@@ -22,6 +22,13 @@ class User(db.Model):
         super(User, self).__init__(*args, **kw)
         self._authenticated = False
 
+    def register_new_user(self, email, first_name, last_name, password, date_of_birth):
+        self.firstname = first_name
+        self.lastname = last_name
+        self.email = email
+        self.set_password(password)
+        self.date_of_birth = date_of_birth
+
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
