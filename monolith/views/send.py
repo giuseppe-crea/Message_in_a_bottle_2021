@@ -1,3 +1,4 @@
+import html
 import re
 
 from flask import Blueprint, render_template, request, escape, abort
@@ -28,8 +29,8 @@ def _send():
         if request.method == 'POST':
             real_recipients = []
             if form.validate_on_submit():
-                message, user_input = form.data['message'], form.data['recipient']
-                message = escape(message)
+                message, user_input = html.escape(form.data['message']), form.data['recipient']
+                time = form.data['time']
                 to_parse = user_input.split(', ')
                 for address in to_parse:
                     address = address.strip()
@@ -37,16 +38,19 @@ def _send():
                         real_recipients.append(escape(address))
                 # find users in database
                 # if user found, enqueue, otherwise print error
+                current_user_mail = getattr(current_user, 'email')
                 for address in real_recipients:
                     exists = db.session.query(User.id).filter_by(email=address).first() is not None
-                    if exists:
+                    if exists and not address == current_user_mail:
                         # queue message
-                        print("OK! Sent " + message + " to " + address)
+                        print("OK! Sent " + html.unescape(message) + " to " + address + " scheduled for " + time.strftime("%m/%d/%Y, %H:%M:%S"))
                         correctly_sent.append(address)
                     else:
-                        print('KO! Address ' + address + " doesn't exist!")
+                        print('KO! Address ' + address + " is not valid!")
                         not_correctly_sent.append(address)
-            return render_template('done_sending.html', users1=correctly_sent, users2=not_correctly_sent)
+            else:
+                return render_template('error_template.html', form=form)
+            return render_template('done_sending.html', users1=correctly_sent, users2=not_correctly_sent, text=html.unescape(message))
         else:
             return render_template('send.html', form=form)
     else:
