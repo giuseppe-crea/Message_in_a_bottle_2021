@@ -2,7 +2,14 @@
 
 {% if current_user.is_authenticated %}
   Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
-    <h2>{{ welcome }}</h2>
+
+  <h2>{{ welcome }}</h2>
+
+  <br>
+  <a href="/unregister">Delete Account</a>
+  <br><br>
+  
+
 
 {% else %}
     Hi Anonymous, <a href="/login">Log in</a> or <a href="/create_user">Register</a>

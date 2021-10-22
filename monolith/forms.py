@@ -16,3 +16,7 @@ class UserForm(FlaskForm):
     password = f.PasswordField('password', validators=[DataRequired()])
     dateofbirth = f.DateField('dateofbirth', format='%d/%m/%Y')
     display = ['email', 'firstname', 'lastname', 'password', 'dateofbirth']
+
+class UnregisterForm(FlaskForm):
+    password = f.PasswordField('password', validators=[DataRequired()])
+    display = ['password']
