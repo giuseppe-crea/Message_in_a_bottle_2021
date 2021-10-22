@@ -2,7 +2,7 @@ from datetime import datetime
 
 import wtforms as f
 from flask_wtf import FlaskForm
-from wtforms.validators import StopValidation, InputRequired
+from wtforms.validators import StopValidation, InputRequired, Length
 from wtforms.fields.html5 import DateTimeLocalField
 
 
@@ -40,7 +40,7 @@ class UserForm(FlaskForm):
 
 
 class SendForm(FlaskForm):
-    message = f.StringField('Message', validators=[InputRequired()])
+    message = f.StringField('Message', validators=[InputRequired(), Length(max=1024)])
     # more than one user is supported, insert multiple mail addresses separated by a comma
     recipient = f.StringField('Recipient', validators=[InputRequired()])
     time = DateTimeLocalField('Send on', format='%Y-%m-%dT%H:%M', validators=[InputRequired(), time_validator(startdate=datetime.now())])
