@@ -1,4 +1,8 @@
-from flask import Blueprint, redirect, render_template, request
+from datetime import date
+
+import flask_login
+from flask import Blueprint, redirect, render_template, request, jsonify
+from flask_login import login_required
 
 from monolith.database import User, db
 from monolith.forms import UserForm
@@ -33,3 +37,20 @@ def create_user():
         return render_template('create_user.html', form=form)
     else:
         raise RuntimeError('This should not happen!')
+
+
+def _user_data2dict(data: User):
+    dict = {}
+    dict["first name"] = data.firstname
+    dict["last name"] = data.lastname
+    dict["email"] = data.email
+    dict["date of birth"] = data.dateofbirth.date()
+    return dict
+
+@users.route('/user_data', methods=['GET'])
+@login_required
+def user_data():
+    user = flask_login.current_user
+    data = db.session.query(User).filter(User.id == user.get_id()).first()
+    result = _user_data2dict(data)
+    return render_template('user_data.html',result=result)
