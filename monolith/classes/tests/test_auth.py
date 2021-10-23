@@ -1,16 +1,10 @@
+import os
 import unittest
-from monolith.classes.tests.utils import get_testing_app
-
-
-def login(client, username, password):
-    return client.post(
-                '/login',
-                data={'email': username, 'password': password},
-                follow_redirects=True
-            )
+from monolith.classes.tests.utils import get_testing_app, login, create_user
 
 
 class TestHome(unittest.TestCase):
+
     def test_get_login(self):
         tested_app = get_testing_app()
         with tested_app:
@@ -21,8 +15,14 @@ class TestHome(unittest.TestCase):
     def test_post_login(self):
         tested_app = get_testing_app()
         with tested_app:
-            login_reply = tested_app.get("/login")
-            self.assertEqual(login_reply.status_code, 200)
+            rv = create_user(
+                tested_app,
+                "example@example.com",
+                "Admin",
+                "Admin",
+                "01/01/1990",
+                "admin")
+            assert rv.status_code == 200
             response = login(tested_app, 'example@example.com', 'admin')
             self.assertIn(b'Hi Admin', response.data)
 
@@ -43,9 +43,15 @@ class TestHome(unittest.TestCase):
     def test_login_logout(self):
         tested_app = get_testing_app()
         with tested_app:
+            response = create_user(
+                tested_app,
+                "example@example.com",
+                "Admin",
+                "Admin",
+                "01/01/1990",
+                "admin")
+            assert response.status_code == 200
             response = login(tested_app, 'example@example.com', 'admin')
             self.assertIn(b'Hi Admin', response.data)
             response = tested_app.get("/logout", follow_redirects=True)
             assert b'Hi Anonymous' in response.data
-
-
