@@ -7,7 +7,7 @@ install:
   - pip install celery
 before_script:
   - docker run -d -p 6379:6379 redis:latest
-  - celery -A monolith.background.celery worker --detach
+  - celery -A background.celery worker --detach
 script:
   - tox -e $TOX_ENV
 after_script:
