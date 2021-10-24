@@ -1,10 +1,11 @@
 import html
 import re
+from datetime import datetime
+from math import floor
 
-from flask import Blueprint, render_template, request, escape, abort
+from flask import Blueprint, render_template, request, escape
 from flask_login import login_required
-
-from monolith.database import User, db, UnsentMessage
+from monolith.database import User, db
 from monolith.forms import SendForm
 from monolith.auth import current_user
 from monolith.background import deliver_message
@@ -44,15 +45,12 @@ def _send():
             for address in real_recipients:
                 exists = db.session.query(User.id).filter_by(email=address).first() is not None
                 if exists and not address == current_user_mail:
-                    # save message, sender, receiver, date to the database of unsent messages
-                    unsent_message = UnsentMessage()
-                    unsent_message.add_message(message, current_user_mail, address,
-                                               time.strftime("%m/%d/%Y, %H:%M:%S"))
-                    db.session.add(unsent_message)
                     # enqueue message with celery
-                    # TODO: bring the broker online and uncomment this
-                    # deliver_message.apply_async((unsent_message.get_id(), message, current_user_mail, address),
-                    #                            eta=time)
+                    # TODO: find out what the proper format for ETA is and replace delay
+                    first_time = datetime.now()
+                    difference = time - first_time
+                    timedelta_seconds = floor(difference.total_seconds())
+                    deliver_message.apply_async((message, current_user_mail, address), countdown=timedelta_seconds)
                     correctly_sent.append(address)
                 else:
                     not_correctly_sent.append(address)

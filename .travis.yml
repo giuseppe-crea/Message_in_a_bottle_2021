@@ -4,5 +4,10 @@ env:
   - TOX_ENV=py39
 install:
   - pip install tox
+before_script:
+  - docker run -d -p 6379:6379 redis:latest
+  - celery -A monolith.background.celery worker --detach
 script:
   - tox -e $TOX_ENV
+after_script:
+  - celery -A monolith.background.celery purge -f
