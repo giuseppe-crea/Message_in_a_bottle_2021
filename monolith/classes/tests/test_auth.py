@@ -1,3 +1,5 @@
+
+"""
 import unittest
 import json
 from flask import request, jsonify
@@ -16,3 +18,5 @@ class testAuth(unittest.TestCase):
             follow_redirects=True
         )
         self.assertIn(b'Hi Admin!', response.data)
+
+"""
