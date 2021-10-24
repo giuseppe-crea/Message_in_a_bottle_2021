@@ -40,17 +40,21 @@ def create_user():
 
 
 def _user_data2dict(data: User):
-    dict = {}
-    dict["first name"] = data.firstname
-    dict["last name"] = data.lastname
-    dict["email"] = data.email
-    dict["date of birth"] = data.dateofbirth.date()
-    return dict
+    """
+    Convert user data into a dictionary for easy display.
+    """
+    return {"first name": data.firstname, "last name": data.lastname, "email": data.email,
+            "date of birth": data.dateofbirth.date()}
+
 
 @users.route('/user_data', methods=['GET'])
 @login_required
 def user_data():
-    user = flask_login.current_user
-    data = db.session.query(User).filter(User.id == user.get_id()).first()
-    result = _user_data2dict(data)
-    return render_template('user_data.html',result=result)
+    """
+    The user can read his account's data. Only logged users are authorized to use this function.
+    :return: display the user's data using the user_data template.
+    """
+    user = flask_login.current_user  # get the current user
+    data = db.session.query(User).filter(User.id == user.get_id()).first()  # get the user's data fom the database
+    result = _user_data2dict(data)  # convert user data into a dictionary for easy display.
+    return render_template('user_data.html', result=result)
