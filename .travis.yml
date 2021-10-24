@@ -11,4 +11,4 @@ before_script:
 script:
   - tox -e $TOX_ENV
 after_script:
-  - celery -A monolith.background.celery purge -f
+  - celery -A background.celery purge -f
