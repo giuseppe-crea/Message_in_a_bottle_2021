@@ -1,11 +1,11 @@
 import html
 import re
 
-from flask import Blueprint, render_template, request, escape, abort
+from flask import Blueprint, render_template, request, escape, abort, redirect, url_for
 from flask_login import login_required
 
 from monolith.database import User, db, UnsentMessage
-from monolith.forms import SendForm
+from monolith.forms import SendForm, RecipientsListForm
 from monolith.auth import current_user
 from monolith.background import deliver_message
 
@@ -24,7 +24,8 @@ def check(email):
 
 @send.route('/send', methods=['POST', 'GET'])
 @login_required
-def _send():
+# data is a default parameter used for recipient setting
+def _send(data=""):
     form = SendForm()
     correctly_sent = []
     not_correctly_sent = []
@@ -64,3 +65,29 @@ def _send():
                                text=html.unescape(message))
     else:
         return render_template('send.html', form=form)
+
+
+@send.route('/list_of_recipients', methods=['POST', 'GET'])
+def _display_users():
+
+    # instantiate the form
+    form = RecipientsListForm()
+
+    # ordering alphabetically and filtering admin accounts
+    _users = db.session.query(User).filter(User.firstname != 'Admin').order_by(User.lastname)
+
+    # sets choices
+    form.radio_form.choices = [(user.email, \
+                                user.lastname + ' ' + user.firstname + ': ' + user.email) for user in _users]
+
+    if request.method == 'POST':  # POST request
+
+        if len(request.form) != 0:  # check the selection of a radio button
+            selected_recipient = request.form['radio_form']
+            return redirect(url_for('send._send', data=selected_recipient))  # redirecting to /send
+
+        else:  # no recipient selected
+            return redirect(url_for('send._send'))
+
+    else:  # GET request, returns the list_of_recipients.html page
+        return render_template('list_of_recipients.html', form=form)
