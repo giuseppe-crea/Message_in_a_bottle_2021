@@ -32,7 +32,7 @@ class testUnreg(unittest.TestCase):
 
         #the user logs in
         response = login(tested_app, 'user@example.com', 'password')
-        self.assertIn(b'Hi name', response.data)
+        assert response.status_code == 200
 
         #get the unregister page
         rv = tested_app.get('/unregister')
