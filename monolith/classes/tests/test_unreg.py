@@ -55,7 +55,7 @@ class testUnreg(unittest.TestCase):
         assert rv.status_code == 200
 
         #the user tries to login but his account does no longer exist
-        response = login(tested_app, 'user@example.com', 'passwor')
+        response = login(tested_app, 'user@example.com', 'password')
         assert response.status_code == 401
 
 
