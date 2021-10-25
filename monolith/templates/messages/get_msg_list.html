@@ -1,0 +1,14 @@
+{% extends 'body.html' %}
+
+<h1>{% block title %} List of messages {% endblock %}</h1>
+
+{% block content %}
+    <ul style="list-style-type: none;">
+        {% for message in messages %}
+            <li><b>from:</b> {{ message['sender_email'] }}</li>
+            <a href="/get_msg/{{message['id']}}">read more...</a>
+            <br>
+            <br>
+        {% endfor %}
+    </ul>
+{% endblock %}

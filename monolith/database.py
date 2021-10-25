@@ -3,6 +3,18 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 db = SQLAlchemy()
 
+class Message(db.Model):
+
+    __tablename__ = 'message'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    sender_email = db.Column(db.Unicode(128), nullable=False)
+    receiver_email = db.Column(db.Unicode(128), nullable=False)
+    message = db.Column(db.Unicode(1024), nullable=False)
+    is_draft = db.Column(db.Boolean, default=True)
+
+    def __init__(self, *args, **kw):
+        super(Message, self).__init__(*args, **kw)
 
 class User(db.Model):
 

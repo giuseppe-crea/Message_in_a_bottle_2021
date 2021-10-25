@@ -3,7 +3,11 @@
 {% if current_user.is_authenticated %}
   Hi {{ current_user.firstname }}! <a href="/logout">Logout</a>
     <h2>{{ welcome }}</h2>
+    <a href="/create_msg">Create message</a>
+    <a href="/get_msg">List of messages</a>
 
 {% else %}
     Hi Anonymous, <a href="/login">Log in</a> or <a href="/create_user">Register</a>
 {% endif %}
+
+
