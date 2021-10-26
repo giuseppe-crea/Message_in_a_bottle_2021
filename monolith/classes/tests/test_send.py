@@ -129,5 +129,3 @@ class TestHome(unittest.TestCase):
             assert rv.status_code == 401
             rv = tested_app.get('send')
             assert rv.status_code == 401
-
-# test_send.py

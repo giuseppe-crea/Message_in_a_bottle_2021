@@ -1,6 +1,7 @@
 from .auth import auth
 from .home import home
 from .users import users
-from .messages import messages
+from .unreg import unreg
+from .send import send
 
-blueprints = [home, auth, users, messages]
+blueprints = [home, auth, users, send, unreg]

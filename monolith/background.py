@@ -1,6 +1,6 @@
+from datetime import datetime
 from celery import Celery
-
-from monolith.database import User, db
+from monolith.database import db
 
 BACKEND = BROKER = 'redis://localhost:6379'
 celery = Celery(__name__, backend=BACKEND, broker=BROKER)
@@ -21,3 +21,11 @@ def do_task():
 
     return []
 
+
+@celery.task
+def deliver_message(message, sender, receiver):
+    # TODO: RPC to the module that will add the message in the receiver's list of messages
+    # TODO: RPC that notifies the receiver
+    # placeholder delivery
+    print("Your message is \"" + message + "\"\nTo be delivered to: " + receiver + "\nSent from: " + sender)
+    return "Done"

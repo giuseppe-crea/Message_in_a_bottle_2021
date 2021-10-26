@@ -1,0 +1,16 @@
+<html>
+ <body>
+  <form action="" method="POST">
+    {{ form.hidden_tag() }}
+    <dl>
+     {% for subfield in form.radio_form %}
+     <tr>
+         <td> <h4> {{ subfield}} {{ subfield.label }} </h4> </td>
+     </tr>
+     {% endfor %}
+    </dl>
+    <p>
+    <input type=submit value="Choose Recipient">
+  </form>
+ </body>
+</html>

@@ -1,0 +1,30 @@
+<html>
+ <body>
+
+ <!-- After the eventual selection of a recipient -->
+ {% if  request.args.get('data') is not none %}
+  <p> You can write to: {{  request.args.get('data') }}</p>
+  {% endif %}
+
+  <form action="" method="POST">
+    {{ form.hidden_tag() }}
+
+    <dl>
+     {% for field in form.display %}
+     <dt>{{ form[field].label }}</dt>
+     <dd>{{ form[field]() }}</dd>
+       {% if form[field].errors %}
+          {% for e in form[field].errors %}
+           <p class="help-block">{{ e }}</p>
+          {% endfor %}
+       {% endif %}
+     {% endfor %}
+    </dl>
+    <p>
+    See a <a href="/list_of_recipients">list</a> of possible recipients
+    <br> <br>
+    <input type=submit value="Send!">
+  </form>
+ <a href="/logout">logout</a>
+ </body>
+</html>

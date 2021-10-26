@@ -28,16 +28,13 @@ def login(client, username, password):
             )
 
 
-def create_user(client, mail, firstname, lastname, dateofbirth, password):
+def create_user(client, mail, firstname, lastname, date_of_birth, password):
     return client.post(
         '/create_user',
         data={'email': mail,
               'firstname': firstname,
               'lastname': lastname,
-              'dateofbirth': dateofbirth,
+              'date_of_birth': date_of_birth,
               'password': password},
         follow_redirects=True
     )
-
-
-# utils.py
