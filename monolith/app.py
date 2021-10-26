@@ -11,6 +11,9 @@ def create_app():
     app = Flask(__name__)
     app.config['WTF_CSRF_SECRET_KEY'] = 'A SECRET KEY'
     app.config['SECRET_KEY'] = 'ANOTHER ONE'
+    # disable CSRF protection when the app is running in dev mode
+    if app.config['ENV'] == 'development':
+        app.config['WTF_CSRF_ENABLED'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../mmiab.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -31,7 +34,7 @@ def create_app():
             example.firstname = 'Admin'
             example.lastname = 'Admin'
             example.email = 'example@example.com'
-            example.dateofbirth = datetime.datetime(2020, 10, 5)
+            example.date_of_birth = datetime.datetime(2020, 10, 5)
             example.is_admin = True
             example.set_password('admin')
             db.session.add(example)
