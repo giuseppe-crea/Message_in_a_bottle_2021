@@ -17,6 +17,14 @@ def get_testing_app():
     db.init_app(app)
     login_manager.init_app(app)
     db.create_all(app=app)
+    create_user(
+        app.test_client(),
+        'default@example.com',
+        'Admin',
+        'Default',
+        '05/10/2020',
+        'admin'
+    )
     return app.test_client()
 
 
@@ -28,13 +36,13 @@ def login(client, username, password):
             )
 
 
-def create_user(client, mail, firstname, lastname, dateofbirth, password):
+def create_user(client, mail, firstname, lastname, date_of_birth, password):
     return client.post(
         '/create_user',
         data={'email': mail,
               'firstname': firstname,
               'lastname': lastname,
-              'dateofbirth': dateofbirth,
+              'date_of_birth': date_of_birth,
               'password': password},
         follow_redirects=True
     )

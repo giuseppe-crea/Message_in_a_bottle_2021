@@ -43,27 +43,3 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
-
-
-class UnsentMessage(db.Model):
-
-    __tablename__ = 'unsent'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    sender_email = db.Column(db.Unicode(128), nullable=False)
-    receiver_email = db.Column(db.Unicode(128), nullable=False)
-    message = db.Column(db.Unicode(1024), nullable=False)
-    # for ease of use with Celery, we import this as string
-    time = db.Column(db.Unicode(128), nullable=False)
-
-    def __init__(self, *args, **kw):
-        super(UnsentMessage, self).__init__(*args, **kw)
-
-    def add_message(self, message, sender_email, receiver_email, time):
-        self.message = message
-        self.sender_email = sender_email
-        self.receiver_email = receiver_email
-        self.time = time
-
-    def get_id(self):
-        return self.id
