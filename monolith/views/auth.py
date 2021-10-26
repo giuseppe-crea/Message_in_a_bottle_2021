@@ -22,7 +22,13 @@ def login():
     return render_template('login.html', form=form)
 
 
+
+
+
 @auth.route("/logout")
 def logout():
     logout_user()
     return redirect('/')
+
+
+
