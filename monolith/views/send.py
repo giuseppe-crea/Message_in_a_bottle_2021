@@ -6,7 +6,7 @@ from math import floor
 from flask import Blueprint, render_template, request, escape, redirect, url_for
 from flask_login import login_required
 
-from monolith.database import User, db, UnsentMessage
+from monolith.database import User, db
 from monolith.forms import SendForm, RecipientsListForm
 from monolith.auth import current_user
 from monolith.background import deliver_message
