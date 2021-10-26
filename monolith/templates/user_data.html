@@ -1,0 +1,14 @@
+<html>
+  <body>
+    <a href="/">Home</a>
+    <h1>Your account information:</h1>
+    <table>
+      {% for key, value in result.items() %}
+      <tr>
+        <th> {{ key }} </th>
+        <td> {{ value }} </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

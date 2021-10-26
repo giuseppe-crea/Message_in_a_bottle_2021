@@ -1,4 +1,8 @@
-from flask import Blueprint, redirect, render_template, request
+from datetime import date
+
+import flask_login
+from flask import Blueprint, redirect, render_template, request, jsonify
+from flask_login import login_required
 
 from monolith.database import User, db
 from monolith.forms import UserForm
@@ -33,3 +37,24 @@ def create_user():
         return render_template('create_user.html', form=form)
     else:
         raise RuntimeError('This should not happen!')
+
+
+def _user_data2dict(data: User):
+    """
+    Convert user data into a dictionary for easy display.
+    """
+    return {"first name": data.firstname, "last name": data.lastname, "email": data.email,
+            "date of birth": data.dateofbirth.date()}
+
+
+@users.route('/user_data', methods=['GET'])
+@login_required
+def user_data():
+    """
+    The user can read his account's data. Only logged users are authorized to use this function.
+    :return: display the user's data using the user_data template.
+    """
+    user = flask_login.current_user  # get the current user
+    data = db.session.query(User).filter(User.id == user.get_id()).first()  # get the user's data fom the database
+    result = _user_data2dict(data)  # convert user data into a dictionary for easy display.
+    return render_template('user_data.html', result=result)
