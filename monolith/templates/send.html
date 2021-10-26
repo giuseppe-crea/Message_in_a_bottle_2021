@@ -1,14 +1,25 @@
 <html>
- <body>
-
- <!-- After the eventual selection of a recipient -->
- {% if  request.args.get('data') is not none %}
-  <p> You can write to: {{  request.args.get('data') }}</p>
-  {% endif %}
-
+ <head>
+     <script>
+         // fill the recipient form input, if necessary
+         function set_recipients(){
+            // retrieve the URL
+            const queryString = window.location.search;
+            // retrieve the string of parameters
+            const urlParams = new URLSearchParams(queryString);
+            // check if data are passed through a GET request
+            if(urlParams.has('data')){
+                // retrieve the value
+                const recipients = urlParams.get('data');
+                // set the input field
+                document.getElementById('recipient').setAttribute('value', recipients);
+            }
+         }
+     </script>
+ </head>
+ <body onload="set_recipients()"> <!-- to set through the DOM the selected recipients passed as GET parameters -->
   <form action="" method="POST">
     {{ form.hidden_tag() }}
-
     <dl>
      {% for field in form.display %}
      <dt>{{ form[field].label }}</dt>
