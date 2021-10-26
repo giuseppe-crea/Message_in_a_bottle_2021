@@ -13,7 +13,7 @@ class User(db.Model):
     firstname = db.Column(db.Unicode(128))
     lastname = db.Column(db.Unicode(128))
     password = db.Column(db.Unicode(128))
-    dateofbirth = db.Column(db.DateTime)
+    date_of_birth = db.Column(db.DateTime)
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
     is_anonymous = False
@@ -27,7 +27,7 @@ class User(db.Model):
         self.lastname = last_name
         self.email = email
         self.set_password(password)
-        self.dateofbirth = date_of_birth
+        self.date_of_birth = date_of_birth
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -43,4 +43,3 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
-

@@ -21,17 +21,17 @@ class TestUsData(unittest.TestCase):
         """
         tested_app = get_testing_app()
         # the user logs
-        login_reply = tested_app.post(
-            '/login',
-            data={'email': 'example@example.com', 'password': 'admin'},
-            follow_redirects=True,
-        )
-        self.assertEqual(200, login_reply.status_code)  # expected a correct login
-        # the user tries to access his data
-        response = tested_app.get('/user_data')
-        tested_app.get('/logout')  # the user logout to not influence other tests
-        # expected a correct access with the correct data displayed
-        self.assertIn(b'Your account information:', response.data)
-        self.assertIn(b'example@example.com', response.data)
-        self.assertIn(b'Admin', response.data)
-        self.assertIn(b'2020-10-05', response.data)
+        with tested_app:
+            login_reply = tested_app.post(
+                '/login',
+                data={'email': 'default@example.com', 'password': 'admin'},
+                follow_redirects=True,
+            )
+            self.assertEqual(200, login_reply.status_code)  # expected a correct login
+            # the user tries to access his data
+            response = tested_app.get('/user_data')
+            # expected a correct access with the correct data displayed
+            self.assertIn(b'Your account information:', response.data)
+            self.assertIn(b'default@example.com', response.data)
+            self.assertIn(b'Admin', response.data)
+            self.assertIn(b'2020-10-05', response.data)
