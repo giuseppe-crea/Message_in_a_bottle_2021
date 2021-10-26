@@ -40,7 +40,7 @@ class UserForm(FlaskForm):
   
 
 class UnregisterForm(FlaskForm):
-    password = f.PasswordField('password', validators=[DataRequired()])
+    password = f.PasswordField('password', validators=[InputRequired()])
     display = ['password']
 
 
