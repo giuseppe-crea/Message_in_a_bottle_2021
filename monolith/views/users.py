@@ -1,7 +1,5 @@
-from datetime import date
-
 import flask_login
-from flask import Blueprint, redirect, render_template, request, jsonify
+from flask import Blueprint, redirect, render_template, request, jsonify, abort
 from flask_login import login_required
 
 from monolith.database import User, db
@@ -51,7 +49,7 @@ def _user_data2dict(data: User):
     Convert user data into a dictionary for easy display.
     """
     return {"first name": data.firstname, "last name": data.lastname, "email": data.email,
-            "date of birth": data.dateofbirth.date()}
+            "date of birth": data.date_of_birth.date()}
 
 
 @users.route('/user_data', methods=['GET'])

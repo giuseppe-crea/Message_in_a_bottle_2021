@@ -35,8 +35,8 @@ class UserForm(FlaskForm):
     firstname = f.StringField('firstname', validators=[InputRequired()])
     lastname = f.StringField('lastname', validators=[InputRequired()])
     password = f.PasswordField('password', validators=[InputRequired()])
-    dateofbirth = f.DateField('dateofbirth', format='%d/%m/%Y')
-    display = ['email', 'firstname', 'lastname', 'password', 'dateofbirth']
+    date_of_birth = f.DateField('date_of_birth', format='%d/%m/%Y')
+    display = ['email', 'firstname', 'lastname', 'password', 'date_of_birth']
 
 
 class SendForm(FlaskForm):
