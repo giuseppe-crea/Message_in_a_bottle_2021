@@ -4,6 +4,7 @@ import wtforms as f
 from flask_wtf import FlaskForm
 from wtforms.validators import StopValidation, InputRequired, Length
 from wtforms.fields.html5 import DateTimeLocalField
+from wtforms import widgets, SelectMultipleField
 
 
 class TimeValidator(object):
@@ -51,6 +52,15 @@ class SendForm(FlaskForm):
     time = DateTimeLocalField('Send on', format='%Y-%m-%dT%H:%M', validators=[InputRequired(), time_validator(startdate=datetime.now())])
     display = ['message', 'time', 'recipient']
 
+
+# custom class to display checkboxes in the form, based on SelectMultipleField
+# to select multiple recipients
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+
+# uses a custom class to render checkboxes
 class RecipientsListForm(FlaskForm):
-    # choices must be declared empty because it has dynamic content, initialized at its instantiation
-    radio_form = f.RadioField('Select a recipient:', choices=[])
+    # choices must be declared empty because it has dynamic content, initialized after its instantiation
+    multiple_field_form = MultiCheckboxField('Select recipients:', choices=[])
