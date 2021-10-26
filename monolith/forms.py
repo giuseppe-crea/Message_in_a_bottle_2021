@@ -50,3 +50,7 @@ class SendForm(FlaskForm):
     recipient = f.StringField('Recipient', validators=[InputRequired()])
     time = DateTimeLocalField('Send on', format='%Y-%m-%dT%H:%M', validators=[InputRequired(), time_validator(startdate=datetime.now())])
     display = ['message', 'time', 'recipient']
+
+class RecipientsListForm(FlaskForm):
+    # choices must be declared empty because it has dynamic content, initialized at its instantiation
+    radio_form = f.RadioField('Select a recipient:', choices=[])
