@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms.validators import StopValidation, InputRequired, Length
 from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.widgets import TextArea
+from wtforms import BooleanField
 
 class TimeValidator(object):
     field_flags = ('required',)
@@ -48,7 +49,8 @@ class SendForm(FlaskForm):
     # more than one user is supported, insert multiple mail addresses separated by a comma
     recipient = f.StringField('Recipient', validators=[InputRequired()])
     time = DateTimeLocalField('Send on', format='%Y-%m-%dT%H:%M', validators=[InputRequired(), time_validator(startdate=datetime.now())])
-    display = ['message', 'time', 'recipient']
+    is_draft = BooleanField('Is draft')
+    display = ['message', 'time', 'recipient', 'is_draft']
 
 class RecipientsListForm(FlaskForm):
     # choices must be declared empty because it has dynamic content, initialized at its instantiation

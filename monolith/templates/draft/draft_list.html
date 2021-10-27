@@ -4,10 +4,9 @@
 
 {% block content %}
     <ul style="list-style-type: none;">
-        {% for message in messages %}
-            <li><b>from:</b> {{ message['sender_email'] }}</li>
-            <a href="/get_msg/{{message['id']}}">read more...</a>
-            <br>
+        {% for draft in drafts %}
+            <li><b>to:</b> {{ draft['recipients'] }}</li>
+            <a href="send/{{draft['id']}}">More...</a>
             <br>
         {% endfor %}
     </ul>

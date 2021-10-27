@@ -6,7 +6,7 @@ from math import floor
 from flask import Blueprint, render_template, request, escape, redirect, url_for
 from flask_login import login_required
 
-from monolith.database import User, db
+from monolith.database import User, Draft, db
 from monolith.forms import SendForm, RecipientsListForm
 from monolith.auth import current_user
 from monolith.background import deliver_message
@@ -23,6 +23,14 @@ def check(email):
     else:
         return False
 
+def save_draft(form):
+    msg, recipients, time = html.escape(form.data['message']), form.data['recipient'], form.data['time']
+    new_draft = Draft()
+    new_draft.add_new_draft(current_user.email, recipients, msg, time)
+
+    db.session.add(new_draft)
+    db.session.commit()
+
 
 @send.route('/send', methods=['POST', 'GET'])
 @login_required
@@ -36,7 +44,14 @@ def _send(data=""):
         if form.validate_on_submit():
             message, user_input = html.escape(form.data['message']), form.data['recipient']
             time = form.data['time']
+            is_draft = form.data['is_draft']
             to_parse = user_input.split(', ')
+            
+            if is_draft == True:
+                save_draft(form)
+                return redirect('/')
+
+
             for address in to_parse:
                 address = address.strip()
                 if check(address):
@@ -52,6 +67,7 @@ def _send(data=""):
                     first_time = datetime.now()
                     difference = time - first_time
                     timedelta_seconds = floor(difference.total_seconds())
+                    
                     deliver_message.apply_async((message, current_user_mail, address), countdown=timedelta_seconds)
                     correctly_sent.append(address)
                 else:
@@ -65,6 +81,21 @@ def _send(data=""):
     else:
         return render_template('send.html', form=form)
 
+
+@send.route('/send/<id>', methods=['GET'])
+def retrieve_one_msg(id):
+    form = SendForm()
+    print(id)
+    draft = Draft().query.filter_by(id = int(id), sender_email=current_user.email).one()
+    form.message.data = draft.message
+    form.recipient.data = draft.recipients
+    
+    return render_template('send.html', form=form)
+
+@send.route('/send_draft_list', methods=['GET'])
+def get_message():
+   drafts = Draft().query.filter_by(sender_email=current_user.email).all()
+   return render_template('draft/draft_list.html', drafts = drafts)
 
 @send.route('/list_of_recipients', methods=['POST', 'GET'])
 def _display_users():
