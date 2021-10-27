@@ -51,7 +51,6 @@ def _send(data=""):
                 save_draft(form)
                 return redirect('/')
 
-
             for address in to_parse:
                 address = address.strip()
                 if check(address):
