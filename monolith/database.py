@@ -68,3 +68,22 @@ class SentMessage(db.Model):
 
     def get_id(self):
         return self.id
+
+
+class Blacklist(db.Model):
+
+    __tablename__ = 'blacklist'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    owner = db.Column(db.Integer, nullable=False)
+    email = db.Column(db.Unicode(128), nullable=False)
+
+    def __init__(self, *args, **kw):
+        super(Blacklist, self).__init__(*args, **kw)
+
+    def add_blocked_user(self, owner, email):
+        self.owner = owner
+        self.email = email
+
+    def get_id(self):
+        return self.owner
