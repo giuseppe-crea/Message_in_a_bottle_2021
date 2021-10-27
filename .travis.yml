@@ -2,8 +2,10 @@ language: python
 python: 3.9
 env:
   - TOX_ENV=py39
+  - COVERALLS_SERVICE_NAME=travis-pro
 install:
   - pip install tox
+  - pip install pyyaml
 before_script:
   - docker run -d -p 6379:6379 redis:latest
 script:
