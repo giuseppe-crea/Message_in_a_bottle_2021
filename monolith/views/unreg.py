@@ -6,12 +6,10 @@ from monolith.database import User, db
 from monolith.forms import UnregisterForm
 
 
-
 unreg = Blueprint('unreg', __name__)
 
 
-
-#delete user account
+# delete user account
 @unreg.route('/unregister', methods=['GET', 'POST'])
 @login_required
 def unregister():
@@ -19,20 +17,22 @@ def unregister():
     form = UnregisterForm()
 
     if request.method == 'GET':
-        return  render_template("unregister.html", form=form)
+        return render_template("unregister.html", form=form)
 
     elif request.method == 'POST':
         if form.validate_on_submit():
             password = form.data['password']
-            id = flask_login.current_user.id    #get user unique id
-            q = db.session.query(User).filter(User.id == id)    #find user in database
-            user=q.first()
-            if user.authenticate(password): #if the input password is correct, delete user account
+            _id = flask_login.current_user.id    # get user unique id
+            # find user in database
+            q = db.session.query(User).filter(User.id == _id)
+            user = q.first()
+            # if the input password is correct, delete user account
+            if user.authenticate(password):
                 db.session.delete(user)
                 db.session.commit()
-                return   redirect('/')
+                return redirect('/')
+            # if the input password password is wrong, return a 401 status code
             else:
-                abort(401)  #if the input password password is wrong, return a 401 status code
+                abort(401)
     else:
         raise RuntimeError('This should not happen!')
-

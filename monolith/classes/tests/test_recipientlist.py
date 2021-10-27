@@ -1,18 +1,17 @@
 import unittest
 from monolith.classes.tests.utils import get_testing_app, create_user, login
-from flask import request, url_for
 
 
 class TestRecipientList(unittest.TestCase):
 
-    # # # # # # # # # # # # # # test page retrieving # # # # # # # # # # # # # #
+    # # # # # # # # # # # # # test page retrieving # # # # # # # # # # # # #
     def test_get_list_of_recipients(self):
         tested_app = get_testing_app()
         with tested_app:
             rv = tested_app.get('/list_of_recipients')
             assert rv.status_code == 200
 
-    # # # # # # # # # # # # try to select an existing user # # # # # # # # # # # #
+    # # # # # # # # # # # try to select an existing user # # # # # # # # # # #
     def test_user_selection(self):
         tested_app = get_testing_app()
         with tested_app:
@@ -56,7 +55,7 @@ class TestRecipientList(unittest.TestCase):
 
             assert rv.status_code == 200
 
-    # # # # # # # # # # # # # test the submitting of a void form # # # # # # # # # # # # #
+    # # # # # # # # # # # test the submitting of a void form # # # # # # # #
     def test_no_selection(self):
         tested_app = get_testing_app()
         with tested_app:
@@ -94,7 +93,7 @@ class TestRecipientList(unittest.TestCase):
             # check HTML consistency
             self.assertIn(b'Message', rv.data)
 
-    # # # # # # # # # # # # try to select two existing users # # # # # # # # # # # #
+    # # # # # # # # # # try to select two existing users # # # # # # # # # #
     def test_two_users_selection(self):
         tested_app = get_testing_app()
         with tested_app:
@@ -140,18 +139,20 @@ class TestRecipientList(unittest.TestCase):
             rv = tested_app.get('/list_of_recipients')
             assert rv.status_code == 200
 
-            # check HTML consistency (presence of first_recipient and second_recipient
-            # TODO
+            # TODO: check presence of first_recipient and second_recipient
+            # in the html page
 
             # selection of a user and POST request
             rv = tested_app.post(
                 '/list_of_recipients',
-                data={'multiple_field_form': ['first_recipient@example.com', 'second_recipient@example.com']},
+                data={
+                    'multiple_field_form':
+                    ['first_recipient@example.com',
+                     'second_recipient@example.com']},
                 follow_redirects=False
             )
 
             assert rv.status_code == 302
-            assert rv.location == "http://localhost/send?data=first_recipient%40example.com%2Csecond_recipient%40example.com"
-
-
-
+            assert rv.location == "http://localhost/send?" \
+                                  "data=first_recipient%40example.com%2C" \
+                                  "second_recipient%40example.com"

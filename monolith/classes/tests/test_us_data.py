@@ -9,11 +9,13 @@ class TestUsData(unittest.TestCase):
 
     def test_unauthorized(self):
         """
-        Test the case where an unauthorized user attempts to access account data.
+        Test the case where an unauthorized user
+        attempts to access account data.
         """
         tested_app = get_testing_app()
         response = tested_app.get('/user_data')
-        self.assertIn(b'Unauthorized', response.data)  # expected an unauthorized access error page
+        # expected an unauthorized access error page
+        self.assertIn(b'Unauthorized', response.data)
 
     def test_authorized(self):
         """
@@ -27,7 +29,8 @@ class TestUsData(unittest.TestCase):
                 data={'email': 'default@example.com', 'password': 'admin'},
                 follow_redirects=True,
             )
-            self.assertEqual(200, login_reply.status_code)  # expected a correct login
+            # expected a correct login
+            self.assertEqual(200, login_reply.status_code)
             # the user tries to access his data
             response = tested_app.get('/user_data')
             # expected a correct access with the correct data displayed

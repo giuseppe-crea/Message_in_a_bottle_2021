@@ -1,6 +1,5 @@
-from datetime import datetime
 from celery import Celery
-from monolith.database import db
+from monolith.database import db, SentMessage
 
 BACKEND = BROKER = 'redis://localhost:6379'
 celery = Celery(__name__, backend=BACKEND, broker=BROKER)
@@ -14,18 +13,23 @@ def do_task():
     # lazy init
     if _APP is None:
         from monolith.app import create_app
-        app = create_app()
-        db.init_app(app)
-    else:
-        app = _APP
-
+        _APP = create_app()
+        db.init_app(_APP)
     return []
 
 
 @celery.task
-def deliver_message(message, sender, receiver):
-    # TODO: RPC to the module that will add the message in the receiver's list of messages
+def deliver_message(message, sender, receiver, time):
     # TODO: RPC that notifies the receiver
-    # placeholder delivery
-    print("Your message is \"" + message + "\"\nTo be delivered to: " + receiver + "\nSent from: " + sender)
+    global _APP
+    do_task()
+    with _APP.app_context():
+        # create an entry in the sent table
+        unsent_message = SentMessage()
+        unsent_message.add_message(message, sender, receiver, time)
+        db.session.add(unsent_message)
+        db.session.commit()
+        # placeholder delivery
+        print("Your message is \"" + message + "\"\nTo be delivered to: " +
+              receiver + "\nSent from: " + sender)
     return "Done"

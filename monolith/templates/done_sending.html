@@ -1,10 +1,12 @@
+<!--suppress ALL -->
+
 <html>
   <body>
   <h1>Message "{{ text }}" was:</h1>
   {% if users1|length > 0 %}
     <h2>Successfully Sent to:</h2>
     <ul>
-      {% for user in users1: %}
+      {% for user in users1 %}
       <li>
       {{user}}
       </li>
@@ -14,7 +16,7 @@
   {% if users2|length > 0 %}
   <h2>Failed to send to:</h2>
     <ul>
-      {% for user in users2: %}
+      {% for user in users2 %}
       <li>
       {{user}}
       </li>

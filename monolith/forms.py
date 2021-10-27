@@ -13,7 +13,8 @@ class TimeValidator(object):
     def __init__(self, startdate=datetime.now(), message=None):
         self.startdate = startdate
         if not message:
-            message = "You can't set a delivery date earlier than " + startdate.strftime("%m/%d/%Y, %H:%M:%S") + "!"
+            message = "You can't set a delivery date earlier than " + \
+                      startdate.strftime("%m/%d/%Y, %H:%M:%S") + "!"
         self.message = message
 
     def __call__(self, form, field):
@@ -38,7 +39,7 @@ class UserForm(FlaskForm):
     password = f.PasswordField('password', validators=[InputRequired()])
     date_of_birth = f.DateField('date_of_birth', format='%d/%m/%Y')
     display = ['email', 'firstname', 'lastname', 'password', 'date_of_birth']
-  
+
 
 class UnregisterForm(FlaskForm):
     password = f.PasswordField('password', validators=[InputRequired()])
@@ -46,10 +47,18 @@ class UnregisterForm(FlaskForm):
 
 
 class SendForm(FlaskForm):
-    message = f.StringField('Message', validators=[InputRequired(), Length(max=1024)])
-    # more than one user is supported, insert multiple mail addresses separated by a comma
+    message = f.StringField(
+        'Message',
+        validators=[InputRequired(), Length(max=1024)]
+    )
+    # more than one user is supported,
+    # insert multiple mail addresses separated by a comma
     recipient = f.StringField('Recipient', validators=[InputRequired()])
-    time = DateTimeLocalField('Send on', format='%Y-%m-%dT%H:%M', validators=[InputRequired(), time_validator(startdate=datetime.now())])
+    time = DateTimeLocalField(
+        'Send on',
+        format='%Y-%m-%dT%H:%M',
+        validators=[InputRequired(), time_validator(startdate=datetime.now())]
+    )
     display = ['message', 'time', 'recipient']
 
 
@@ -62,5 +71,6 @@ class MultiCheckboxField(SelectMultipleField):
 
 # uses a custom class to render checkboxes
 class RecipientsListForm(FlaskForm):
-    # choices must be declared empty because it has dynamic content, initialized after its instantiation
+    # choices must be declared empty because it has dynamic content,
+    # initialized after its instantiation
     multiple_field_form = MultiCheckboxField('Select recipients:', choices=[])

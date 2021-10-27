@@ -1,9 +1,8 @@
 import os
-from datetime import datetime
 
 from monolith import app
 from monolith.auth import login_manager
-from monolith.database import db, User
+from monolith.database import db
 
 
 def get_testing_app():

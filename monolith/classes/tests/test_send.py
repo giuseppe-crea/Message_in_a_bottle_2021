@@ -1,5 +1,3 @@
-import datetime
-import os
 import unittest
 from monolith.classes.tests.utils import get_testing_app, login, create_user
 
@@ -43,7 +41,8 @@ class TestHome(unittest.TestCase):
             self.assertIn(b'Message "Short test message" was:', rv.data)
             self.assertIn(b'Successfully Sent to:', rv.data)
             self.assertIn(b'receiver@example.com', rv.data)
-            # adding a user, trying to send the same message again to multiple users
+            # adding a user,
+            # trying to send the same message again to multiple users
             rv = create_user(
                 tested_app,
                 "otherguy@example.com",
@@ -56,7 +55,9 @@ class TestHome(unittest.TestCase):
                 '/send',
                 data={
                     'message': "Short test message",
-                    'recipient': "receiver@example.com, otherguy@example.com, nonexisting@example.com",
+                    'recipient': "receiver@example.com,"
+                                 " otherguy@example.com, "
+                                 "nonexisting@example.com",
                     'time': "2199-01-01T01:01"},
                 follow_redirects=True
             )
