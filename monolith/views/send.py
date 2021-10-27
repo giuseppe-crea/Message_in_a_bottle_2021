@@ -72,18 +72,20 @@ def _display_users():
     # instantiate the form
     form = RecipientsListForm()
 
-    # ordering alphabetically and filtering admin accounts
-    _users = db.session.query(User).filter(User.firstname != 'Admin').order_by(User.lastname)
+    # ordering alphabetically, filtering admin accounts and the sender itself
+    _users = db.session.query(User).order_by(User.lastname).filter(User.firstname != 'Admin').all()
 
     # sets choices
-    form.radio_form.choices = [(user.email, \
-                                user.lastname + ' ' + user.firstname + ': ' + user.email) for user in _users]
+    form.multiple_field_form.choices = [(user.email, user.lastname + ' ' + user.firstname + ': ' + user.email) for user in _users]
 
     if request.method == 'POST':  # POST request
-
-        if len(request.form) != 0:  # check the selection of a radio button
-            selected_recipient = request.form['radio_form']
-            return redirect(url_for('send._send', data=selected_recipient))  # redirecting to /send
+        if len(request.form) != 0:  # check the selection of a recipient
+            # create a list of emails, removing the submitted label
+            selected_recipient_list = request.form.getlist('multiple_field_form')
+            # create a dictionary to construct the right structure
+            payload = {'email_list': ','.join(selected_recipient_list)}
+            # send a list of comma-separated emails
+            return redirect(url_for('send._send', data=payload['email_list']))  # redirecting to /send
 
         else:  # no recipient selected
             return redirect(url_for('send._send'))

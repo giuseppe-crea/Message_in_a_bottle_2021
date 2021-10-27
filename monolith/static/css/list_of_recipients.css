@@ -1,0 +1,35 @@
+/* remove the bullets from the recipients selection */
+ul {
+    list-style-type: none;
+    padding-left: 10px;
+}
+
+li {
+    padding: 5px;
+}
+
+body {
+    background-color: lightblue;
+}
+
+input[name=multiple_field_form] {
+    cursor: pointer;
+}
+
+input[type=submit] {
+    padding: 4px;
+    border: solid;
+    border-width: 1px;
+    border-radius: 2px;
+    font-family: "Lucida Console", "Courier New", "monospace";
+    font-weight: bold;
+}
+
+input[type=submit]:hover {
+    background-color: green;
+    border-color: green;
+    cursor: pointer;
+    color: white;
+    font-family: "Lucida Console", "Courier New", "monospace";
+    font-weight: bold;
+}
