@@ -40,7 +40,8 @@ class User(db.Model):
         super(User, self).__init__(*args, **kw)
         self._authenticated = False
 
-    def register_new_user(self, email, first_name, last_name, password, date_of_birth):
+    def register_new_user(self, email, first_name, last_name, password,
+                          date_of_birth):
         self.firstname = first_name
         self.lastname = last_name
         self.email = email
@@ -58,6 +59,30 @@ class User(db.Model):
         checked = check_password_hash(self.password, password)
         self._authenticated = checked
         return self._authenticated
+
+    def get_id(self):
+        return self.id
+
+
+class SentMessage(db.Model):
+
+    __tablename__ = 'sent'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    sender_email = db.Column(db.Unicode(128), nullable=False)
+    receiver_email = db.Column(db.Unicode(128), nullable=False)
+    message = db.Column(db.Unicode(1024), nullable=False)
+    # for ease of use with Celery, we import this as string
+    time = db.Column(db.Unicode(128), nullable=False)
+
+    def __init__(self, *args, **kw):
+        super(SentMessage, self).__init__(*args, **kw)
+
+    def add_message(self, message, sender_email, receiver_email, time):
+        self.message = message
+        self.sender_email = sender_email
+        self.receiver_email = receiver_email
+        self.time = time
 
     def get_id(self):
         return self.id

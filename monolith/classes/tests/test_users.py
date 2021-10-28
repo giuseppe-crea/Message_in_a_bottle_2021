@@ -1,7 +1,6 @@
 import unittest
-import datetime
 
-from monolith.classes.tests.utils import get_testing_app, login, create_user
+from monolith.classes.tests.utils import get_testing_app, create_user
 
 
 class TestHome(unittest.TestCase):

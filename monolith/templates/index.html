@@ -2,7 +2,8 @@
 
 {% if current_user.is_authenticated %}
   Hi {{ current_user.firstname }}! 
-  <a href="/inbox">Check inbox</a> or <a href="/send">Send a message</a> or 
+  <a href="/inbox">Check inbox</a> or <a href="/send">Send a message</a> or
+  <a href="/send_draft_list">See drafts</a> or 
   <a href="/logout">Logout</a> or <a href="/unregister">Delete Account</a>
     <h2>{{ welcome }}</h2>
   Hi {{ current_user.firstname }}! <a href="/logout">Logout</a><br>

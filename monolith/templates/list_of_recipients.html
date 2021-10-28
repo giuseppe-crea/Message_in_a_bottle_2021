@@ -1,16 +1,15 @@
 <html>
+ <head>
+     <link rel="stylesheet" href="../static/css/list_of_recipients.css">
+     <title>List of Recipients</title>
+ </head>
  <body>
+ <h2> Possible Recipients: </h2>
   <form action="" method="POST">
     {{ form.hidden_tag() }}
-    <dl>
-     {% for subfield in form.radio_form %}
-     <tr>
-         <td> <h4> {{ subfield}} {{ subfield.label }} </h4> </td>
-     </tr>
-     {% endfor %}
-    </dl>
-    <p>
-    <input type=submit value="Choose Recipient">
+    {{ form.multiple_field_form }}
+    <br>
+    <input type=submit value="Choose Recipients">
   </form>
  </body>
 </html>
