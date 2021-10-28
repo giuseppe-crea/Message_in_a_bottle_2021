@@ -10,8 +10,8 @@ users = Blueprint('users', __name__)
 
 @users.route('/users')
 def _users():
-    _users = db.session.query(User)
-    return render_template("users.html", users=_users)
+    users_query = db.session.query(User)
+    return render_template("users.html", users=users_query)
 
 
 @users.route('/create_user', methods=['POST', 'GET'])

@@ -25,6 +25,7 @@ def check(email):
         return False
 
 
+# noinspection PyUnusedLocal
 @send.route('/send', methods=['POST', 'GET'])
 @login_required
 # data is a default parameter used for recipient setting
@@ -63,8 +64,6 @@ def _send(data=""):
                     correctly_sent.append(address)
                 else:
                     not_correctly_sent.append(address)
-            if len(correctly_sent) > 0:
-                db.session.commit()
         else:
             return render_template('error_template.html', form=form)
         return render_template(
