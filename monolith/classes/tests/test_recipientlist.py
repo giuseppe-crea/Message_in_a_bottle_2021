@@ -108,7 +108,7 @@ class TestRecipientList(unittest.TestCase):
                 "password"
             )
             assert rv.status_code == 200
-
+            assert b'tester' in rv.data
             # create a possible recipient
             rv = create_user(
                 tested_app,
@@ -119,7 +119,7 @@ class TestRecipientList(unittest.TestCase):
                 "password"
             )
             assert rv.status_code == 200
-
+            assert b'firstname1' in rv.data
             # create a second possible recipient
             rv = create_user(
                 tested_app,
@@ -130,7 +130,7 @@ class TestRecipientList(unittest.TestCase):
                 "password"
             )
             assert rv.status_code == 200
-
+            assert b'firstname2' in rv.data
             # login with the tester user
             response = login(tested_app, 'tester@example.com', 'password')
             self.assertIn(b'Hi tester', response.data)
@@ -153,6 +153,5 @@ class TestRecipientList(unittest.TestCase):
             )
 
             assert rv.status_code == 302
-            assert rv.location == "http://localhost/send?" \
-                                  "data=first_recipient%40example.com%2C" \
-                                  "second_recipient%40example.com"
+            print(rv.location)
+            assert rv.location == "http://localhost/send?data=first_recipient%40example.com%2C+second_recipient%40example.com"

@@ -47,6 +47,7 @@ def _send(_id, data=""):
             message, user_input = \
                 form.data['message'], form.data['recipient']
             time = form.data['time']
+            print(user_input)
             to_parse = user_input.split(', ')
             current_user_mail = getattr(current_user, 'email')
             if request.form.get("save_button"):
@@ -75,7 +76,6 @@ def get_message():
 
 
 @send.route('/list_of_recipients', methods=['POST', 'GET'])
-@login_required
 def _display_users():
     # instantiate the form
     form = RecipientsListForm()
@@ -92,7 +92,7 @@ def _display_users():
             selected_recipient_list = \
                 request.form.getlist('multiple_field_form')
             # create a dictionary to construct the right structure
-            payload = {'email_list': ','.join(selected_recipient_list)}
+            payload = {'email_list': ', '.join(selected_recipient_list)}
             # send a list of comma-separated emails
             # redirecting to /send
             return redirect(url_for('send._send', data=payload['email_list']))

@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 db = SQLAlchemy()
 
+
 class Draft(db.Model):
 
     __tablename__ = 'draft'
@@ -63,6 +64,9 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
+
+    def get_email(self):
+        return self.email
 
 
 class SentMessage(db.Model):

@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 import wtforms as f
@@ -21,6 +22,39 @@ class TimeValidator(object):
         if field.data < self.startdate:
             field.errors[:] = []
             raise StopValidation(self.message)
+
+
+class MailValidator(object):
+    field_flags = ('required',)
+
+    @staticmethod
+    def check(email):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        # pass the regular expression
+        # and the string into the fullmatch() method
+        if re.fullmatch(regex, email):
+            return True
+        else:
+            return False
+
+    def __init__(self, mails=[], message=None):
+        self.mails = []
+        if not message:
+            message = "You must specify at least one valid sender! "
+        self.message = message
+
+    def __call__(self, form, field):
+        self.mails = []
+        to_parse = field.data.split(', ')
+        for address in to_parse:
+            address = address.strip()
+            if self.check(address):
+                self.mails.append(address)
+        if len(self.mails) < 1:
+            field.errors[:] = []
+            raise StopValidation(self.message)
+        else:
+            field.data = ', '.join(self.mails)
 
 
 time_validator = TimeValidator
@@ -53,7 +87,10 @@ class SendForm(FlaskForm):
     )
     # more than one user is supported,
     # insert multiple mail addresses separated by a comma
-    recipient = f.StringField('Recipient', validators=[InputRequired()])
+    recipient = f.StringField(
+        'Recipient',
+        validators=[InputRequired(), MailValidator()]
+    )
     time = DateTimeLocalField(
         'Send on',
         format='%Y-%m-%dT%H:%M',

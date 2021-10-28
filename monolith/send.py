@@ -3,7 +3,7 @@ import re
 from html import escape
 from math import floor
 from monolith.background import deliver_message
-from database import db, User, Draft
+from monolith.database import db, User, Draft
 
 
 def check(email):
@@ -17,18 +17,14 @@ def check(email):
 
 
 def send_messages(to_parse, current_user_mail, time, message):
-    real_recipients = []
     correctly_sent = []
     not_correctly_sent = []
-    for address in to_parse:
-        address = address.strip()
-        if check(address):
-            real_recipients.append(escape(address))
     # find users in database
     # if user found, enqueue, otherwise print error
-    for address in real_recipients:
-        exists = db.session.query(User.id). \
-                     filter_by(email=address).first() is not None
+    for address in to_parse:
+        address = address.strip()
+        exists = db.session.query(User.id).\
+            filter_by(email=address).first() is not None
         if exists and not address == current_user_mail:
             # enqueue message with celery
             # TODO: find out what the proper format for
@@ -50,6 +46,5 @@ def save_draft(current_user_mail, recipients, msg, time):
     new_draft = Draft()
     # TODO: Maybe implement defaults for missing fields
     new_draft.add_new_draft(current_user_mail, recipients, msg, time)
-
     db.session.add(new_draft)
     db.session.commit()
