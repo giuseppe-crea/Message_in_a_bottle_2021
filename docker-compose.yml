@@ -1,0 +1,25 @@
+version: '3'
+services:
+  web:
+    build:
+      dockerfile: DockerfileWeb
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - celery
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  celery:
+    build:
+      dockerfile: DockerfileCelery
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+    links:
+      - redis
