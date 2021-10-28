@@ -3,7 +3,7 @@ import re
 from html import escape
 from math import floor
 from monolith.background import deliver_message
-from database import db, User
+from database import db, User, Draft
 
 
 def check(email):
@@ -44,3 +44,12 @@ def send_messages(to_parse, current_user_mail, time, message):
         else:
             not_correctly_sent.append(address)
     return correctly_sent, not_correctly_sent
+
+
+def save_draft(current_user_mail, recipients, msg, time):
+    new_draft = Draft()
+    # TODO: Maybe implement defaults for missing fields
+    new_draft.add_new_draft(current_user_mail, recipients, msg, time)
+
+    db.session.add(new_draft)
+    db.session.commit()
