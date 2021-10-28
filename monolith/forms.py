@@ -4,7 +4,7 @@ import wtforms as f
 from flask_wtf import FlaskForm
 from wtforms.validators import StopValidation, InputRequired, Length
 from wtforms.fields.html5 import DateTimeLocalField
-from wtforms import widgets, SelectMultipleField, BooleanField
+from wtforms import widgets, SelectMultipleField, BooleanField, SubmitField
 
 
 class TimeValidator(object):
@@ -59,8 +59,7 @@ class SendForm(FlaskForm):
         format='%Y-%m-%dT%H:%M',
         validators=[InputRequired(), time_validator(startdate=datetime.now())]
     )
-    is_draft = BooleanField('Is draft')
-    display = ['message', 'time', 'recipient', 'is_draft']
+    display = ['message', 'time', 'recipient']
 
 
 # custom class to display checkboxes in the form, based on SelectMultipleField

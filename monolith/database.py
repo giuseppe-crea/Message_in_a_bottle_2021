@@ -11,7 +11,7 @@ class Draft(db.Model):
     sender_email = db.Column(db.Unicode(128), nullable=True)
     recipients = db.Column(db.Unicode(128), nullable=True)
     message = db.Column(db.Unicode(1024), nullable=True)
-    # delivery_date = db.Column(db.DateTime, nullable=True)
+    delivery_date = db.Column(db.Unicode(128), nullable=False)
 
     def __init__(self, *args, **kw):
         super(Draft, self).__init__(*args, **kw)
@@ -20,7 +20,8 @@ class Draft(db.Model):
         self.sender_email = sender_email
         self.recipients = recipients
         self.message = message
-        # self.delivery_date = delivery_date
+        self.delivery_date = delivery_date
+
 
 class User(db.Model):
 

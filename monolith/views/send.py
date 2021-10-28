@@ -11,6 +11,7 @@ from monolith.database import Draft, User, db
 from monolith.forms import SendForm, RecipientsListForm
 from monolith.auth import current_user
 from monolith.background import deliver_message
+from monolith.send import send_messages
 
 send = Blueprint('send', __name__)
 
@@ -24,8 +25,10 @@ def check(email):
     else:
         return False
 
+
 def save_draft(form):
-    msg, recipients, time = html.escape(form.data['message']), form.data['recipient'], form.data['time']
+    msg = html.escape(form.data['message'])
+    recipients, time = form.data['recipient'], form.data['time']
     new_draft = Draft()
     new_draft.add_new_draft(current_user.email, recipients, msg, time)
 
@@ -33,6 +36,7 @@ def save_draft(form):
     db.session.commit()        
 
 
+# noinspection PyUnusedLocal
 @send.route('/send', methods=['POST', 'GET'])
 @login_required
 # data is a default parameter used for recipient setting
@@ -44,113 +48,71 @@ def _send(data=""):
         real_recipients = []
         if form.validate_on_submit():
             message, user_input = \
-                html.escape(form.data['message']), form.data['recipient']
-            is_draft = form.data['is_draft']
-            to_parse = user_input.split(', ')
-            
-            if is_draft == True:
+                form.data['message'], form.data['recipient']
+            if request.form.get("save_button"):
                 save_draft(form)
                 return redirect('/')
-
             time = form.data['time']
-            for address in to_parse:
-                address = address.strip()
-                if check(address):
-                    real_recipients.append(escape(address))
-            # find users in database
-            # if user found, enqueue, otherwise print error
+            to_parse = user_input.split(', ')
             current_user_mail = getattr(current_user, 'email')
-            for address in real_recipients:
-                exists = db.session.query(User.id).\
-                             filter_by(email=address).first() is not None
-                if exists and not address == current_user_mail:
-                    # enqueue message with celery
-                    # TODO: find out what the proper format for
-                    #  ETA is and replace delay
-                    first_time = datetime.now()
-                    difference = time - first_time
-                    timedelta_seconds = floor(difference.total_seconds())
-                    deliver_message.apply_async(
-                        (message, current_user_mail, address, time),
-                        countdown=timedelta_seconds
-                    )
-                    correctly_sent.append(address)
-                else:
-                    not_correctly_sent.append(address)
-            if len(correctly_sent) > 0:
-                db.session.commit()
+            correctly_sent, not_correctly_sent = \
+                send_messages(to_parse, current_user_mail, time, message)
         else:
             return render_template('error_template.html', form=form)
         return render_template(
             'done_sending.html',
             users1=correctly_sent,
             users2=not_correctly_sent,
-            text=html.unescape(message)
+            text=message
         )
     else:
         return render_template('send.html', form=form)
 
+
 @send.route('/send/<id>', methods=['POST', 'GET'])
+@login_required
 def retrieve_one_msg(id):
     form = SendForm()
-    draft = Draft().query.filter_by(id = int(id), sender_email=current_user.email).one()
+    draft = Draft().query.filter_by(
+        id=int(id),
+        sender_email=current_user.email
+    ).one()
     form.message.data = draft.message
     form.recipient.data = draft.recipients
-
-    correctly_sent = []
-    not_correctly_sent = []
+    form.time.data = \
+        datetime.strptime(draft.delivery_date, '%Y-%m-%d %H:%M:%S')
     if request.method == 'POST':
-        real_recipients = []
         if form.validate_on_submit():
             message, user_input = \
                 html.escape(form.data['message']), form.data['recipient']
+            if request.form.get("save_button"):
+                save_draft(form)
+                return redirect('/')
             to_parse = user_input.split(', ')
-            
             time = form.data['time']
-            for address in to_parse:
-                address = address.strip()
-                if check(address):
-                    real_recipients.append(escape(address))
-            # find users in database
-            # if user found, enqueue, otherwise print error
             current_user_mail = getattr(current_user, 'email')
-            for address in real_recipients:
-                exists = db.session.query(User.id).\
-                             filter_by(email=address).first() is not None
-                if exists and not address == current_user_mail:
-                    # enqueue message with celery
-                    # TODO: find out what the proper format for
-                    #  ETA is and replace delay
-                    first_time = datetime.now()
-                    difference = time - first_time
-                    timedelta_seconds = floor(difference.total_seconds())
-                    deliver_message.apply_async(
-                        (message, current_user_mail, address, time),
-                        countdown=timedelta_seconds
-                    )
-                    correctly_sent.append(address)
-                else:
-                    not_correctly_sent.append(address)
-            if len(correctly_sent) > 0:
-                db.session.commit()
+            correctly_sent, not_correctly_sent = \
+                send_messages(to_parse, current_user_mail, time, message)
         else:
             return render_template('error_template.html', form=form)
         return render_template(
             'done_sending.html',
             users1=correctly_sent,
             users2=not_correctly_sent,
-            text=html.unescape(message)
+            text=message
         )
-
     return render_template('send.html', form=form)
 
+
 @send.route('/send_draft_list', methods=['GET'])
+@login_required
 def get_message():
-   drafts = Draft().query.filter_by(sender_email=current_user.email).all()
-   return render_template('list/draft_list.html', drafts = drafts)
+    drafts = Draft().query.filter_by(sender_email=current_user.email).all()
+    return render_template('list/draft_list.html', drafts=drafts)
 
 
 @send.route('/list_of_recipients', methods=['POST', 'GET'])
+@login_required
 def _display_users():
 
     # instantiate the form

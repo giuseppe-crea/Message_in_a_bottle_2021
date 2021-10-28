@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <title>Error!</title>
-      {% for field in form.display %}
-        {% if form[field].errors %}
-            {% for e in form[field].errors %}
-            <p class="help-block">{{ e }}</p>
-            {% endfor %}
-        {% endif %}
-      {% endfor %}
-  <a href="/send">Go back</a> or <a href="/logout">Logout</a>
-  </head>
-  <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error!</title>
+     {% for field in form.display %}
+       {% if form[field].errors %}
+          {% for e in form[field].errors %}
+           <p class="help-block">{{ e }}</p>
+          {% endfor %}
+       {% endif %}
+     {% endfor %}
+<a href="/send">Go back</a> or <a href="/logout">Logout</a>
+</head>
+<body>
 
-  </body>
+</body>
 </html>
