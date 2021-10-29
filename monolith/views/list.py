@@ -45,7 +45,10 @@ def ajax_livesearch():
         recipients_found = db.session.query(User).all()
     else:
         recipients_found = db.session.query(User). \
-            filter(User.email.like(search) | User.firstname.like(search) | User.lastname.like(search)).all()
+            filter(User.email.like(search) \
+                   | User.firstname.like(search) \
+                   | User.lastname.like(search)). \
+                    limit(100).all() # avoiding a huge result
 
     # instantiate the form
     form = RecipientsListForm()
