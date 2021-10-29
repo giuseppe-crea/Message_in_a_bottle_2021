@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blacklist</title>
+</head>
+<a href="/">Home</a><br>
+<a href="/blacklist/add">add user</a> or <a href="/blacklist/remove">remove user</a><br>
+{% if result != [] %}
+<h1>Your blacklist:</h1>
+<ul>
+    {% for value in result %}
+        <li> {{ value }} </li>
+    {% endfor %}
+</ul>
+{% else %}
+<br>Your blacklist is empty!
+{% endif %}
+</html>

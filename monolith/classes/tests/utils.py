@@ -29,10 +29,10 @@ def get_testing_app():
 
 def login(client, username, password):
     return client.post(
-                '/login',
-                data={'email': username, 'password': password},
-                follow_redirects=True
-            )
+        '/login',
+        data={'email': username, 'password': password},
+        follow_redirects=True
+    )
 
 
 def create_user(client, mail, firstname, lastname, date_of_birth, password):
@@ -45,3 +45,34 @@ def create_user(client, mail, firstname, lastname, date_of_birth, password):
               'password': password},
         follow_redirects=True
     )
+
+
+# a counter to create uniques example users
+next_example_user = 1
+
+
+def create_ex_usr(client):
+    """
+    Create an unique example user with username = user<counter and
+    this data:
+    (username@example.com, username, username, "02/02/2000", passusername)
+    :param client: the testing app
+    :return: (email, password) of the new user
+    """
+    global next_example_user
+    name = "user" + str(next_example_user)
+    next_example_user += 1
+    email = name + "@example.com"
+    password = "pass" + name
+    create_user(client, email, name, name, "02/02/2000", password)
+    return email, password
+
+
+def create_ex_users(client, number):
+    """
+    Create multiple example users
+    :param client: the testing app
+    :param number: number of users to create
+    :return: list of (email, password) tuple of the new users
+    """
+    return [create_ex_usr(client) for _ in range(number)]
