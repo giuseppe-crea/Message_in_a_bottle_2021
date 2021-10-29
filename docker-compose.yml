@@ -3,6 +3,7 @@ services:
   web:
     container_name: flask-monolith
     build:
+      context: .
       dockerfile: DockerfileWeb
     ports:
       - "5000:5000"
@@ -18,6 +19,7 @@ services:
   celery:
     container_name: celery
     build:
+      context: .
       dockerfile: DockerfileCelery
     volumes:
       - .:/code
