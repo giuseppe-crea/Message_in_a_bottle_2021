@@ -37,17 +37,15 @@ def _display_users():
 @list_blueprint.route('/live_search', methods=['POST'])
 @login_required
 def ajax_livesearch():
-    search_word = request.form['query']
-    search = "%{}%".format(search_word)
 
-    print("LOG_DEBUG: " + search_word)
-
-    recipients_found = []
-    if search_word != '':
+    try:
+        search_word = request.form['query']
+        search = "%{}%".format(search_word)
+    except:
+        recipients_found = db.session.query(User).all()
+    else:
         recipients_found = db.session.query(User). \
             filter(User.email.like(search) | User.firstname.like(search) | User.lastname.like(search)).all()
-    else:
-        recipients_found = db.session.query(User).oder_by(User.lastname).all()
 
     # instantiate the form
     form = RecipientsListForm()
@@ -55,6 +53,6 @@ def ajax_livesearch():
     # sets choices
     form.multiple_field_form.choices = \
         [(user.email, user.lastname + ' ' + user.firstname + ': ' + user.email)
-            for user in recipients_found]
+         for user in recipients_found]
 
     return jsonify({'htmlresponse': render_template('search_response.html', form=form)})
