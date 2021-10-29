@@ -42,7 +42,6 @@ def _send(_id, data=""):
     correctly_sent = []
     not_correctly_sent = []
     if request.method == 'POST':
-        real_recipients = []
         if form.validate_on_submit():
             message, user_input = \
                 form.data['message'], form.data['recipient']

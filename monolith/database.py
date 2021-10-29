@@ -7,7 +7,7 @@ db = SQLAlchemy()
 class Draft(db.Model):
 
     __tablename__ = 'draft'
-    
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     sender_email = db.Column(db.Unicode(128), nullable=True)
     recipients = db.Column(db.Unicode(128), nullable=True)
