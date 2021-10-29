@@ -3,7 +3,7 @@ from monolith.database import db, SentMessage
 import os
 
 if os.environ.get('DOCKER') is not None:
-    BACKEND = BROKER = 'redis://message_in_a_bottle-redis-1:6379/0'
+    BACKEND = BROKER = 'redis://redis:6379/0'
 else:
     BACKEND = BROKER = 'redis://localhost:6379/0'
 celery = Celery(__name__, backend=BACKEND, broker=BROKER)

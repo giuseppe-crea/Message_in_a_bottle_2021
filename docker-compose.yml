@@ -1,6 +1,7 @@
 version: '3'
 services:
   web:
+    container_name: flask-monolith
     build:
       dockerfile: DockerfileWeb
     ports:
@@ -10,10 +11,12 @@ services:
     depends_on:
       - redis
   redis:
+    container_name: redis
     image: "redis:alpine"
     ports:
       - "6379:6379"
   celery:
+    container_name: celery
     build:
       dockerfile: DockerfileCelery
     volumes:
