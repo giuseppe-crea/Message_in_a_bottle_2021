@@ -1,9 +1,8 @@
-//templates/response.html
-<h2> Possible Recipients: </h2>
-  <form action="" method="POST">
-    <input type=submit value="Choose Recipients">
-    <br>
-    {{ form.hidden_tag() }}
-    {{ form.multiple_field_form }}
-
-  </form>
+<br>
+<form action="" method="POST">
+  <br>
+  <input type=submit value="Choose Recipients">
+  <br><br>
+  {{ form.hidden_tag() }}
+  {{ form.multiple_field_form }}
+</form>
