@@ -42,7 +42,7 @@ class MailValidator(object):
             mails = []
         self.mails = mails
         if not message:
-            message = "You must specify at least one valid sender! "
+            message = "You must specify at least one valid sender!"
         self.message = message
 
     def __call__(self, form, field):
@@ -55,8 +55,14 @@ class MailValidator(object):
         if len(self.mails) < 1:
             field.errors[:] = []
             raise StopValidation(self.message)
+        elif len(self.mails) == 1:
+            field.data = self.mails.pop(0)
         else:
             field.data = ', '.join(self.mails)
+
+
+time_validator = TimeValidator
+mail_validator = MailValidator
 
 
 class LoginForm(FlaskForm):
@@ -68,7 +74,7 @@ class LoginForm(FlaskForm):
 class UserForm(FlaskForm):
     email = f.StringField(
         'email',
-        validators=[InputRequired(), MailValidator(message="Invalid email!")])
+        validators=[InputRequired(), mail_validator(message="Invalid email!")])
     firstname = f.StringField('firstname', validators=[InputRequired()])
     lastname = f.StringField('lastname', validators=[InputRequired()])
     password = f.PasswordField('password', validators=[InputRequired()])
@@ -90,12 +96,12 @@ class SendForm(FlaskForm):
     # insert multiple mail addresses separated by a comma
     recipient = f.StringField(
         'Recipient',
-        validators=[InputRequired(), MailValidator()]
+        validators=[InputRequired(), mail_validator()]
     )
     time = DateTimeLocalField(
         'Send on',
         format='%Y-%m-%dT%H:%M',
-        validators=[InputRequired(), TimeValidator()]
+        validators=[InputRequired(), time_validator(startdate=datetime.now())]
     )
     display = ['message', 'time', 'recipient']
 

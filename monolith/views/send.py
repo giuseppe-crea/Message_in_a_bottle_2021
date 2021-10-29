@@ -24,12 +24,12 @@ def check(email):
 
 # noinspection PyUnusedLocal
 @send.route('/send', methods=['POST', 'GET'], defaults={'_id': None})
-@send.route('/send/<_id>')
+@send.route('/send/<_id>', methods=['POST', 'GET'])
 @login_required
 # data is a default parameter used for recipient setting
 def _send(_id, data=""):
     form = SendForm()
-    if _id is not None:
+    if _id is not None and request.method == 'GET':
         # we are viewing a draft, load it
         draft = Draft().query.filter_by(
             id=int(_id),

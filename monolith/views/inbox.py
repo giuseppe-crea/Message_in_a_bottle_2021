@@ -17,7 +17,7 @@ def _inbox(_id):
         try:
             message = SentMessage().query.filter_by(
                 id=int(_id),
-                receiver_email='mpme@mail.com'
+                receiver_email=user_mail
             ).one()
             return render_template("list/inbox_one.html", message=message)
         except NoResultFound:
