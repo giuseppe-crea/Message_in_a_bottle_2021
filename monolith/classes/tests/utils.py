@@ -1,5 +1,4 @@
 import os
-
 from monolith import app
 from monolith.auth import login_manager
 from monolith.database import db
@@ -27,6 +26,8 @@ def get_testing_app():
     return app.test_client()
 
 
+# utility function to log in a user in the tests
+# through a post request to /login
 def login(client, username, password):
     return client.post(
                 '/login',
@@ -35,6 +36,8 @@ def login(client, username, password):
             )
 
 
+# utility function to create a new user in the tests
+# through a post request to /create_user
 def create_user(client, mail, firstname, lastname, date_of_birth, password):
     return client.post(
         '/create_user',

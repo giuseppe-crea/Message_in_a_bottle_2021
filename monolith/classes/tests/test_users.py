@@ -3,7 +3,7 @@ import unittest
 from monolith.classes.tests.utils import get_testing_app, create_user
 
 
-class TestHome(unittest.TestCase):
+class TestCreate(unittest.TestCase):
     def test_create_user(self):
         tested_app = get_testing_app()
         with tested_app:
