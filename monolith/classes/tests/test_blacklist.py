@@ -1,6 +1,7 @@
 import unittest
 
 from monolith.classes.tests import utils
+from monolith.views.blacklist import _is_blacklisted
 
 
 class TestBlacklist(unittest.TestCase):
@@ -137,3 +138,21 @@ class TestBlacklist(unittest.TestCase):
             # expect that it is not present
             response = self.app.get('/blacklist')
             self.assertNotIn(bytes(email, 'utf-8'), response.data)
+
+    def test_blacklist_check(self):
+        """
+        Test the internal view.blacklist._is_blacklisted function
+        """
+
+        with self.app:
+            # create a new user
+            receiver, psw = utils.create_ex_usr(self.app)
+            # the user logs
+            utils.login(self.app, receiver, psw)
+            # create a second user
+            sender, _ = utils.create_ex_usr(self.app)
+
+            self._add_user(sender)
+
+            self.assertEqual(_is_blacklisted(sender, receiver), True)
+            self.assertEqual(_is_blacklisted(receiver, sender), False)

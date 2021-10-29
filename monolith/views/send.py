@@ -7,10 +7,11 @@ from flask import Blueprint, render_template, request, escape, redirect, \
     url_for
 from flask_login import login_required
 
-from monolith.database import User, db
-from monolith.forms import SendForm, RecipientsListForm
 from monolith.auth import current_user
 from monolith.background import deliver_message
+from monolith.database import User, db
+from monolith.forms import SendForm, RecipientsListForm
+from monolith.views.blacklist import _is_blacklisted
 
 send = Blueprint('send', __name__)
 
@@ -47,9 +48,11 @@ def _send(data=""):
             # if user found, enqueue, otherwise print error
             current_user_mail = getattr(current_user, 'email')
             for address in real_recipients:
-                exists = db.session.query(User.id).\
+                exists = db.session.query(User.id). \
                              filter_by(email=address).first() is not None
-                if exists and not address == current_user_mail:
+                if exists and not address == current_user_mail \
+                        and not _is_blacklisted(sender=current_user_mail,
+                                                receiver=address):
                     # enqueue message with celery
                     # TODO: find out what the proper format for
                     #  ETA is and replace delay
@@ -79,12 +82,11 @@ def _send(data=""):
 
 @send.route('/list_of_recipients', methods=['POST', 'GET'])
 def _display_users():
-
     # instantiate the form
     form = RecipientsListForm()
 
     # ordering alphabetically, filtering admin accounts and the sender itself
-    _users = db.session.query(User).order_by(User.lastname).\
+    _users = db.session.query(User).order_by(User.lastname). \
         filter(User.firstname != 'Admin').all()
 
     # sets choices

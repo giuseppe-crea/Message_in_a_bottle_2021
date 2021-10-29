@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 import wtforms as f
@@ -19,6 +20,23 @@ class TimeValidator(object):
 
     def __call__(self, form, field):
         if field.data < self.startdate:
+            field.errors[:] = []
+            raise StopValidation(self.message)
+
+
+class MailValidator(object):
+    field_flags = ('required',)
+
+    def __init__(self, message=None):
+        if not message:
+            message = "Mail not valid."
+        self.message = message
+
+    def __call__(self, form, field):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        # pass the regular expression
+        # and the string into the fullmatch() method
+        if not re.fullmatch(regex, field.data):
             field.errors[:] = []
             raise StopValidation(self.message)
 
@@ -80,5 +98,6 @@ class EmailForm(FlaskForm):
     """
     Requests an email to the user
     """
-    email = f.StringField('email', validators=[InputRequired()])
+    email = f.StringField('email', validators=[InputRequired(),
+                                               MailValidator()])
     display = ['email']
