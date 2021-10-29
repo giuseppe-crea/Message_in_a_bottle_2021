@@ -27,6 +27,7 @@ def deliver_message(message, sender, receiver, time):
     # TODO: RPC that notifies the receiver
     global _APP
     do_task()
+    # noinspection PyUnresolvedReferences
     with _APP.app_context():
         # create an entry in the sent table
         print("Your message is \"" + message + "\"\nTo be delivered to: " +

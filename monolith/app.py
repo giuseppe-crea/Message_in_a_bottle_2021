@@ -8,25 +8,25 @@ from monolith.views import blueprints
 
 
 def create_app():
-    app = Flask(__name__)
-    app.config['WTF_CSRF_SECRET_KEY'] = 'A SECRET KEY'
-    app.config['SECRET_KEY'] = 'ANOTHER ONE'
+    _app = Flask(__name__)
+    _app.config['WTF_CSRF_SECRET_KEY'] = 'A SECRET KEY'
+    _app.config['SECRET_KEY'] = 'ANOTHER ONE'
     # disable CSRF protection when the app is running in dev mode
-    if app.config['ENV'] == 'development':
-        app.config['WTF_CSRF_ENABLED'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../mmiab.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    if _app.config['ENV'] == 'development':
+        _app.config['WTF_CSRF_ENABLED'] = False
+    _app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../mmiab.db'
+    _app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     for bp in blueprints:
-        app.register_blueprint(bp)
-        bp.app = app
+        _app.register_blueprint(bp)
+        bp.app = _app
 
-    db.init_app(app)
-    login_manager.init_app(app)
-    db.create_all(app=app)
+    db.init_app(_app)
+    login_manager.init_app(_app)
+    db.create_all(app=_app)
 
     # create a first admin user
-    with app.app_context():
+    with _app.app_context():
         q = db.session.query(User).filter(User.email == 'example@example.com')
         user = q.first()
         if user is None:
@@ -40,7 +40,7 @@ def create_app():
             db.session.add(example)
             db.session.commit()
 
-    return app
+    return _app
 
 
 app = create_app()

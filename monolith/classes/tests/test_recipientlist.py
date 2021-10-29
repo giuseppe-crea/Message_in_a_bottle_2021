@@ -153,5 +153,7 @@ class TestRecipientList(unittest.TestCase):
             )
 
             assert rv.status_code == 302
-            print(rv.location)
-            assert rv.location == "http://localhost/send?data=first_recipient%40example.com%2C+second_recipient%40example.com"
+            expected_str = "http://localhost/send?data=" + \
+                           "first_recipient%40example.com" + \
+                           "%2C+second_recipient%40example.com"
+            assert rv.location == expected_str

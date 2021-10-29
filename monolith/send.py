@@ -1,6 +1,5 @@
 from datetime import datetime
 import re
-from html import escape
 from math import floor
 from monolith.background import deliver_message
 from monolith.database import db, User, Draft

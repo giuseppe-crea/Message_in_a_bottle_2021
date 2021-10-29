@@ -35,9 +35,10 @@ def create_user():
                 db.session.commit()
                 return redirect('/users')
             else:
-                abort(400)
+                form.email.errors.append("Mail already in use.")
+                return render_template('error_template.html', form=form)
         else:
-            abort(400)
+            return render_template('error_template.html', form=form)
     elif request.method == 'GET':
         return render_template('create_user.html', form=form)
     else:

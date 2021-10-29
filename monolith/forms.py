@@ -5,7 +5,7 @@ import wtforms as f
 from flask_wtf import FlaskForm
 from wtforms.validators import StopValidation, InputRequired, Length
 from wtforms.fields.html5 import DateTimeLocalField
-from wtforms import widgets, SelectMultipleField, BooleanField, SubmitField
+from wtforms import widgets, SelectMultipleField
 
 
 class TimeValidator(object):
@@ -37,8 +37,10 @@ class MailValidator(object):
         else:
             return False
 
-    def __init__(self, mails=[], message=None):
-        self.mails = []
+    def __init__(self, mails=None, message=None):
+        if mails is None:
+            mails = []
+        self.mails = mails
         if not message:
             message = "You must specify at least one valid sender! "
         self.message = message
@@ -57,9 +59,6 @@ class MailValidator(object):
             field.data = ', '.join(self.mails)
 
 
-time_validator = TimeValidator
-
-
 class LoginForm(FlaskForm):
     email = f.StringField('email', validators=[InputRequired()])
     password = f.PasswordField('password', validators=[InputRequired()])
@@ -67,7 +66,9 @@ class LoginForm(FlaskForm):
 
 
 class UserForm(FlaskForm):
-    email = f.StringField('email', validators=[InputRequired()])
+    email = f.StringField(
+        'email',
+        validators=[InputRequired(), MailValidator(message="Invalid email!")])
     firstname = f.StringField('firstname', validators=[InputRequired()])
     lastname = f.StringField('lastname', validators=[InputRequired()])
     password = f.PasswordField('password', validators=[InputRequired()])
@@ -94,7 +95,7 @@ class SendForm(FlaskForm):
     time = DateTimeLocalField(
         'Send on',
         format='%Y-%m-%dT%H:%M',
-        validators=[InputRequired(), time_validator(startdate=datetime.now())]
+        validators=[InputRequired(), TimeValidator()]
     )
     display = ['message', 'time', 'recipient']
 
