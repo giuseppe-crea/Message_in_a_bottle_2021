@@ -27,10 +27,6 @@ def get_testing_app():
     return app.test_client()
 
 
-def get_app():
-    return app
-
-
 def login(client, username, password):
     return client.post(
                 '/login',

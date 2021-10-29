@@ -1,4 +1,4 @@
-from celery import Celery, shared_task
+from celery import Celery
 from monolith.database import db, SentMessage
 import os
 
@@ -19,7 +19,7 @@ def do_task():
         from monolith.app import create_app
         _APP = create_app()
         db.init_app(_APP)
-    return []
+    return _APP, celery
 
 
 @celery.task
