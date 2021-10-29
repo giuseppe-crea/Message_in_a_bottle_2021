@@ -1,8 +1,7 @@
-from datetime import datetime
 import re
-from math import floor
 from monolith.background import deliver_message
 from monolith.database import db, User, Draft
+import pytz
 
 
 def check(email):
@@ -20,20 +19,17 @@ def send_messages(to_parse, current_user_mail, time, message):
     not_correctly_sent = []
     # find users in database
     # if user found, enqueue, otherwise print error
+    # TODO: generalize this based on the user, somehow
+    time_aware = pytz.timezone('Europe/Rome').localize(time)
     for address in to_parse:
         address = address.strip()
         exists = db.session.query(User.id).\
             filter_by(email=address).first() is not None
         if exists and not address == current_user_mail:
             # enqueue message with celery
-            # TODO: find out what the proper format for
-            #  ETA is and replace delay
-            first_time = datetime.now()
-            difference = time - first_time
-            timedelta_seconds = floor(difference.total_seconds())
             deliver_message.apply_async(
-                (message, current_user_mail, address, time),
-                countdown=timedelta_seconds
+                (None, message, current_user_mail, address, time),
+                eta=time_aware
             )
             correctly_sent.append(address)
         else:

@@ -46,7 +46,6 @@ def _send(_id, data=""):
             message, user_input = \
                 form.data['message'], form.data['recipient']
             time = form.data['time']
-            print(user_input)
             to_parse = user_input.split(', ')
             current_user_mail = getattr(current_user, 'email')
             if request.form.get("save_button"):

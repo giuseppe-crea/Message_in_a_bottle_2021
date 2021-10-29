@@ -11,15 +11,18 @@ from wtforms import widgets, SelectMultipleField
 class TimeValidator(object):
     field_flags = ('required',)
 
+    # this validator strips times down to the minute
+    # our delivery method will instantly deliver anything with a negative
+    # timestamp, making this reliable
     def __init__(self, startdate=datetime.now(), message=None):
-        self.startdate = startdate
+        self.startdate = startdate.replace(second=0, microsecond=0)
         if not message:
             message = "You can't set a delivery date earlier than " + \
-                      startdate.strftime("%m/%d/%Y, %H:%M:%S") + "!"
+                      startdate.strftime("%m/%d/%Y, %H:%M") + "!"
         self.message = message
 
     def __call__(self, form, field):
-        if field.data < self.startdate:
+        if field.data.replace(second=0, microsecond=0) < self.startdate:
             field.errors[:] = []
             raise StopValidation(self.message)
 
