@@ -37,4 +37,5 @@ class TestHome(unittest.TestCase):
             "Admin",
             "01/01/1990",
             "admin")
-        assert rv.status_code == 400
+        assert rv.status_code == 200
+        assert b'already in use' in rv.data
