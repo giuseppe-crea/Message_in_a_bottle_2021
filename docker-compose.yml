@@ -9,7 +9,6 @@ services:
       - .:/code
     depends_on:
       - redis
-      - celery
   redis:
     image: "redis:alpine"
     ports:
