@@ -1,17 +1,6 @@
-import re
 from monolith.background import deliver_message
 from monolith.database import db, User, Draft
 import pytz
-
-
-def check(email):
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    # pass the regular expression
-    # and the string into the fullmatch() method
-    if re.fullmatch(regex, email):
-        return True
-    else:
-        return False
 
 
 def send_messages(to_parse, current_user_mail, time, message):

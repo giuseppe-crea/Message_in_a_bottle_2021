@@ -1,8 +1,9 @@
+import datetime
 import os
 
 from monolith import app
 from monolith.auth import login_manager
-from monolith.database import db
+from monolith.database import db, User
 
 
 def get_testing_app():
@@ -16,14 +17,16 @@ def get_testing_app():
     db.init_app(app)
     login_manager.init_app(app)
     db.create_all(app=app)
-    create_user(
-        app.test_client(),
-        'default@example.com',
-        'Admin',
-        'Default',
-        '05/10/2020',
-        'admin'
-    )
+    with app.app_context():
+        example = User()
+        example.firstname = 'Admin'
+        example.lastname = 'Admin'
+        example.email = 'default@example.com'
+        example.date_of_birth = datetime.datetime(2020, 10, 5)
+        example.is_admin = True
+        example.set_password('admin')
+        db.session.add(example)
+        db.session.commit()
     return app.test_client()
 
 

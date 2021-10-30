@@ -118,6 +118,16 @@ class TestHome(unittest.TestCase):
                 follow_redirects=True
             )
             assert b'This field is required.' in rv.data
+            # trying to send only invalid mails
+            rv = tested_app.post(
+                '/send',
+                data={
+                    'message': "Short test message",
+                    'recipient': "sender@example.",
+                    'time': "2199-01-01T01:01"},
+                follow_redirects=True
+            )
+            assert b'You must specify at least one valid sender!' in rv.data
             # try to logout and access send
             tested_app.get('/logout')
             rv = tested_app.post(
@@ -131,3 +141,11 @@ class TestHome(unittest.TestCase):
             assert rv.status_code == 401
             rv = tested_app.get('send')
             assert rv.status_code == 401
+
+    """
+    def test_check_mail(self):
+        assert check('valid@mail.com') is True
+        assert check('invalid@mail.c') is False
+        assert check('aghap39') is False
+        assert check(' arish .com') is False
+        assert check('almost @ real.com') is False"""

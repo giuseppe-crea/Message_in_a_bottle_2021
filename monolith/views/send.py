@@ -1,4 +1,3 @@
-import re
 from datetime import datetime
 
 from flask import Blueprint, render_template, request, redirect, url_for
@@ -10,16 +9,6 @@ from monolith.auth import current_user
 from monolith.send import send_messages, save_draft
 
 send = Blueprint('send', __name__)
-
-
-def check(email):
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    # pass the regular expression
-    # and the string into the fullmatch() method
-    if re.fullmatch(regex, email):
-        return True
-    else:
-        return False
 
 
 # noinspection PyUnusedLocal

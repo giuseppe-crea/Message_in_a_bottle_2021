@@ -5,5 +5,6 @@ from .users import users
 from .unreg import unreg
 from .send import send
 from .outbox import outbox
+from .admin import admin
 
-blueprints = [home, auth, users, send, unreg, outbox, inbox]
+blueprints = [home, auth, users, send, unreg, outbox, inbox, admin]
