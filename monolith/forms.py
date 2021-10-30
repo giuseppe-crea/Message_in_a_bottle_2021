@@ -132,7 +132,6 @@ class EmailForm(FlaskForm):
     display = ['email']
 
 
-
 class ReportForm(FlaskForm):
     user = f.StringField('User', validators=[InputRequired()])
     description = f.StringField(
@@ -141,7 +140,7 @@ class ReportForm(FlaskForm):
     )
     block_user = f.RadioField(
         'Blacklist User', 
-        choices=[('yes','YES'),('no','NO')],
+        choices=[('yes','YES'),('no','NO')], 
         default='yes', 
         validators=[InputRequired()]
         )

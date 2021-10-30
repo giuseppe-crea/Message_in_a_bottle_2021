@@ -20,8 +20,6 @@ def _users():
     return render_template("reports.html", reports=query_reports)
 
 
-
-
 # report a user to the admins
 # noinspection PyUnresolvedReferences
 @report.route('/report_user', methods=['GET', 'POST'])
@@ -63,16 +61,11 @@ def report_user():
             db.session.add(report)
             db.session.commit()
             
-
             # blacklist reported user
-            #if block_user == 'yes':
+            # if block_user == 'yes':
                 #todo
                 
-
             return redirect('/')
             
     else:
         raise RuntimeError('This should not happen!')
-
-
-

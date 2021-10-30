@@ -11,7 +11,7 @@ class TestReport(unittest.TestCase):
         with tested_app:
             rv = tested_app.get('/report_user')
             assert rv.status_code == 401
-    
+
     # report creation testing
     def test_report(self):
         tested_app = get_testing_app()
@@ -87,7 +87,7 @@ class TestReport(unittest.TestCase):
     def test_user_reports(self):
         tested_app = get_testing_app()
         with tested_app:
-            
+
             # a non-authenticated user cannot access the reports
             rv = tested_app.get('/reports')
             assert rv.status_code == 401
@@ -122,6 +122,3 @@ class TestReport(unittest.TestCase):
             # an admin can access the reports
             rv = tested_app.get('/reports')
             assert rv.status_code == 200
-
-
- 

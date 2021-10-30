@@ -1,4 +1,3 @@
-from monolith.views.report import report_user
 from .auth import auth
 from .home import home
 from .inbox import inbox
