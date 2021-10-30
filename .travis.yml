@@ -9,5 +9,3 @@ before_script:
   - docker run -d -p 6379:6379 redis:latest
 script:
   - tox -e $TOX_ENV
-after_script:
-  - celery -A background.celery purge -f
