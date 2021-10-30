@@ -1,18 +1,19 @@
 from datetime import datetime
 
-from flask import Blueprint, render_template, request, redirect, url_for, abort
+from flask import Blueprint, render_template, request, redirect, abort
 from flask_login import login_required
 from sqlalchemy.exc import NoResultFound
 
-from monolith.database import Draft, User, db
-from monolith.forms import SendForm, RecipientsListForm
+from monolith.database import Draft
+from monolith.forms import SendForm
 from monolith.auth import current_user
 from monolith.send import send_messages, save_draft
+
 
 send = Blueprint('send', __name__)
 
 
-# noinspection PyUnusedLocal
+# noinspection PyUnusedLocal,PyUnboundLocalVariable
 @send.route('/send', methods=['POST', 'GET'], defaults={'_id': None})
 @send.route('/send/<_id>', methods=['POST', 'GET'])
 @login_required

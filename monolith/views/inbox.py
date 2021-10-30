@@ -8,6 +8,7 @@ from monolith.database import SentMessage
 inbox = Blueprint('inbox', __name__)
 
 
+# noinspection PyUnresolvedReferences
 @inbox.route("/inbox", methods=["GET"], defaults={'_id': None})
 @inbox.route("/inbox/<_id>", methods=["GET"])
 @login_required
