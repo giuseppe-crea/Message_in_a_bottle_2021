@@ -32,8 +32,11 @@ def deliver_message(app, message, sender, receiver, time):
     # noinspection PyUnresolvedReferences
     with app.app_context():
         # create an entry in the sent table
+        print("Your message is \"" + message + "\"\nTo be delivered to: " +
+              receiver + "\nSent from: " + sender)
         unsent_message = SentMessage()
         unsent_message.add_message(message, sender, receiver, time)
         db.session.add(unsent_message)
         db.session.commit()
+
     return "Done"

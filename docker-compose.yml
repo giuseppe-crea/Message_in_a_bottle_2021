@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web:
+    container_name: flask-monolith
+    build:
+      context: .
+      dockerfile: DockerfileWeb
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  celery:
+    container_name: celery
+    build:
+      context: .
+      dockerfile: DockerfileCelery
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+    links:
+      - redis
