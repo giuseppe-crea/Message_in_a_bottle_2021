@@ -3,9 +3,9 @@ from datetime import datetime
 
 import wtforms as f
 from flask_wtf import FlaskForm
-from wtforms.validators import StopValidation, InputRequired, Length
-from wtforms.fields.html5 import DateTimeLocalField
 from wtforms import widgets, SelectMultipleField
+from wtforms.fields.html5 import DateTimeLocalField
+from wtforms.validators import StopValidation, InputRequired, Length
 
 
 class TimeValidator(object):
@@ -121,3 +121,12 @@ class RecipientsListForm(FlaskForm):
     # choices must be declared empty because it has dynamic content,
     # initialized after its instantiation
     multiple_field_form = MultiCheckboxField('Select recipients:', choices=[])
+
+
+class EmailForm(FlaskForm):
+    """
+    Requests an email to the user
+    """
+    email = f.StringField('email', validators=[InputRequired(),
+                                               MailValidator()])
+    display = ['email']
