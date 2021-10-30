@@ -1,3 +1,4 @@
+from monolith.views.report import report_user
 from .auth import auth
 from .home import home
 from .inbox import inbox
@@ -8,6 +9,7 @@ from .outbox import outbox
 from .admin import admin
 from .list import list_blueprint
 from .blacklist import blacklist
+from .report import report
 
 blueprints = [
   home,
@@ -19,5 +21,6 @@ blueprints = [
   inbox,
   admin,
   list_blueprint,
-  blacklist
+  blacklist,
+  report
 ]
