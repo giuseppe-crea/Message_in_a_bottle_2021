@@ -1,7 +1,7 @@
 import unittest
 
 from monolith.classes.tests import utils
-from monolith.views.blacklist import _is_blacklisted
+from monolith.views.blacklist import is_blacklisted
 
 
 class TestBlacklist(unittest.TestCase):
@@ -141,7 +141,7 @@ class TestBlacklist(unittest.TestCase):
 
     def test_blacklist_check(self):
         """
-        Test the internal view.blacklist._is_blacklisted function
+        Test the internal view.blacklist.is_blacklisted function
         """
 
         with self.app:
@@ -154,5 +154,5 @@ class TestBlacklist(unittest.TestCase):
 
             self._add_user(sender)
 
-            self.assertEqual(_is_blacklisted(sender, receiver), True)
-            self.assertEqual(_is_blacklisted(receiver, sender), False)
+            self.assertEqual(is_blacklisted(sender, receiver), True)
+            self.assertEqual(is_blacklisted(receiver, sender), False)

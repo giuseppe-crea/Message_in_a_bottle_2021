@@ -10,14 +10,14 @@ from .list import list_blueprint
 from .blacklist import blacklist
 
 blueprints = [
-  home, 
-  auth, 
-  users, 
-  send, 
-  unreg, 
-  outbox, 
-  inbox, 
-  admin, 
+  home,
+  auth,
+  users,
+  send,
+  unreg,
+  outbox,
+  inbox,
+  admin,
   list_blueprint,
   blacklist
 ]

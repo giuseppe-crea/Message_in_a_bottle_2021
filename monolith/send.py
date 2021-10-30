@@ -2,6 +2,8 @@ from monolith.background import deliver_message
 from monolith.database import db, User, Draft
 import pytz
 
+from monolith.views.blacklist import is_blacklisted
+
 
 def send_messages(to_parse, current_user_mail, time, message):
     correctly_sent = []
@@ -15,11 +17,15 @@ def send_messages(to_parse, current_user_mail, time, message):
         exists = db.session.query(User.id).\
             filter_by(email=address).first() is not None
         if exists and not address == current_user_mail:
-            # enqueue message with celery
-            deliver_message.apply_async(
-                (None, message, current_user_mail, address, time),
-                eta=time_aware
-            )
+            # check if the receiver has this sender blacklisted
+            if not is_blacklisted(sender=current_user_mail, receiver=address):
+                # enqueue message with celery
+                deliver_message.apply_async(
+                    (None, message, current_user_mail, address, time),
+                    eta=time_aware
+                )
+            # the sender will believe this message was correctly sent
+            # but no actual message task will be dispatched
             correctly_sent.append(address)
         else:
             not_correctly_sent.append(address)

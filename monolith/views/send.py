@@ -59,7 +59,7 @@ def _send(_id, data=""):
     else:
         return render_template('send.html', form=form)
 
- 
+
 @send.route('/send_draft_list', methods=['GET'])
 @login_required
 def get_message():

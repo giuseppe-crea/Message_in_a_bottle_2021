@@ -92,18 +92,19 @@ def delete_from_blacklist():
         # get the current user
         user = flask_login.current_user
 
-        # removee the email from the blacklist
-        blacklist = db.session.query(Blacklist).filter(Blacklist.owner ==
-                                                       user.get_id(),
-                                                       Blacklist.email == email)
-        blacklist.delete(synchronize_session=False)
+        # remove the email from the blacklist
+        _blacklist = db.session.query(Blacklist).filter(
+            Blacklist.owner == user.get_id(),
+            Blacklist.email == email
+        )
+        _blacklist.delete(synchronize_session=False)
         db.session.commit()
         return redirect('/blacklist')
 
     return render_template('request_form.html', form=form)
 
 
-def _is_blacklisted(sender, receiver):
+def is_blacklisted(sender, receiver):
     receiver_id = db.session.query(User).filter(User.email == receiver) \
         .first().id
     return db.session.query(
