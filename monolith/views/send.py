@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, abort
 from flask_login import login_required
+from sqlalchemy.exc import NoResultFound
 
 from monolith.database import Draft, User, db
 from monolith.forms import SendForm, RecipientsListForm
@@ -19,11 +20,14 @@ send = Blueprint('send', __name__)
 def _send(_id, data=""):
     form = SendForm()
     if _id is not None and request.method == 'GET':
-        # we are viewing a draft, load it
-        draft = Draft().query.filter_by(
-            id=int(_id),
-            sender_email=current_user.email
-        ).one()
+        # we are viewing a draft, load it after checking its existence
+        try:
+            draft = Draft().query.filter_by(
+                id=int(_id),
+                sender_email=current_user.email
+            ).one()
+        except NoResultFound:
+            abort(404)
         form.message.data = draft.message
         form.recipient.data = draft.recipients
         form.time.data = \
