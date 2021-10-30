@@ -5,6 +5,7 @@ from monolith.auth import current_user
 home = Blueprint('home', __name__)
 
 
+# noinspection PyUnresolvedReferences
 @home.route('/')
 def index():
     if current_user is not None and hasattr(current_user, 'id'):

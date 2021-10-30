@@ -1,29 +1,54 @@
-/* remove the bullets from the recipients selection */
+.search-table {
+    padding: 10%;
+    margin-top: -6%;
+}
+.search-box {
+    background: #c1c1c1;
+    border: 1px solid #ababab;
+    padding: 3%;
+}
+.search-box input:focus {
+    box-shadow:none;
+    border:2px solid #eeeeee;
+}
+.search-list {
+    background: #fff;
+    border: 1px solid #ababab;
+    border-top: none;
+}
+.search-list h3 {
+    background: #eee;
+    padding: 3%;color:#fe6f41;
+    margin-bottom: 0;
+}
+
 ul {
     list-style-type: none;
-    padding-left: 10px;
 }
 
 li {
-    padding: 5px;
+    padding-left: 5px;
+    font-size: 18px;
+}
+
+
+input[name=multiple_field_form], label {
+    cursor: pointer;
+}
+
+/*
+input[type=submit] {
+    padding: 4px;
+    border: 2px solid;
+    border-radius: 2px;
+    font-family: "Lucida Console", "Courier New", "monospace";
+    font-weight: bold;
 }
 
 body {
     background-color: lightblue;
 }
 
-input[name=multiple_field_form] {
-    cursor: pointer;
-}
-
-input[type=submit] {
-    padding: 4px;
-    border: solid;
-    border-width: 1px;
-    border-radius: 2px;
-    font-family: "Lucida Console", "Courier New", "monospace";
-    font-weight: bold;
-}
 
 input[type=submit]:hover {
     background-color: green;
@@ -33,3 +58,4 @@ input[type=submit]:hover {
     font-family: "Lucida Console", "Courier New", "monospace";
     font-weight: bold;
 }
+*/

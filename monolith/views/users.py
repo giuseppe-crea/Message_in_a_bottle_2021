@@ -1,5 +1,5 @@
 import flask_login
-from flask import Blueprint, redirect, render_template, request, abort
+from flask import Blueprint, redirect, render_template, request
 from flask_login import login_required
 
 from monolith.database import User, db
@@ -8,12 +8,14 @@ from monolith.forms import UserForm
 users = Blueprint('users', __name__)
 
 
+# noinspection PyUnresolvedReferences
 @users.route('/users')
 def _users():
-    _users = db.session.query(User)
-    return render_template("users.html", users=_users)
+    users_query = db.session.query(User)
+    return render_template("users.html", users=users_query)
 
 
+# noinspection PyUnresolvedReferences
 @users.route('/create_user', methods=['POST', 'GET'])
 def create_user():
     form = UserForm()
@@ -35,9 +37,10 @@ def create_user():
                 db.session.commit()
                 return redirect('/users')
             else:
-                abort(400)
+                form.email.errors.append("Mail already in use.")
+                return render_template('error_template.html', form=form)
         else:
-            abort(400)
+            return render_template('error_template.html', form=form)
     elif request.method == 'GET':
         return render_template('create_user.html', form=form)
     else:
@@ -56,6 +59,7 @@ def _user_data2dict(data: User):
     }
 
 
+# noinspection PyUnresolvedReferences
 @users.route('/user_data', methods=['GET'])
 @login_required
 def user_data():

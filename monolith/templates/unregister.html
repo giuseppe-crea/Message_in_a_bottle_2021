@@ -1,3 +1,5 @@
+<!--suppress ALL -->
+
 <html>
  <body>
   <h1>Unregister</h1>
@@ -10,7 +12,8 @@
      <dd>{{ form[field]() }}</dd>
        {% if form[field].errors %}
           {% for e in form[field].errors %}
-           <p class="help-block">{{ e }}</p>
+           <!--suppress HtmlUnknownTag -->
+        <p class="help-block">{{ e }}</p>
           {% endfor %}
        {% endif %}
      {% endfor %}
@@ -20,4 +23,5 @@
   </form>
  </body>
 </html>
+
 

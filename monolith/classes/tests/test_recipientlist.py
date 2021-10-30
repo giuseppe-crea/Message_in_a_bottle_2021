@@ -4,15 +4,17 @@ from monolith.classes.tests.utils import get_testing_app, create_user, login
 
 class TestRecipientList(unittest.TestCase):
 
-    # # # # # # # # # # # # # test page retrieving # # # # # # # # # # # # #
-    def test_get_list_of_recipients(self):
+    # # # # # # # # # # # # test unauthorized access # # # # # # # # # # # #
+    def test_unauthorized_access(self):
         tested_app = get_testing_app()
         with tested_app:
             rv = tested_app.get('/list_of_recipients')
-            assert rv.status_code == 200
+            assert rv.status_code == 401
 
-    # # # # # # # # # # # try to select an existing user # # # # # # # # # # #
-    def test_user_selection(self):
+    # # # # # # # # # # test several functionalities # # # # # # # # # # #
+    def test_listing(self):
+
+        # test page retrieving
         tested_app = get_testing_app()
         with tested_app:
             # create a user which will look for
@@ -27,6 +29,30 @@ class TestRecipientList(unittest.TestCase):
             )
             assert rv.status_code == 200
 
+            # login with the tester user
+            response = login(tested_app, 'tester@example.com', 'password')
+            assert response.status_code == 200
+            self.assertIn(b'Hi tester', response.data)
+
+            # retrieve list_of_recipients.html
+            rv = tested_app.get('/list_of_recipients')
+            assert rv.status_code == 200
+
+            # the page automatically produces a post request
+            # to /live_search with void data
+            # that results in the entire DB display
+            rv = tested_app.post(
+                '/live_search',
+                data={'query': ''},
+                follow_redirects=True
+            )
+            assert rv.status_code == 200
+            # tester address and admin address
+            assert b'Choose Recipients' in rv.data
+            assert b'default@example.com' in rv.data
+            assert b'tester@example.com' in rv.data
+
+            # try to select an existing user
             # create a possible recipient
             rv = create_user(
                 tested_app,
@@ -38,49 +64,28 @@ class TestRecipientList(unittest.TestCase):
             )
             assert rv.status_code == 200
 
-            # login with the tester user
-            response = login(tested_app, 'tester@example.com', 'password')
-            self.assertIn(b'Hi tester', response.data)
-
-            # retrieve list_of_recipients.html
-            rv = tested_app.get('/list_of_recipients')
-            assert rv.status_code == 200
-
-            # selection of a user and POST request
+            # keyboard input of 'q'
+            # not exists an account with a 'q'
+            # in his information
             rv = tested_app.post(
-                '/list_of_recipients',
-                data={'multiple_field_form': 'recipient@example.com'},
+                '/live_search',
+                data={'query': 'q'},
                 follow_redirects=True
             )
-
             assert rv.status_code == 200
+            assert b'q' not in rv.data
 
-    # # # # # # # # # # # test the submitting of a void form # # # # # # # #
-    def test_no_selection(self):
-        tested_app = get_testing_app()
-        with tested_app:
-            # create a user which will look for
-            # the list of available recipients
-            rv = create_user(
-                tested_app,
-                "tester@example.com",
-                "tester",
-                "tester",
-                "12/12/1999",
-                "password"
+            # keyboard input of 't'
+            # exists an account with a 't'
+            # in his information (tester)
+            rv = tested_app.post(
+                '/live_search',
+                data={'query': 't'},
+                follow_redirects=True
             )
             assert rv.status_code == 200
-
-            # login with the tester user
-            response = login(tested_app, 'tester@example.com', 'password')
-            self.assertIn(b'Hi tester', response.data)
-
-            # retrieve list_of_recipients.html
-            rv = tested_app.get('/list_of_recipients')
-            assert rv.status_code == 200
-
-            # check HTML consistency
-            self.assertIn(b'tester tester: tester@example.com', rv.data)
+            assert b'Choose Recipients' in rv.data
+            assert b'tester@example.com' in rv.data
 
             # void POST request (no recipient selection)
             rv = tested_app.post(
@@ -89,60 +94,48 @@ class TestRecipientList(unittest.TestCase):
                 follow_redirects=True
             )
             assert rv.status_code == 200
+            # back to /send
+            assert b'Message' in rv.data
+            assert b'Send on' in rv.data
 
-            # check HTML consistency
-            self.assertIn(b'Message', rv.data)
+            # submitting one existing user selection
+            # no redirection
+            rv = tested_app.post(
+                '/list_of_recipients',
+                data={
+                    'multiple_field_form':
+                        'recipient@example.com'},
+                follow_redirects=False
+            )
+            assert rv.status_code == 302
+            assert rv.location == \
+                   "http://localhost/send?data=recipient%40example.com"
 
-    # # # # # # # # # # try to select two existing users # # # # # # # # # #
-    def test_two_users_selection(self):
-        tested_app = get_testing_app()
-        with tested_app:
-            # create a user which will look for
-            # the list of available recipients
-            rv = create_user(
-                tested_app,
-                "tester@example.com",
-                "tester",
-                "tester",
-                "12/12/1999",
-                "password"
+            # testing with redirection
+            rv = tested_app.post(
+                '/list_of_recipients',
+                data={
+                    'multiple_field_form':
+                        'recipient@example.com'},
+                follow_redirects=True
             )
             assert rv.status_code == 200
+            assert b'Message' in rv.data
+            # cannot test the presence of recipient@example.com
+            # inserted in JS after the http response
 
-            # create a possible recipient
-            rv = create_user(
-                tested_app,
-                "first_recipient@example.com",
-                "firstname1",
-                "lastname1",
-                "01/01/2000",
-                "password"
-            )
-            assert rv.status_code == 200
-
-            # create a second possible recipient
+            # create another possible recipient
             rv = create_user(
                 tested_app,
                 "second_recipient@example.com",
-                "firstname2",
-                "lastname2",
+                "firstname",
+                "lastname",
                 "01/01/2000",
                 "password"
             )
             assert rv.status_code == 200
 
-            # login with the tester user
-            response = login(tested_app, 'tester@example.com', 'password')
-            self.assertIn(b'Hi tester', response.data)
-
-            # retrieve list_of_recipients.html
-            rv = tested_app.get('/list_of_recipients')
-            assert rv.status_code == 200
-
-            # TODO: check presence of first_recipient and second_recipient
-            # in the html page
-
-            # selection of a user and POST request
+            # selection of two user and POST request (without redirection)
             rv = tested_app.post(
                 '/list_of_recipients',
                 data={
@@ -151,8 +144,19 @@ class TestRecipientList(unittest.TestCase):
                      'second_recipient@example.com']},
                 follow_redirects=False
             )
-
             assert rv.status_code == 302
-            assert rv.location == "http://localhost/send?" \
-                                  "data=first_recipient%40example.com%2C" \
-                                  "second_recipient%40example.com"
+            assert rv.location == \
+                   "http://localhost/send?data=first_recipient%40example.com" \
+                   "%2C+second_recipient%40example.com"
+
+            # selection of two user and POST request (with redirection)
+            rv = tested_app.post(
+                '/list_of_recipients',
+                data={
+                    'multiple_field_form':
+                        ['first_recipient@example.com',
+                         'second_recipient@example.com']},
+                follow_redirects=True
+            )
+            assert rv.status_code == 200
+            assert b'Message' in rv.data

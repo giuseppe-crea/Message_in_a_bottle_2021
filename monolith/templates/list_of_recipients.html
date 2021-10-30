@@ -1,15 +1,58 @@
+<!--suppress ALL -->
 <html>
  <head>
-     <link rel="stylesheet" href="../static/css/list_of_recipients.css">
      <title>List of Recipients</title>
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="../static/css/list_of_recipients.css">
+    <!--  <link rel=”shortcut icon” href =“../static/images/favicon.ico”> -->
+     <link rel="shortcut icon" href="#"> <!-- remove favicon error -->
+     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+      load_data();
+      function load_data(query)
+      {
+       $.ajax({
+            url: "/live_search",
+            method: "POST",
+            data: {query:query},
+            success: function(data){
+              $('#result').html(data);
+              $("#result").append(data.htmlresponse);
+            }
+       });
+      }
+
+      $('#search_text').keyup(function(){
+        let search = $(this).val();
+        if(search !== ''){
+            load_data(search);
+       } else {
+            load_data('void_request');
+       }
+      });
+
+    });
+</script>
  </head>
  <body>
- <h2> Possible Recipients: </h2>
-  <form action="" method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.multiple_field_form }}
-    <br>
-    <input type=submit value="Choose Recipients">
-  </form>
+ <div class="container search-table">
+    <p><h2 style="text-align: center"> Search Recipients </h2></p>
+            <div class="search-box">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h5>Search</h5>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" name="search_text" id="search_text" class="form-control" placeholder="example@example.com">
+                    </div>
+                </div>
+            </div>
+    <div id="result"></div>
+
+    </div>
  </body>
 </html>
