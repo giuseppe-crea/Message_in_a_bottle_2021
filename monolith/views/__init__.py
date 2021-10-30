@@ -8,4 +8,5 @@ from .outbox import outbox
 from .admin import admin
 from .list import list_blueprint
 
-blueprints = [home, auth, users, send, unreg, outbox, inbox, admin, list_blueprint]
+blueprints = \
+    [home, auth, users, send, unreg, outbox, inbox, admin, list_blueprint]

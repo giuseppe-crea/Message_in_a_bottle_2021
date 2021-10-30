@@ -65,4 +65,3 @@ def _send(_id, data=""):
 def get_message():
     drafts = Draft().query.filter_by(sender_email=current_user.email).all()
     return render_template('list/draft_list.html', drafts=drafts)
-

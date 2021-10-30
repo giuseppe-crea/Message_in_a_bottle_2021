@@ -123,7 +123,7 @@ class TestRecipientList(unittest.TestCase):
             assert b'Message' in rv.data
             # cannot test the presence of recipient@example.com
             # inserted in JS after the http response
-            
+
             # create another possible recipient
             rv = create_user(
                 tested_app,
@@ -160,4 +160,3 @@ class TestRecipientList(unittest.TestCase):
             )
             assert rv.status_code == 200
             assert b'Message' in rv.data
-
