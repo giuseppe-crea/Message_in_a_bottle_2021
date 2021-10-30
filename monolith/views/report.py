@@ -35,9 +35,9 @@ def report_user():
         if form.validate_on_submit():
             reported_user = form.data['user']
             description = form.data['description']
-            block_user = form.data['block_user']
+            #block_user = form.data['block_user']
             current_user = flask_login.current_user.email
-            
+
             # check if the reported email exists
             q = db.session.query(User).filter(User.email == reported_user)
             if q.first() is None:
@@ -60,12 +60,12 @@ def report_user():
                 )
             db.session.add(report)
             db.session.commit()
-            
+
             # blacklist reported user
             # if block_user == 'yes':
-                #todo
-                
+            # todo
+
             return redirect('/')
-            
+
     else:
         raise RuntimeError('This should not happen!')
