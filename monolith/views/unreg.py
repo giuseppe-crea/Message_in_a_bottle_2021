@@ -10,6 +10,7 @@ unreg = Blueprint('unreg', __name__)
 
 
 # delete user account
+# noinspection PyUnresolvedReferences
 @unreg.route('/unregister', methods=['GET', 'POST'])
 @login_required
 def unregister():

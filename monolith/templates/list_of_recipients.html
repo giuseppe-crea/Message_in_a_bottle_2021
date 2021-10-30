@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <html>
  <head>
      <title>List of Recipients</title>
@@ -26,11 +27,11 @@
       }
 
       $('#search_text').keyup(function(){
-        var search = $(this).val();
-        if(search != ''){
+        let search = $(this).val();
+        if(search !== ''){
             load_data(search);
        } else {
-            load_data();
+            load_data('void_request');
        }
       });
 

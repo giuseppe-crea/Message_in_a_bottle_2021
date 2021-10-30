@@ -24,7 +24,7 @@ def check(email):
         return False
 
 
-# noinspection PyUnusedLocal
+# noinspection PyUnusedLocal,PyUnresolvedReferences
 @send.route('/send', methods=['POST', 'GET'])
 @login_required
 # data is a default parameter used for recipient setting

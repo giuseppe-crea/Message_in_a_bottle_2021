@@ -3,10 +3,12 @@ from flask import Blueprint, render_template, request, redirect, \
 from flask_login import login_required
 from monolith.database import User, db
 from monolith.forms import RecipientsListForm
+from werkzeug.exceptions import BadRequestKeyError
 
 list_blueprint = Blueprint('list', __name__)
 
 
+# noinspection PyUnresolvedReferences
 @list_blueprint.route('/list_of_recipients', methods=['POST', 'GET'])
 @login_required
 def _display_users():
@@ -34,21 +36,22 @@ def _display_users():
         return render_template('list_of_recipients.html')
 
 
+# noinspection PyUnresolvedReferences
 @list_blueprint.route('/live_search', methods=['POST'])
 @login_required
 def ajax_livesearch():
 
     try:
         search_word = request.form['query']
-        search = "%{}%".format(search_word)
-    except:
+    except BadRequestKeyError:
         recipients_found = db.session.query(User).all()
     else:
+        search = "%{}%".format(search_word)
         recipients_found = db.session.query(User). \
-            filter(User.email.like(search) \
-                   | User.firstname.like(search) \
+            filter(User.email.like(search)
+                   | User.firstname.like(search)
                    | User.lastname.like(search)). \
-                    limit(100).all() # avoiding a huge result
+            limit(100).all()  # avoiding a huge result
 
     # instantiate the form
     form = RecipientsListForm()
@@ -58,4 +61,5 @@ def ajax_livesearch():
         [(user.email, user.lastname + ' ' + user.firstname + ': ' + user.email)
          for user in recipients_found]
 
-    return jsonify({'htmlresponse': render_template('search_response.html', form=form)})
+    return jsonify(
+        {'htmlresponse': render_template('search_response.html', form=form)})
