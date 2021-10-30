@@ -7,6 +7,7 @@ from monolith.forms import LoginForm
 auth = Blueprint('auth', __name__)
 
 
+# noinspection PyUnresolvedReferences
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -26,3 +27,4 @@ def login():
 def logout():
     logout_user()
     return redirect('/')
+

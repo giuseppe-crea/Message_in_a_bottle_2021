@@ -65,29 +65,3 @@ def get_message():
     drafts = Draft().query.filter_by(sender_email=current_user.email).all()
     return render_template('list/draft_list.html', drafts=drafts)
 
-
-@send.route('/list_of_recipients', methods=['POST', 'GET'])
-def _display_users():
-    # instantiate the form
-    form = RecipientsListForm()
-    # ordering alphabetically, filtering admin accounts and the sender itself
-    _users = db.session.query(User).order_by(User.lastname).\
-        filter(User.firstname != 'Admin').all()
-    # sets choices
-    form.multiple_field_form.choices = \
-        [(user.email, user.lastname + ' ' + user.firstname + ': ' + user.email)
-         for user in _users]
-    if request.method == 'POST':  # POST request
-        if len(request.form) != 0:  # check the selection of a recipient
-            # create a list of emails, removing the submitted label
-            selected_recipient_list = \
-                request.form.getlist('multiple_field_form')
-            # create a dictionary to construct the right structure
-            payload = {'email_list': ', '.join(selected_recipient_list)}
-            # send a list of comma-separated emails
-            # redirecting to /send
-            return redirect(url_for('send._send', data=payload['email_list']))
-        else:  # no recipient selected
-            return redirect(url_for('send._send'))
-    else:  # GET request, returns the list_of_recipients.html page
-        return render_template('list_of_recipients.html', form=form)

@@ -22,6 +22,7 @@ def do_task():
     return _APP, celery
 
 
+# noinspection PyUnresolvedReferences
 @celery.task
 def deliver_message(app, message, sender, receiver, time):
     # TODO: RPC that notifies the receiver
