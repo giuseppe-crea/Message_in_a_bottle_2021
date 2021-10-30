@@ -1,0 +1,13 @@
+{% extends 'body.html' %}
+
+<h1>{% block title %} List of messages {% endblock %}</h1>
+
+{% block content %}
+    <ul style="list-style-type: none;">
+        {% for draft in drafts %}
+            <li><b>to:</b> {{ draft['recipients'] }}</li>
+            <a href="send/{{draft['id']}}">More...</a>
+            <br>
+        {% endfor %}
+    </ul>
+{% endblock %}

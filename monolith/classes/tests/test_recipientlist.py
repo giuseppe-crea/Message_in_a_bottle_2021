@@ -160,4 +160,3 @@ class TestRecipientList(unittest.TestCase):
             )
             assert rv.status_code == 200
             assert b'Message' in rv.data
-

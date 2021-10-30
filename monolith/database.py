@@ -4,6 +4,26 @@ from werkzeug.security import check_password_hash, generate_password_hash
 db = SQLAlchemy()
 
 
+class Draft(db.Model):
+
+    __tablename__ = 'draft'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    sender_email = db.Column(db.Unicode(128), nullable=True)
+    recipients = db.Column(db.Unicode(128), nullable=True)
+    message = db.Column(db.Unicode(1024), nullable=True)
+    delivery_date = db.Column(db.Unicode(128), nullable=False)
+
+    def __init__(self, *args, **kw):
+        super(Draft, self).__init__(*args, **kw)
+
+    def add_new_draft(self, sender_email, recipients, message, delivery_date):
+        self.sender_email = sender_email
+        self.recipients = recipients
+        self.message = message
+        self.delivery_date = delivery_date
+
+
 class User(db.Model):
 
     __tablename__ = 'user'
@@ -44,6 +64,9 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
+
+    def get_email(self):
+        return self.email
 
 
 class SentMessage(db.Model):

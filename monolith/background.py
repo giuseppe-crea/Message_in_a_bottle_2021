@@ -19,16 +19,19 @@ def do_task():
         from monolith.app import create_app
         _APP = create_app()
         db.init_app(_APP)
-    return []
+    return _APP, celery
 
 
 # noinspection PyUnresolvedReferences
 @celery.task
-def deliver_message(message, sender, receiver, time):
+def deliver_message(app, message, sender, receiver, time):
     # TODO: RPC that notifies the receiver
     global _APP
-    do_task()
-    with _APP.app_context():
+    if app is None:
+        do_task()
+        app = _APP
+    # noinspection PyUnresolvedReferences
+    with app.app_context():
         # create an entry in the sent table
         print("Your message is \"" + message + "\"\nTo be delivered to: " +
               receiver + "\nSent from: " + sender)
@@ -36,5 +39,5 @@ def deliver_message(message, sender, receiver, time):
         unsent_message.add_message(message, sender, receiver, time)
         db.session.add(unsent_message)
         db.session.commit()
-        # placeholder delivery
+
     return "Done"

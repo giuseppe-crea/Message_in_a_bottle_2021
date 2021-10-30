@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 import wtforms as f
@@ -10,20 +11,61 @@ from wtforms import widgets, SelectMultipleField
 class TimeValidator(object):
     field_flags = ('required',)
 
+    # this validator strips times down to the minute
+    # our delivery method will instantly deliver anything with a negative
+    # timestamp, making this reliable
     def __init__(self, startdate=datetime.now(), message=None):
-        self.startdate = startdate
+        self.startdate = startdate.replace(second=0, microsecond=0)
         if not message:
             message = "You can't set a delivery date earlier than " + \
-                      startdate.strftime("%m/%d/%Y, %H:%M:%S") + "!"
+                      startdate.strftime("%m/%d/%Y, %H:%M") + "!"
         self.message = message
 
     def __call__(self, form, field):
-        if field.data < self.startdate:
+        if field.data.replace(second=0, microsecond=0) < self.startdate:
             field.errors[:] = []
             raise StopValidation(self.message)
 
 
+class MailValidator(object):
+    field_flags = ('required',)
+
+    @staticmethod
+    def check(email):
+        regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        # pass the regular expression
+        # and the string into the fullmatch() method
+        if re.fullmatch(regex, email):
+            return True
+        else:
+            return False
+
+    def __init__(self, mails=None, message=None):
+        if mails is None:
+            mails = []
+        self.mails = mails
+        if not message:
+            message = "You must specify at least one valid sender!"
+        self.message = message
+
+    def __call__(self, form, field):
+        self.mails = []
+        to_parse = field.data.split(', ')
+        for address in to_parse:
+            address = address.strip()
+            if self.check(address):
+                self.mails.append(address)
+        if len(self.mails) < 1:
+            field.errors[:] = []
+            raise StopValidation(self.message)
+        elif len(self.mails) == 1:
+            field.data = self.mails.pop(0)
+        else:
+            field.data = ', '.join(self.mails)
+
+
 time_validator = TimeValidator
+mail_validator = MailValidator
 
 
 class LoginForm(FlaskForm):
@@ -33,7 +75,9 @@ class LoginForm(FlaskForm):
 
 
 class UserForm(FlaskForm):
-    email = f.StringField('email', validators=[InputRequired()])
+    email = f.StringField(
+        'email',
+        validators=[InputRequired(), mail_validator(message="Invalid email!")])
     firstname = f.StringField('firstname', validators=[InputRequired()])
     lastname = f.StringField('lastname', validators=[InputRequired()])
     password = f.PasswordField('password', validators=[InputRequired()])
@@ -53,7 +97,10 @@ class SendForm(FlaskForm):
     )
     # more than one user is supported,
     # insert multiple mail addresses separated by a comma
-    recipient = f.StringField('Recipient', validators=[InputRequired()])
+    recipient = f.StringField(
+        'Recipient',
+        validators=[InputRequired(), mail_validator()]
+    )
     time = DateTimeLocalField(
         'Send on',
         format='%Y-%m-%dT%H:%M',
