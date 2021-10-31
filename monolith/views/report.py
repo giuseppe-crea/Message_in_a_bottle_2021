@@ -35,7 +35,7 @@ def report_user():
         if form.validate_on_submit():
             reported_user = form.data['user']
             description = form.data['description']
-            #block_user = form.data['block_user']
+            # block_user = form.data['block_user']
             current_user = flask_login.current_user.email
 
             # check if the reported email exists
