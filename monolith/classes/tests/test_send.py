@@ -1,5 +1,10 @@
+import datetime
 import unittest
 
+import flask
+
+from monolith.background import deliver_message
+from monolith.classes.tests import utils
 from monolith.classes.tests.utils import get_testing_app, login, create_user
 
 
@@ -149,3 +154,43 @@ class TestSend(unittest.TestCase):
         assert check('aghap39') is False
         assert check(' arish .com') is False
         assert check('almost @ real.com') is False"""
+
+    def test_forward(self):
+        """
+        Test the message replay functionality.
+        """
+        tested_app = get_testing_app()
+        with tested_app:
+            # create 2 users
+            users = utils.create_ex_users(tested_app, 2)
+            user1, password1 = users[0]
+            user2, password2 = users[1]
+            # internally send a message to user2 from user1
+            delivery_time = datetime.datetime.now()
+            deliver_message(
+                flask.current_app,
+                "Test1",
+                user1,
+                user2,
+                delivery_time.strftime('%Y-%m-%dT%H:%M')
+            )
+
+            # log as user2
+            utils.login(tested_app, user2, password2)
+            # the message is present
+            rv = tested_app.get('/inbox')
+            self.assertIn(bytes(user1, 'utf-8'), rv.data)
+            rv = tested_app.get('/inbox/1')
+            self.assertEqual(rv.status_code, 200)
+
+            # replay to the message
+            time = "2199-01-01T01:01"
+            rv = tested_app.post(
+                '/send/replay/1',
+                data={
+                    'message': "Success!",
+                    'time': time},
+                follow_redirects=True
+            )
+            # the message is correctly sent
+            self.assertIn(b'Successfully Sent to:', rv.data)
