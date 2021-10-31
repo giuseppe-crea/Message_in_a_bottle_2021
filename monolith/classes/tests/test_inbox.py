@@ -3,6 +3,7 @@ import unittest
 
 import flask
 
+from monolith.classes.tests import utils
 from monolith.classes.tests.utils import get_testing_app, create_user, login
 from monolith.background import deliver_message
 
@@ -92,3 +93,42 @@ class TestHome(unittest.TestCase):
             assert rv.status_code == 200
             rv = tested_app.get('/inbox/1', follow_redirects=True)
             assert rv.status_code == 403
+
+    """        
+    def test_forward(self):
+        tested_app = get_testing_app()
+        with tested_app:
+            users = utils.create_ex_users(tested_app, 2)
+            user1, password1 = users[0]
+            user2, password2 = users[1]
+            utils.login(tested_app, user1, password1)
+
+            time = datetime.now().strftime("%m/%d/%Y, %H:%M")
+            rv = tested_app.post(
+                '/send',
+                data={
+                    'message': "Short test message",
+                    'recipient': user2,
+                    'time': time},
+                follow_redirects=True
+            )
+            self.assertIn(b'Successfully Sent to:', rv.data)
+            tested_app.post('/logout')
+        with tested_app:
+            utils.login(tested_app, user2, password2)
+
+            rv = tested_app.get('/inbox')
+            self.assertIn(bytes(user1, 'utf-8'), rv.data)
+            print(rv.data)
+            #rv = tested_app.get('/inbox/1')
+            self.assertEqual(rv.status_code, 200)
+            time = datetime.now().strftime("%m/%d/%Y, %H:%M")
+            rv = tested_app.post(
+                '/inbox/forward/1',
+                data={
+                    'recipient': user1,
+                    'time': time},
+                follow_redirects=True
+            )
+            #self.assertIn(b'Successfully Sent to:', rv.data)
+            """
