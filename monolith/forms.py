@@ -109,6 +109,34 @@ class SendForm(FlaskForm):
     display = ['message', 'time', 'recipient']
 
 
+class ReplayForm(FlaskForm):
+    message = f.StringField(
+        'Message',
+        validators=[InputRequired(), Length(max=1024)]
+    )
+    time = DateTimeLocalField(
+        'Send on',
+        format='%Y-%m-%dT%H:%M',
+        validators=[InputRequired(), time_validator(startdate=datetime.now())]
+    )
+    display = ['message', 'time']
+
+
+class ForwardForm(FlaskForm):
+    # more than one user is supported,
+    # insert multiple mail addresses separated by a comma
+    recipient = f.StringField(
+        'Recipient',
+        validators=[InputRequired(), mail_validator()]
+    )
+    time = DateTimeLocalField(
+        'Send on',
+        format='%Y-%m-%dT%H:%M',
+        validators=[InputRequired(), time_validator(startdate=datetime.now())]
+    )
+    display = ['time', 'recipient']
+
+
 # custom class to display checkboxes in the form, based on SelectMultipleField
 # to select multiple recipients
 class MultiCheckboxField(SelectMultipleField):
