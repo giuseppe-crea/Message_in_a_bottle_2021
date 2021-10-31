@@ -16,7 +16,7 @@ report = Blueprint('report', __name__)
 @report.route('/reports', methods=['GET'])
 @login_required
 @admin_required
-def _users():
+def reports():
     query_reports = db.session.query(Report).order_by(Report.id.desc())
     return render_template("reports.html", reports=query_reports)
 
