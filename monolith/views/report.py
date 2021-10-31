@@ -6,6 +6,7 @@ from werkzeug.utils import redirect
 from monolith.database import Report, db, User
 from monolith.forms import ReportForm
 from datetime import datetime
+from monolith.views.blacklist import add2blacklist_local
 
 
 report = Blueprint('report', __name__)
@@ -35,8 +36,9 @@ def report_user():
         if form.validate_on_submit():
             reported_user = form.data['user']
             description = form.data['description']
-            # block_user = form.data['block_user']
-            current_user = flask_login.current_user.email
+            block_user = form.data['block_user']
+            current_user = flask_login.current_user
+            current_user_email = current_user.email
 
             # check if the reported email exists
             q = db.session.query(User).filter(User.email == reported_user)
@@ -45,7 +47,7 @@ def report_user():
                 return render_template('error_template.html', form=form)
 
             # a user cannot report himself
-            if reported_user == current_user:
+            if reported_user == current_user_email:
                 form.user.errors.append("ERROR: cannot report yourself")
                 return render_template('error_template.html', form=form)
 
@@ -53,7 +55,7 @@ def report_user():
             report = Report()
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             report.add_report(
-                current_user,
+                current_user_email,
                 reported_user,
                 description,
                 timestamp
@@ -62,8 +64,8 @@ def report_user():
             db.session.commit()
 
             # blacklist reported user
-            # if block_user == 'yes':
-            # todo
+            if block_user == 'yes':
+                add2blacklist_local(current_user, reported_user)
 
             return redirect('/')
 

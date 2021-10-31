@@ -49,6 +49,15 @@ def _check_add_blacklist(user, email):
             _check_itself(user, email))
 
 
+def add2blacklist_local(user, email):
+    if _check_add_blacklist(user, email):
+        # insert the email to block in the user's blacklist
+        blacklist = Blacklist()
+        blacklist.add_blocked_user(user.get_id(), email)
+        db.session.add(blacklist)
+        db.session.commit()
+
+
 @blacklist.route('/blacklist/add', methods=['GET', 'POST'])
 @login_required
 def add2blacklist():
@@ -64,12 +73,7 @@ def add2blacklist():
         email = form.data['email']
         # get the current user
         user = flask_login.current_user
-        if _check_add_blacklist(user, email):
-            # insert the email to block in the user's blacklist
-            blacklist = Blacklist()
-            blacklist.add_blocked_user(user.get_id(), email)
-            db.session.add(blacklist)
-            db.session.commit()
+        add2blacklist_local(user, email)
         return redirect('/blacklist')
 
     return render_template('request_form.html', form=form)
