@@ -3,7 +3,7 @@ from flask.templating import render_template
 from flask_login import login_required, current_user
 from sqlalchemy.exc import NoResultFound
 
-from monolith.database import SentMessage
+from monolith.database import Message
 
 outbox = Blueprint('outbox', __name__)
 
@@ -14,12 +14,17 @@ outbox = Blueprint('outbox', __name__)
 def _outbox(_id):
     user_mail = current_user.get_email()
     if _id is None:
-        messages = SentMessage().query.filter_by(sender_email=user_mail)
+        pending = Message().query.filter_by(sender_email=user_mail, status=1)
+        delivered = Message().query.filter_by(sender_email=user_mail, status=2)
         # noinspection PyUnresolvedReferences
-        return render_template("list/outbox.html", messages=messages)
+        return render_template(
+            "list/outbox.html",
+            pending=pending,
+            delivered=delivered
+        )
     if _id is not None:
         try:
-            message = SentMessage().query.filter_by(
+            message = Message().query.filter_by(
                 id=int(_id),
                 sender_email=user_mail
             ).one()

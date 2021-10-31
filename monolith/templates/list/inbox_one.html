@@ -8,7 +8,12 @@
 <br>
 <b>to:</b> {{ message['receiver_email'] }}
 <br>
-<textarea rows="4" cols="50">{{ message['message'] }}</textarea>
+<b>Delivery date:</b> {{ message['time'] }}
+<br>
+<b>Message:</b>
+<br>
+{{ message['message'] }}
+<br>
 <br>
 
 <a href="forward/{{message['id']}}">Forward</a>

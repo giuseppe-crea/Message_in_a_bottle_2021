@@ -3,9 +3,13 @@ from datetime import datetime
 
 import wtforms as f
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
+from flask_uploads import UploadSet, IMAGES
 from wtforms import widgets, SelectMultipleField
 from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import StopValidation, InputRequired, Length
+
+images = UploadSet('images', IMAGES)
 
 
 class TimeValidator(object):
@@ -99,14 +103,18 @@ class SendForm(FlaskForm):
     # insert multiple mail addresses separated by a comma
     recipient = f.StringField(
         'Recipient',
-        validators=[InputRequired(), mail_validator()]
+        validators=[InputRequired(), mail_validator(), Length(max=1024)]
     )
     time = DateTimeLocalField(
         'Send on',
         format='%Y-%m-%dT%H:%M',
         validators=[InputRequired(), time_validator(startdate=datetime.now())]
     )
-    display = ['message', 'time', 'recipient']
+    file = FileField(
+        'Your picture',
+        validators=[FileAllowed(images, 'Images only!')]
+    )
+    display = ['message', 'time', 'recipient', 'file']
 
 
 class ReplayForm(FlaskForm):

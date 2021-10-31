@@ -5,7 +5,7 @@
 {% block content %}
     <ul style="list-style-type: none;">
         {% for draft in drafts %}
-            <li><b>to:</b> {{ draft['recipients'] }}</li>
+            <li><b>to:</b> {{ draft['receiver_email'] }}</li>
             <a href="send/{{draft['id']}}">More...</a>
             <br>
         {% endfor %}

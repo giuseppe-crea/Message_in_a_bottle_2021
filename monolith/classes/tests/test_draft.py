@@ -32,7 +32,9 @@ class TestHome(unittest.TestCase):
                     'message': "Short test message",
                     'recipient': "example@example.com",
                     'time': "2199-01-01T01:01",
-                    'save_button': True},
+                    'save_button': True,
+                    'file': None
+                },
                 follow_redirects=True
             )
             assert rv.status_code == 200
