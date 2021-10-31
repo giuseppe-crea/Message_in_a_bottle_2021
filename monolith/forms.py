@@ -146,4 +146,3 @@ class ReportForm(FlaskForm):
         )
 
     display = ['user', 'description', 'block_user']
-    
