@@ -140,7 +140,7 @@ class ReportForm(FlaskForm):
     )
     block_user = f.RadioField(
         'Blacklist User',
-        choices=[('yes', 'YES'), ('no', 'NO')], 
+        choices=[('yes', 'YES'), ('no', 'NO')],
         default='yes',
         validators=[InputRequired()]
         )
