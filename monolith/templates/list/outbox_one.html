@@ -1,5 +1,5 @@
 {% extends 'body.html' %}
-
+<meta http-equiv="Content-Security-Policy" media-src='/';>
 <h1>{% block title %} List of messages {% endblock %}</h1>
 
 
@@ -14,4 +14,9 @@
 <br>
 {{ message['message'] }}
 <br>
+{% if message['image'] is defined %}
+<b>Attached Picture:</b>
+<br>
+<img src="{{ message['image'] }}"/>
+{% endif %}
 {% endblock %}

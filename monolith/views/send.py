@@ -1,11 +1,13 @@
 import os
 from datetime import datetime
+from pathlib import Path
 
 import flask
 from flask import Blueprint, render_template, request, redirect, abort
 from flask_login import login_required
 from sqlalchemy.exc import NoResultFound
 from werkzeug.utils import secure_filename
+from slugify import slugify
 
 from monolith.auth import current_user
 from monolith.database import Message
@@ -66,8 +68,8 @@ def _send(_id, data=""):
                 # TODO: change this to a "Draft saved" message
                 return redirect('/')
             # check if the post request has the optional file part
-            if 'image' in request.files:
-                file = request.files['image']
+            if 'file' in request.files:
+                file = request.files['file']
                 # if user does not select file, browser also
                 # submit an empty part without filename
                 # also checks if the file is an image
@@ -75,11 +77,13 @@ def _send(_id, data=""):
                 if file.filename != '' and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     # files are saved in a unique folder per each user
-                    file_path = os.path.join(
-                        flask.current_app.config['UPLOAD_FOLDER'],
-                        current_user_mail,
-                        filename
+                    folder_path = os.path.join(
+                        flask.current_app.config['UPLOADED_IMAGES_DEST'],
+                        slugify(current_user_mail),
                     )
+                    if not os.path.exists(folder_path):
+                        Path(folder_path).mkdir(parents=True, exist_ok=True)
+                    file_path = os.path.join(folder_path, filename)
                     # make sure the path fits in our db field of 1024 char
                     if len(file_path) > 1024:
                         form.file.errors.append("Filename too big.")
@@ -88,7 +92,7 @@ def _send(_id, data=""):
                             form=form
                         )
                     file.save(file_path)
-            # go ahead and parse the message
+            # go ahead and deliver the messages
             correctly_sent, not_correctly_sent = send_messages(
                 to_parse,
                 current_user_mail,

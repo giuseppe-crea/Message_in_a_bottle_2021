@@ -28,6 +28,12 @@ def do_task(app):
     return app
 
 
+# TODO: task to periodically send unsent messages past due
+
+
+# TODO: task to delete pictures with no reference in the database
+
+
 # noinspection PyUnresolvedReferences
 @celery.task
 def deliver_message(app, message_id):

@@ -9,7 +9,7 @@ from wtforms import widgets, SelectMultipleField
 from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import StopValidation, InputRequired, Length
 
-images = UploadSet('images', IMAGES)
+images = UploadSet('images', IMAGES, default_dest=None)
 
 
 class TimeValidator(object):
@@ -111,7 +111,7 @@ class SendForm(FlaskForm):
         validators=[InputRequired(), time_validator(startdate=datetime.now())]
     )
     file = FileField(
-        'Your picture',
+        'Your picture (optional)',
         validators=[FileAllowed(images, 'Images only!')]
     )
     display = ['message', 'time', 'recipient', 'file']
