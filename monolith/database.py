@@ -102,3 +102,26 @@ class Blacklist(db.Model):
 
     def get_id(self):
         return self.owner
+
+
+class Report(db.Model):
+
+    __tablename__ = 'report'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    author_email = db.Column(db.Unicode(128), nullable=False)
+    reported_email = db.Column(db.Unicode(128), nullable=False)
+    description = db.Column(db.Unicode(1024), nullable=False)
+    timestamp = db.Column(db.Unicode(128), nullable=False)
+
+    def __init__(self, *args, **kw):
+        super(Report, self).__init__(*args, **kw)
+
+    def add_report(self, author_email, reported_email, description, timestamp):
+        self.author_email = author_email
+        self.reported_email = reported_email
+        self.description = description
+        self.timestamp = timestamp
+
+    def get_id(self):
+        return self.id

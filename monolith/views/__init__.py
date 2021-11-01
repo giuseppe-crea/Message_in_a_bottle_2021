@@ -8,6 +8,7 @@ from .outbox import outbox
 from .admin import admin
 from .list import list_blueprint
 from .blacklist import blacklist
+from .report import report
 
 blueprints = [
   home,
@@ -19,5 +20,6 @@ blueprints = [
   inbox,
   admin,
   list_blueprint,
-  blacklist
+  blacklist,
+  report
 ]
