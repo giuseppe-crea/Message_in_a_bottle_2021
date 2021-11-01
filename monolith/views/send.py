@@ -1,13 +1,18 @@
+import os
 from datetime import datetime
+from pathlib import Path
 
+import flask
 from flask import Blueprint, render_template, request, redirect, abort
 from flask_login import login_required
 from sqlalchemy.exc import NoResultFound
+from werkzeug.utils import secure_filename
+from slugify import slugify
 
 from monolith.auth import current_user
-from monolith.database import Draft, SentMessage
+from monolith.database import Message
 from monolith.forms import SendForm, ReplayForm
-from monolith.send import send_messages, save_draft
+from monolith.send import send_messages, save_draft, allowed_file
 
 send = Blueprint('send', __name__)
 
@@ -19,34 +24,85 @@ send = Blueprint('send', __name__)
 # data is a default parameter used for recipient setting
 def _send(_id, data=""):
     form = SendForm()
+    # if we are loading a draft:
+    # the method check is required to avoid resetting the data on a POST
     if _id is not None and request.method == 'GET':
-        # we are viewing a draft, load it after checking its existence
+        # load it after checking its existence
+        # drafts don't save images
         try:
-            draft = Draft().query.filter_by(
+            draft = Message().query.filter_by(
                 id=int(_id),
-                sender_email=current_user.email
+                sender_email=current_user.email,
+                status=0
             ).one()
         except NoResultFound:
             abort(404)
         form.message.data = draft.message
-        form.recipient.data = draft.recipients
+        form.recipient.data = draft.receiver_email
         form.time.data = \
-            datetime.strptime(draft.delivery_date, '%Y-%m-%d %H:%M:%S')
+            datetime.strptime(draft.time, '%Y-%m-%d %H:%M:%S')
+    # instantiate arrays of mail addresses to display for our sender
     correctly_sent = []
     not_correctly_sent = []
     if request.method == 'POST':
         if form.validate_on_submit():
-            message, user_input = \
-                form.data['message'], form.data['recipient']
+            current_user_mail = getattr(current_user, 'email')
+            path_to_save = None
+            # grab must-have data which we are guaranteed to have
+            message, user_input = form.data['message'], form.data['recipient']
             time = form.data['time']
             to_parse = user_input.split(', ')
-            current_user_mail = getattr(current_user, 'email')
+            # we are saving a draft
             if request.form.get("save_button"):
-                # the user asked to save this message
-                save_draft(current_user_mail, user_input, message, time)
+                # save draft
+                # unlike normal messages, drafts have multiple receivers
+                # because they haven't been split yet
+                draft = save_draft(
+                    current_user_mail,
+                    user_input,
+                    message,
+                    time,
+                    None,
+                )
+                # TODO: change this to a "Draft saved" message
                 return redirect('/')
-            correctly_sent, not_correctly_sent = \
-                send_messages(to_parse, current_user_mail, time, message)
+            # check if the post request has the optional file part
+            if 'file' in request.files:
+                file = request.files['file']
+                # if user does not select file, browser also
+                # submit an empty part without filename
+                # also checks if the file is an image
+                # despite the validator having already done so
+                if file.filename != '' and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    # files are saved in a unique folder per each user
+                    folder_path = os.path.join(
+                        flask.current_app.config['UPLOADED_IMAGES_DEST'],
+                        slugify(current_user_mail),
+                    )
+                    if not os.path.exists(folder_path):
+                        Path(folder_path).mkdir(parents=True, exist_ok=True)
+                    file_path = os.path.join(folder_path, filename)
+                    # make sure the path fits in our db field of 1024 char
+                    if len(file_path) > 1024:
+                        form.file.errors.append("Filename too big.")
+                        return render_template(
+                            'error_template.html',
+                            form=form
+                        )
+                    file.save(file_path)
+                    # creating a webserver-approved file path
+                    path_to_save = 'images/uploads/' + \
+                                   slugify(current_user_mail) + \
+                                   '/' + filename
+            # go ahead and deliver the messages
+            correctly_sent, not_correctly_sent = send_messages(
+                to_parse,
+                current_user_mail,
+                time,
+                message,
+                path_to_save
+            )
         else:
             return render_template('error_template.html', form=form)
         return render_template(
@@ -62,7 +118,8 @@ def _send(_id, data=""):
 @send.route('/send_draft_list', methods=['GET'])
 @login_required
 def get_message():
-    drafts = Draft().query.filter_by(sender_email=current_user.email).all()
+    drafts = Message().query.filter_by(sender_email=current_user.email,
+                                       status=0).all()
     return render_template('list/draft_list.html', drafts=drafts)
 
 
@@ -74,7 +131,7 @@ def replay(_id):
     message = None
     try:
         user_mail = current_user.get_email()
-        message = SentMessage().query.filter_by(
+        message = Message().query.filter_by(
             id=int(_id),
             receiver_email=user_mail
         ).one()
@@ -83,8 +140,8 @@ def replay(_id):
     user_input = message.sender_email
     form = ReplayForm()
 
-    correctly_sent = []
-    not_correctly_sent = []
+    # correctly_sent = []
+    # not_correctly_sent = []
     if request.method == 'POST':
         if form.validate_on_submit():
             message = form.data['message']
@@ -93,10 +150,10 @@ def replay(_id):
             current_user_mail = getattr(current_user, 'email')
             if request.form.get("save_button"):
                 # the user asked to save this message
-                save_draft(current_user_mail, user_input, message, time)
+                save_draft(current_user_mail, user_input, message, time, None)
                 return redirect('/')
             correctly_sent, not_correctly_sent = \
-                send_messages(to_parse, current_user_mail, time, message)
+                send_messages(to_parse, current_user_mail, time, message, None)
         else:
             return render_template('error_template.html', form=form)
         return render_template(

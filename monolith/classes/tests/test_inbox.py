@@ -5,7 +5,8 @@ import flask
 
 from monolith.background import deliver_message
 from monolith.classes.tests import utils
-from monolith.classes.tests.utils import get_testing_app, create_user, login
+from monolith.classes.tests.utils import get_testing_app, create_user, login, \
+    create_message
 
 
 class TestHome(unittest.TestCase):
@@ -30,12 +31,17 @@ class TestHome(unittest.TestCase):
             # send a message to default@example.com with no wait
             # this doesn't actually use celery
             delivery_time = datetime.datetime.now()
-            deliver_message(
-                flask.current_app,
+            message = create_message(
                 "Test1",
                 "sender@example.com",
                 "default@example.com",
-                delivery_time.strftime('%Y-%m-%dT%H:%M')
+                delivery_time.strftime('%Y-%m-%dT%H:%M'),
+                None,
+                1
+            )
+            deliver_message(
+                flask.current_app,
+                message.get_id()
             )
             # check the outbox
             rv = tested_app.get('/outbox', follow_redirects=True)
@@ -106,12 +112,17 @@ class TestHome(unittest.TestCase):
             user2, password2 = users[1]
             # internally send a message to user2 from user1
             delivery_time = datetime.datetime.now()
-            deliver_message(
-                flask.current_app,
+            message = create_message(
                 "Test1",
                 user1,
                 user2,
-                delivery_time.strftime('%Y-%m-%dT%H:%M')
+                delivery_time.strftime('%Y-%m-%dT%H:%M'),
+                None,
+                1
+            )
+            deliver_message(
+                flask.current_app,
+                message.get_id()
             )
 
             # log as user2

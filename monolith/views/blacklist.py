@@ -19,10 +19,11 @@ def get_blacklist():
     # get the current user
     user = flask_login.current_user
     # get the user's blacklist fom the database
-    blacklist = db.session.query(Blacklist).filter(Blacklist.owner ==
-                                                   user.get_id()).all()
-    blacklist = [e.email for e in blacklist]
-    return render_template('blacklist.html', result=blacklist)
+    _blacklist = db.session.query(Blacklist).filter(
+        Blacklist.owner == user.get_id()
+    ).all()
+    _blacklist = [e.email for e in _blacklist]
+    return render_template('blacklist.html', result=_blacklist)
 
 
 # some checks for the add functionality
@@ -66,9 +67,9 @@ def add2blacklist():
         user = flask_login.current_user
         if _check_add_blacklist(user, email):
             # insert the email to block in the user's blacklist
-            blacklist = Blacklist()
-            blacklist.add_blocked_user(user.get_id(), email)
-            db.session.add(blacklist)
+            _blacklist = Blacklist()
+            _blacklist.add_blocked_user(user.get_id(), email)
+            db.session.add(_blacklist)
             db.session.commit()
         return redirect('/blacklist')
 
