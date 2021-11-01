@@ -4,19 +4,21 @@
 
 
 {% block content %}
-<b>from:</b> {{ message['sender_email'] }}
-<br>
-<b>to:</b> {{ message['receiver_email'] }}
-<br>
-<b>Delivery date:</b> {{ message['time'] }}
-<br>
-<b>Message:</b>
-<br>
-{{ message['message'] }}
-<br>
-{% if message['image'] is defined %}
-<b>Attached Picture:</b>
-<br>
-<img src="{{ message['image'] }}"/>
-{% endif %}
+    <b>from:</b> {{ message['sender_email'] }}
+    <br>
+    <b>to:</b> {{ message['receiver_email'] }}
+    <br>
+    <b>Delivery date:</b> {{ message['time'] }}
+    <br>
+    <b>Message:</b>
+    <br>
+    {{ message['message'] }}
+    <br>
+    {% if message['image'] is defined %}
+        <b>Attached Picture:</b>
+        <br>
+            <div style="width: 1000px; height: 1000px">
+                <img src="{{ url_for('static', filename=message['image']|safe) }}" width="100%" height="auto"/>
+            </div>
+        {% endif %}
 {% endblock %}

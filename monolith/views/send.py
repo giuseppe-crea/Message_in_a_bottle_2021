@@ -92,13 +92,17 @@ def _send(_id, data=""):
                             form=form
                         )
                     file.save(file_path)
+                    # creating a webserver-approved file path
+                    path_to_save = 'images/uploads/' + \
+                                   slugify(current_user_mail) + \
+                                   '/' + filename
             # go ahead and deliver the messages
             correctly_sent, not_correctly_sent = send_messages(
                 to_parse,
                 current_user_mail,
                 time,
                 message,
-                file_path
+                path_to_save
             )
         else:
             return render_template('error_template.html', form=form)

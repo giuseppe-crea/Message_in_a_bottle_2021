@@ -4,7 +4,7 @@ import pytz
 
 from monolith.views.blacklist import is_blacklisted
 
-UPLOAD_FOLDER = '/media/uploads/images'
+UPLOAD_FOLDER = './monolith/static/images/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
 
