@@ -47,7 +47,7 @@ def _send(_id, data=""):
     if request.method == 'POST':
         if form.validate_on_submit():
             current_user_mail = getattr(current_user, 'email')
-            file_path = None
+            path_to_save = None
             # grab must-have data which we are guaranteed to have
             message, user_input = form.data['message'], form.data['recipient']
             time = form.data['time']
