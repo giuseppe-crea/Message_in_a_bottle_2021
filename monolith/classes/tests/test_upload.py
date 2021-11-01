@@ -76,7 +76,7 @@ class TestSend(unittest.TestCase):
             os.remove(lenna_dst)
             os.rmdir(Path(lenna_dst).parent)
 
-    def test_send_and_view_image(self):
+    def test_send_not_a_picture(self):
         tested_app = get_testing_app()
         with tested_app:
             rv = create_user(

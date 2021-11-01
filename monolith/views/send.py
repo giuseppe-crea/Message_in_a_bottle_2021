@@ -54,7 +54,6 @@ def _send(_id, data=""):
             to_parse = user_input.split(', ')
             # we are saving a draft
             if request.form.get("save_button"):
-                status = 0
                 # save draft
                 # unlike normal messages, drafts have multiple receivers
                 # because they haven't been split yet
