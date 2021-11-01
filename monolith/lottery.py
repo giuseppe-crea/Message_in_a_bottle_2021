@@ -21,11 +21,15 @@ class Lottery:
         # self.difficulty = difficulty
         self.period = period
         self.prize = prize
+        self.cancelled = False
 
     def start(self):
-        pass
+        self._iter()
 
     def execute(self):
+        if self.cancelled:
+            return
+
         users = [u.id for u in db.session.query(User).all()]
         winner_id = random.choice(users)
         winner = db.session.query(LotteryPoints).filter(
@@ -43,6 +47,9 @@ class Lottery:
 
     def _iter(self):
         pass
+
+    def cancel(self):
+        self.cancelled = True
 
 
 def unlock_message(user):
