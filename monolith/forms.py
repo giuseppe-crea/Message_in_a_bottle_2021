@@ -3,9 +3,13 @@ from datetime import datetime
 
 import wtforms as f
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
+from flask_uploads import UploadSet, IMAGES
 from wtforms import widgets, SelectMultipleField
 from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import StopValidation, InputRequired, Length
+
+images = UploadSet('images', IMAGES, default_dest=None)
 
 
 class TimeValidator(object):
@@ -99,6 +103,38 @@ class SendForm(FlaskForm):
     # insert multiple mail addresses separated by a comma
     recipient = f.StringField(
         'Recipient',
+        validators=[InputRequired(), mail_validator(), Length(max=1024)]
+    )
+    time = DateTimeLocalField(
+        'Send on',
+        format='%Y-%m-%dT%H:%M',
+        validators=[InputRequired(), time_validator(startdate=datetime.now())]
+    )
+    file = FileField(
+        'Your picture (optional)',
+        validators=[FileAllowed(images, 'Images only!')]
+    )
+    display = ['message', 'time', 'recipient', 'file']
+
+
+class ReplayForm(FlaskForm):
+    message = f.StringField(
+        'Message',
+        validators=[InputRequired(), Length(max=1024)]
+    )
+    time = DateTimeLocalField(
+        'Send on',
+        format='%Y-%m-%dT%H:%M',
+        validators=[InputRequired(), time_validator(startdate=datetime.now())]
+    )
+    display = ['message', 'time']
+
+
+class ForwardForm(FlaskForm):
+    # more than one user is supported,
+    # insert multiple mail addresses separated by a comma
+    recipient = f.StringField(
+        'Recipient',
         validators=[InputRequired(), mail_validator()]
     )
     time = DateTimeLocalField(
@@ -106,7 +142,7 @@ class SendForm(FlaskForm):
         format='%Y-%m-%dT%H:%M',
         validators=[InputRequired(), time_validator(startdate=datetime.now())]
     )
-    display = ['message', 'time', 'recipient']
+    display = ['time', 'recipient']
 
 
 # custom class to display checkboxes in the form, based on SelectMultipleField

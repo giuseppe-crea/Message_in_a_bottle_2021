@@ -2,7 +2,7 @@ import datetime
 import os
 from monolith import app
 from monolith.auth import login_manager
-from monolith.database import db, User
+from monolith.database import db, User, Message
 
 
 def get_testing_app():
@@ -82,3 +82,18 @@ def create_ex_users(client, number):
     :return: list of (email, password) tuple of the new users
     """
     return [create_ex_usr(client) for _ in range(number)]
+
+
+def create_message(message, sender, receiver, time, image, status):
+    unsent_message = Message()
+    unsent_message.add_message(
+        message,
+        sender,
+        receiver,
+        time,
+        image,
+        status
+    )
+    db.session.add(unsent_message)
+    db.session.commit()
+    return unsent_message
