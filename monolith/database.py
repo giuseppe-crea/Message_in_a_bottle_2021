@@ -103,6 +103,20 @@ class Blacklist(db.Model):
     def get_id(self):
         return self.owner
 
+class LotteryPoints(db.Model):
+
+    __tablename__ = 'lottery'
+
+    id = db.Column(db.Integer, primary_key=True)
+    points = db.Column(db.Integer)
+
+    def __init__(self, *args, **kw):
+        super(Blacklist, self).__init__(*args, **kw)
+
+    def add_new_user(self, id, points=0):
+        self.id = id
+        self.points = points
+
 
 class Report(db.Model):
 
