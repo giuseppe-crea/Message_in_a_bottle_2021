@@ -57,7 +57,6 @@ class TestHome(unittest.TestCase):
             assert rv.status_code == 401  # user is logged out
             rv = login(tested_app, 'default@example.com', 'admin')
             assert rv.status_code == 200
-            assert b'Hi Admin' in rv.data
             rv = tested_app.get('/inbox', follow_redirects=True)
             assert rv.status_code == 200
             assert b'sender@example.com' in rv.data
