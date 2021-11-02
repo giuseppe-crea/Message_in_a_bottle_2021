@@ -28,4 +28,4 @@ def notifications():
     db.session.commit()
 
     return render_template("notifications.html",
-                            notifications=query_notifications)
+                           notifications=query_notifications)
