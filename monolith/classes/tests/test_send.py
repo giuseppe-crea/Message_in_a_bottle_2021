@@ -30,7 +30,7 @@ class TestSend(unittest.TestCase):
                 "bob")
             assert rv.status_code == 200
             response = login(tested_app, 'sender@example.com', 'alice')
-            self.assertIn(b'Hi Alice', response.data)
+            assert response.status_code == 200
             # completed the registration and login procedures
             # get the send message page
             rv = tested_app.get('/send')

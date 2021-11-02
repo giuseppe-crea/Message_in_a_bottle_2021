@@ -27,7 +27,6 @@ class TestHome(unittest.TestCase):
             # login as Alice
             rv = login(tested_app, 'sender@example.com', 'alice')
             assert rv.status_code == 200
-            assert b'Hi Alice' in rv.data
             # send a message to default@example.com with no wait
             # this doesn't actually use celery
             delivery_time = datetime.datetime.now()

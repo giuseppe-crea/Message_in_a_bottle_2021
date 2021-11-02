@@ -13,7 +13,6 @@ class TestHome(unittest.TestCase):
             assert rv.status_code == 200
             rv = tested_app.get('/admin')
             assert rv.status_code == 200
-            assert b'Hello Admin' in rv.data
 
     def test_anonymous_denied(self):
         # anonymous users can't access the page
@@ -38,6 +37,5 @@ class TestHome(unittest.TestCase):
             assert rv.status_code == 200
             rv = login(tested_app, 'otherguy@example.com', 'charlie')
             assert rv.status_code == 200
-            assert b'Hi Charlie' in rv.data
             rv = tested_app.get('/admin')
             assert rv.status_code == 401
