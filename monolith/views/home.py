@@ -12,7 +12,7 @@ def index():
 
         current_user_email = current_user.email
         query = db.session.query(Notification).\
-                filter_by(user_email=current_user_email, is_read=False)
+            filter_by(user_email=current_user_email, is_read=False)
         notifications_count = query.count()
     else:
         notifications_count = 0
