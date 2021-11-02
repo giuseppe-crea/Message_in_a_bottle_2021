@@ -2,7 +2,6 @@ from flask import Blueprint, render_template
 from monolith.database import Notification, db
 import flask_login
 from flask_login.utils import login_required
-from datetime import datetime
 
 
 alerts = Blueprint('alerts', __name__)
@@ -21,10 +20,10 @@ def notifications():
     db.session.query(Notification).filter_by(user_email=current_user_email,
                                              is_read=True).delete()
     # load unread notifications
-    query_notifications = db.session.query(Notification).filter_by( \
+    query_notifications = db.session.query(Notification).filter_by(
             user_email=current_user_email).order_by(Notification.id.desc())
     # set notifications as read
-    db.session.query(Notification).filter_by( \
+    db.session.query(Notification).filter_by(
            user_email=current_user_email).update(dict(is_read=True))
     db.session.commit()
 
