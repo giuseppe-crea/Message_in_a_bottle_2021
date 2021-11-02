@@ -1,5 +1,7 @@
 import random
+from threading import Timer
 
+from monolith.background import celery
 from monolith.database import LotteryPoints, db, User
 
 price = 100
@@ -19,14 +21,17 @@ def get_usr_points(user):
 class Lottery:
     def __init__(self):
         # self.difficulty = difficulty
-        self.period = period
+        self.period = float(period)
         self.prize = prize
         self.cancelled = False
+        self.timer = None
 
     def start(self):
         self._iter()
 
+    @celery.task(bind=True, name="execute")
     def execute(self):
+        print("EXECUTE")
         if self.cancelled:
             return
 
@@ -43,10 +48,20 @@ class Lottery:
             winner.points += self.prize
             db.session.commit()
         # TODO send a notification
-        self._iter()
+        self.cancelled = True
+        #print("RESTART")
+        #self._iter()
 
     def _iter(self):
-        pass
+        """
+        try:
+            self.timer = Timer(period, self.execute)
+            self.timer.start()
+        except:
+            print("ITER ERROR")
+        """
+        print("SUPER ITER")
+        self.execute.apply_async(countdown=period)
 
     def cancel(self):
         self.cancelled = True
