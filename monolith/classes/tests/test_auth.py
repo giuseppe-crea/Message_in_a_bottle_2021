@@ -1,6 +1,6 @@
 import unittest
 from monolith.classes.tests.utils import get_testing_app, login, create_user
-
+from flask_login import current_user
 
 class TestAuth(unittest.TestCase):
 
@@ -53,4 +53,5 @@ class TestAuth(unittest.TestCase):
             response = login(tested_app, 'example@example.com', 'admin')
             assert response.status_code == 200
             response = tested_app.get("/logout", follow_redirects=True)
-            assert b'Hi Anonymous' in response.data
+            assert flask_login.current_user.is_authenticated()==False
+            #assert b'Hi Anonymous' in response.data
