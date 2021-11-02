@@ -66,7 +66,8 @@ class TestHome(unittest.TestCase):
             # logout, make sure nobody else can see this message
             rv = tested_app.get('/logout', follow_redirects=True)
             assert rv.status_code == 200
-            assert b'Hi Anonymous' in rv.data
+            rv = tested_app.get('/user_data')
+            assert rv.status_code == 401  # user is logged out
             # check both outbox and inbox as anonymous user
             rv = tested_app.get('/outbox', follow_redirects=True)
             assert rv.status_code == 401
@@ -89,7 +90,6 @@ class TestHome(unittest.TestCase):
             assert b'Eve Nosy' in rv.data
             rv = login(tested_app, 'intruder@example.com', 'eve')
             assert rv.status_code == 200
-            assert b'Hi Eve' in rv.data
             rv = tested_app.get('/outbox', follow_redirects=True)
             assert rv.status_code == 200
             rv = tested_app.get('/outbox/1', follow_redirects=True)
