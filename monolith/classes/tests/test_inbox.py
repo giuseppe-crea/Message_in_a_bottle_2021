@@ -54,8 +54,7 @@ class TestHome(unittest.TestCase):
             rv = tested_app.get('/logout', follow_redirects=True)
             assert rv.status_code == 200
             rv = tested_app.get('/user_data')
-            assert rv.status_code == 401 # user is logged out
-            assert b'Hi Anonymous' in rv.data
+            assert rv.status_code == 401  # user is logged out
             rv = login(tested_app, 'default@example.com', 'admin')
             assert rv.status_code == 200
             assert b'Hi Admin' in rv.data
