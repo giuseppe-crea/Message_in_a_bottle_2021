@@ -111,7 +111,7 @@ class LotteryPoints(db.Model):
     points = db.Column(db.Integer)
 
     def __init__(self, *args, **kw):
-        super(Blacklist, self).__init__(*args, **kw)
+        super(LotteryPoints, self).__init__(*args, **kw)
 
     def add_new_user(self, id, points=0):
         self.id = id
