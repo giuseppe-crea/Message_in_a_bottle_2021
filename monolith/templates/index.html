@@ -51,9 +51,11 @@
               {% if current_user.is_authenticated %}
               <li>
 
-                <a class="nav-link" href="#" target="_blank" rel="noopener" aria-label="GitHub">
+                <a class="nav-link" href="/notifications">
                   <i class="fa fa-lg fa-bell"></i>
-                  <span class="notification-badge badge badge-danger">1</span>
+                  {% if notifications > 0 %}
+                  <span class="notification-badge badge badge-danger">{{notifications}}</span>
+                  {% endif %}
               </a>
               </li>
 

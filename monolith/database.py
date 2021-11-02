@@ -139,15 +139,14 @@ class Notification(db.Model):
     is_read = db.Column(db.Boolean, default=False)
 
     def __init__(self, *args, **kw):
-        super(Report, self).__init__(*args, **kw)
+        super(Notification, self).__init__(*args, **kw)
 
-    def add_notification(self, id, user_email, title, description,
+    def add_notification(self, user_email, title, description,
                          timestamp, is_read):
-        self.id = id
         self.user_email = user_email
         self.title = title
         self.description = description
-        self.description = description
+        self.timestamp = timestamp
         self.is_read = is_read
 
     def get_id(self):
