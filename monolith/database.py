@@ -142,7 +142,7 @@ class Notification(db.Model):
         super(Report, self).__init__(*args, **kw)
 
     def add_notification(self, id, user_email, title, description,
-                        timestamp, is_read):
+                         timestamp, is_read):
         self.id = id
         self.user_email = user_email
         self.title = title

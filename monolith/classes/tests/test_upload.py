@@ -66,7 +66,6 @@ class TestSend(unittest.TestCase):
             tested_app.get('/logout')
             rv = login(tested_app, 'receiver@example.com', 'bob')
             assert rv.status_code == 200
-            assert b'Hi Bob' in rv.data
             # get the message
             rv = tested_app.get('/inbox/1', follow_redirects=True)
             assert rv.status_code == 200
