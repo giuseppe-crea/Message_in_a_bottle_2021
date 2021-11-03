@@ -30,7 +30,6 @@ def _content_filter():
         content_filter_status = db.session.query(User).filter(
             User.id == current_user.get_id()
         ).first().content_filter
-        print(content_filter_status)
         return render_template('content_filter.html',
                                status=content_filter_status, form=form)
 
