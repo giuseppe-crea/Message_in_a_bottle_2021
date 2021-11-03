@@ -3,6 +3,7 @@ from monolith.database import db, User, Message
 import pytz
 
 from monolith.views.blacklist import is_blacklisted
+from monolith.views.content_filter import check_content_filter
 
 UPLOAD_FOLDER = './monolith/static/images/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -24,11 +25,12 @@ def send_messages(to_parse, current_user_mail, time, message, image):
     time_aware = pytz.timezone('Europe/Rome').localize(time)
     for address in to_parse:
         address = address.strip()
-        exists = db.session.query(User.id).\
-            filter_by(email=address).first() is not None
+        exists = db.session.query(User.id). \
+                     filter_by(email=address).first() is not None
         if exists and not address == current_user_mail:
             # check if the receiver has this sender blacklisted
-            if not is_blacklisted(sender=current_user_mail, receiver=address):
+            if not is_blacklisted(sender=current_user_mail, receiver=address) \
+                    and check_content_filter(address, message):
                 # create a message entry in the database with status = pending
                 status = '1'
                 unsent_message = Message()
