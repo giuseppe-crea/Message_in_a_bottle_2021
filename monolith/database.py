@@ -62,6 +62,9 @@ class Message(db.Model):
     image = db.Column(db.Unicode(1024), nullable=False)
     # 0 draft, 1 sent, 2 delivered
     status = db.Column(db.Integer, nullable=False)
+    # two columns: visible to sender, visible to receiver, for deletion
+    visible_to_sender = db.Column(db.Boolean, nullable=False)
+    visible_to_receiver = db.Column(db.Boolean, nullable=False)
 
     def __init__(self, *args, **kw):
         super(Message, self).__init__(*args, **kw)
@@ -77,6 +80,8 @@ class Message(db.Model):
         else:
             self.image = ''
         self.status = status
+        self.visible_to_sender = True
+        self.visible_to_receiver = True
 
     def get_id(self):
         return self.id

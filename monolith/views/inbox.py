@@ -1,4 +1,4 @@
-from flask import Blueprint, abort
+from flask import Blueprint, abort, redirect
 from flask.templating import render_template
 from flask_login import login_required, current_user
 from sqlalchemy.exc import NoResultFound
@@ -6,6 +6,7 @@ from sqlalchemy.exc import NoResultFound
 from monolith import send
 from monolith.database import Message
 from monolith.forms import ForwardForm
+from monolith.delete import delete_for_receiver
 
 inbox = Blueprint('inbox', __name__)
 
@@ -21,7 +22,8 @@ def get_inbox(_id):
             message = Message().query.filter_by(
                 id=int(_id),
                 receiver_email=user_mail,
-                status=2
+                status=2,
+                visible_to_receiver=True
             ).one()
             return render_template("list/inbox_one.html", message=message)
         except NoResultFound:
@@ -29,9 +31,30 @@ def get_inbox(_id):
     else:
         messages = Message().query.filter_by(
             receiver_email=user_mail,
-            status=2
+            status=2,
+            visible_to_receiver=True
         )
         return render_template("list/inbox.html", messages=messages)
+
+
+@inbox.route("/inbox_delete/<_id>", methods=["GET"])
+@login_required
+def delete(_id):
+    user_mail = current_user.get_email()
+    if _id is not None:
+        try:
+            message = Message().query.filter_by(
+                id=int(_id),
+                receiver_email=user_mail,
+                status=2,
+                visible_to_receiver=True
+            ).one()
+            # TODO: add confirmation window maybe?
+            #  add a successful deletion notification?
+            delete_for_receiver(message)
+            return redirect('/inbox')
+        except NoResultFound:
+            abort(403)
 
 
 @inbox.route("/inbox/forward/<_id>", methods=["GET", "POST"])
