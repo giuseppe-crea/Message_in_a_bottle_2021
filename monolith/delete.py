@@ -14,3 +14,10 @@ def delete_for_sender(message_query: Message):
     if not message_query.visible_to_receiver:
         db.session.delete(message_query)
     db.session.commit()
+
+
+def remove_message(message_query, role):
+    if role == '/inbox':
+        delete_for_receiver(message_query)
+    else:
+        delete_for_sender(message_query)
