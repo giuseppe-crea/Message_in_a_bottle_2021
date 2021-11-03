@@ -107,7 +107,9 @@ def deliver_message(app, message_id):
             notification = Notification()
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             title = message.sender_email + " Sent You a Message"
-            description = "Check Your Inbox to Open It"
+            description = \
+                "Check Your <a href=\"/inbox\">Inbox</a> to <a href=\"/inbox/"\
+                + str(message_id) + "\">Open It</a>"
             notification.add_notification(
                 message.receiver_email,
                 title,

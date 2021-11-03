@@ -111,7 +111,7 @@
                             <div class="notification-list_content">
                                 <div class="notification-list_detail">
                                     <p><b>{{notification.title}}</b></p>
-                                    <p class="text-muted">{{notification.description}}</p>
+                                    <p class="text-muted">{{notification.description|safe}}</p>
                                     <p class="text-muted"><small>{{notification.timestamp}}</small></p>
                                 </div>
                             </div>

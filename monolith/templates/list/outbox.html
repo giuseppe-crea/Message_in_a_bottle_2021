@@ -24,7 +24,7 @@
         <ul style="list-style-type: none;">
             {% for message in delivered %}
                 <li><b>to:</b> {{ message['receiver_email'] }}</li>
-                <a href="outbox/{{message['id']}}">Read more...</a> or <a onclick=deleteRecord("inbox/{{message['id']}}") href="#">Delete</a>
+                <a href="outbox/{{message['id']}}">Read more...</a> or <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">Delete</a>
                 <br>
             {% endfor %}
         </ul>
@@ -34,7 +34,7 @@
         <ul style="list-style-type: none;">
             {% for message in pending %}
                 <li><b>to:</b> {{ message['receiver_email'] }}</li>
-                <a href="outbox/{{message['id']}}">Read more...</a> or <a onclick=deleteRecord("inbox/{{message['id']}}") href="#">Delete</a>
+                <a href="outbox/{{message['id']}}">Read more...</a> or <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">Delete</a>
                 <br>
             {% endfor %}
         </ul>
