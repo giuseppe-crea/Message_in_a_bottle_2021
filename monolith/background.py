@@ -49,7 +49,7 @@ def deliver_message(app, message_id):
             message.status = 2
             # notify recipient
             notification = Notification()
-            timestamp = message.time
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             title = message.sender_email + " Sent You a Message"
             description = "Check Your Inbox to Open It"
             notification.add_notification(
