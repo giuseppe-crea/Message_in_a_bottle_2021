@@ -44,6 +44,7 @@ def _send(_id, data=""):
     # instantiate arrays of mail addresses to display for our sender
     correctly_sent = []
     not_correctly_sent = []
+
     if request.method == 'POST':
         if form.validate_on_submit():
             current_user_mail = getattr(current_user, 'email')
@@ -95,6 +96,9 @@ def _send(_id, data=""):
                     path_to_save = 'images/uploads/' + \
                                    slugify(current_user_mail) + \
                                    '/' + filename
+
+
+
             # go ahead and deliver the messages
             correctly_sent, not_correctly_sent = send_messages(
                 to_parse,
