@@ -9,6 +9,7 @@ from .admin import admin
 from .list import list_blueprint
 from .blacklist import blacklist
 from .report import report
+from .content_filter import content_filter
 
 blueprints = [
   home,
@@ -21,5 +22,6 @@ blueprints = [
   admin,
   list_blueprint,
   blacklist,
-  report
+  report,
+  content_filter
 ]
