@@ -30,7 +30,7 @@ class TestSend(unittest.TestCase):
                 "bob")
             assert rv.status_code == 200
             response = login(tested_app, 'sender@example.com', 'alice')
-            self.assertIn(b'Hi Alice', response.data)
+            assert response.status_code == 200
             # completed the registration and login procedures
             # get the send message page
             rv = tested_app.get('/send')
@@ -66,7 +66,6 @@ class TestSend(unittest.TestCase):
             tested_app.get('/logout')
             rv = login(tested_app, 'receiver@example.com', 'bob')
             assert rv.status_code == 200
-            assert b'Hi Bob' in rv.data
             # get the message
             rv = tested_app.get('/inbox/1', follow_redirects=True)
             assert rv.status_code == 200
@@ -96,7 +95,7 @@ class TestSend(unittest.TestCase):
                 "bob")
             assert rv.status_code == 200
             response = login(tested_app, 'sender@example.com', 'alice')
-            self.assertIn(b'Hi Alice', response.data)
+            assert response.status_code == 200
             # completed the registration and login procedures
             # get the send message page
             rv = tested_app.get('/send')

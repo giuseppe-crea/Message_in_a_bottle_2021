@@ -38,7 +38,7 @@ class TestHome(unittest.TestCase):
                 follow_redirects=True
             )
             assert rv.status_code == 200
-            assert b'Hi Admin' in rv.data
+            self.assertTrue('Hi, Admin!' in rv.get_data(as_text=True))
             # get the list, we expect to see a mail addressed to example
             rv = tested_app.get('/send_draft_list')
             assert rv.status_code == 200

@@ -27,7 +27,6 @@ class TestHome(unittest.TestCase):
             # login as Alice
             rv = login(tested_app, 'sender@example.com', 'alice')
             assert rv.status_code == 200
-            assert b'Hi Alice' in rv.data
             # send a message to default@example.com with no wait
             # this doesn't actually use celery
             delivery_time = datetime.datetime.now()
@@ -54,10 +53,10 @@ class TestHome(unittest.TestCase):
             # let's log out and see if we can find it on default@example.com
             rv = tested_app.get('/logout', follow_redirects=True)
             assert rv.status_code == 200
-            assert b'Hi Anonymous' in rv.data
+            rv = tested_app.get('/user_data')
+            assert rv.status_code == 401  # user is logged out
             rv = login(tested_app, 'default@example.com', 'admin')
             assert rv.status_code == 200
-            assert b'Hi Admin' in rv.data
             rv = tested_app.get('/inbox', follow_redirects=True)
             assert rv.status_code == 200
             assert b'sender@example.com' in rv.data
@@ -67,7 +66,8 @@ class TestHome(unittest.TestCase):
             # logout, make sure nobody else can see this message
             rv = tested_app.get('/logout', follow_redirects=True)
             assert rv.status_code == 200
-            assert b'Hi Anonymous' in rv.data
+            rv = tested_app.get('/user_data')
+            assert rv.status_code == 401  # user is logged out
             # check both outbox and inbox as anonymous user
             rv = tested_app.get('/outbox', follow_redirects=True)
             assert rv.status_code == 401
@@ -90,7 +90,6 @@ class TestHome(unittest.TestCase):
             assert b'Eve Nosy' in rv.data
             rv = login(tested_app, 'intruder@example.com', 'eve')
             assert rv.status_code == 200
-            assert b'Hi Eve' in rv.data
             rv = tested_app.get('/outbox', follow_redirects=True)
             assert rv.status_code == 200
             rv = tested_app.get('/outbox/1', follow_redirects=True)

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
-
 from monolith.auth import current_user
+from monolith.views.alerts import get_notifincations_count
 
 home = Blueprint('home', __name__)
 
@@ -9,7 +9,9 @@ home = Blueprint('home', __name__)
 @home.route('/')
 def index():
     if current_user is not None and hasattr(current_user, 'id'):
-        welcome = "Logged In!"
+        current_user_email = current_user.email
+        notifications_count = get_notifincations_count(current_user_email)
     else:
-        welcome = None
-    return render_template("index.html", welcome=welcome)
+        notifications_count = 0
+
+    return render_template("index.html", notifications=notifications_count)
