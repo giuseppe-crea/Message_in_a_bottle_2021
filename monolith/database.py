@@ -5,7 +5,6 @@ db = SQLAlchemy()
 
 
 class User(db.Model):
-
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -50,7 +49,6 @@ class User(db.Model):
 
 
 class Message(db.Model):
-
     __tablename__ = 'messages'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -91,7 +89,6 @@ class Message(db.Model):
 
 
 class Blacklist(db.Model):
-
     __tablename__ = 'blacklist'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -108,8 +105,8 @@ class Blacklist(db.Model):
     def get_id(self):
         return self.owner
 
-class LotteryPoints(db.Model):
 
+class LotteryPoints(db.Model):
     __tablename__ = 'lottery'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -124,7 +121,6 @@ class LotteryPoints(db.Model):
 
 
 class Report(db.Model):
-
     __tablename__ = 'report'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -147,7 +143,6 @@ class Report(db.Model):
 
 
 class Notification(db.Model):
-
     __tablename__ = 'notification'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

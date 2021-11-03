@@ -30,6 +30,7 @@ def give_points(winner_id, points):
         winner.points += points
         db.session.commit()
 
+
 def set_points(winner_id, points):
     winner = db.session.query(LotteryPoints).filter(
         LotteryPoints.id == winner_id).first()
@@ -66,8 +67,8 @@ class Lottery:
                 winner_id = random.choice(users)
                 give_points(winner_id, self.prize)
                 # TODO send a notification
-                #self.cancelled = True
-                #self._iter()
+                # self.cancelled = True
+                # self._iter()
         except Exception as e:
             self.cancelled = True
             self.error = e
@@ -84,4 +85,3 @@ class Lottery:
 
     def cancel(self):
         self.cancelled = True
-
