@@ -27,3 +27,14 @@ services:
       - redis
     links:
       - redis
+  beat:
+    container_name: beat
+    build:
+      context: .
+      dockerfile: DockerfileBeat
+    volumes:
+      - .:/code
+    depends_on:
+      - celery
+    links:
+      - celery
