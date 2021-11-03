@@ -1,28 +1,158 @@
-<!--suppress ALL -->
+<!DOCTYPE html>
+<html lang="en">
 
 
+<head>
+  <link rel="stylesheet" href="../static/css/index.css">
+  <link rel="icon" href="../static/images/icon.png">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+</head>
 
 
-
-
-
-<h1>My Message in a Bottle -- Now Dockerized!</h1>
 
 {% if current_user.is_authenticated %}
-  Hi {{ current_user.firstname }}!
-  <a href="/inbox">Check inbox</a> or <a href="/send">Send a message</a> or
-  <a href="/outbox">Check Sent Messages</a> or
-    <a href="/send_draft_list">See drafts</a>
-    or <a href="/logout">Logout</a>
-    <h2>{{ welcome }}</h2>
-    <a href="/logout">Logout</a><br>
-    <a href="/user_data">Account Data</a>
-    <a href="/unregister">Delete Account</a>
-    <a href="/blacklist">Blacklist</a>
-    <a href="/lottery">Lottery</a>
-    <br><br> <a href="/report_user">Report User</a>
-
-
+<body style="background-color: #e7f2f8b2">
 {% else %}
-    Hi Anonymous, <a href="/login">Log in</a> or <a href="/create_user">Register</a>
+<body style="background-color: #74BDCB">
 {% endif %}
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-md navbar-light navbar-laravel" style="margin-bottom: 20px;background-color: #e3f2fd;">
+    <div class="container">
+      
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">
+          <img src="../static/images/icon.png" alt="logo" width="50" height="50">
+        </a>
+      </div>
+
+        <a class="navbar-brand" href="#">My Message in a Bottle</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Left Side Of Navbar -->
+             <!--
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+            //-->
+
+            <!-- Right Side Of Navbar -->
+            
+            <ul class="navbar-nav ml-auto">
+              {% if current_user.is_authenticated %}
+              <li>
+
+                <a class="nav-link" href="/notifications">
+                  <i class="fa fa-lg fa-bell"></i>
+                  {% if notifications > 0 %}
+                  <span class="notification-badge badge badge-danger"> {{ notifications }} </span>
+                  {% endif %}
+              </a>
+              </li>
+
+              <li>
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Hi, {{ current_user.firstname }}!                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                    <a class="dropdown-item" href="/user_data">Account Data</a>
+                    <a class="dropdown-item" href="/unregister">Delete Account</a>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                  </div>
+                </div>
+              </li>
+
+              {% else %}
+                <li><a class="nav-link" href="/login">Login</a></li>
+                <li><a class="nav-link" href="/create_user">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+</nav>
+
+
+
+<!-- User Functionalities -->
+{% if current_user.is_authenticated %}
+<section class="tiles">
+<div class="container ">
+
+  <div class="row justify-content-center">
+    <div class="col-sm-6">
+      <div class="link-tiles"><a href="/inbox">Inbox</a>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="link-tiles"><a href="/outbox">Sent Messages</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-sm-6">
+      <div class="link-tiles"><a href="/send">Send a Message</a>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="link-tiles"><a href="/send_draft_list">Drafts</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-sm-6">
+      <div class="link-tiles"><a href="/blacklist">Blacklist</a>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="link-tiles"><a href="/report_user">Reaport a User</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Functionalities -->
+  {% if current_user.is_admin %}
+  <div class="row justify-content-center">
+    <div class="col-sm-6">
+      <div class="link-tiles"><a href="/reports">Reports</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+</section>
+
+
+<!-- Anonymous Welcome Page -->
+{% else %}
+
+<div>
+  <img src="../static/images/welcome.png" class="img-fluid rounded mx-auto d-block" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 300px; max-width:800px" alt="Welcome">
+</div>
+ 
+
+
+
+
+{% endif %}
+
+
+
+
+
+</body>
+</html>
+

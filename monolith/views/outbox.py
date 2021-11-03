@@ -3,8 +3,7 @@ from flask.templating import render_template
 from flask_login import login_required, current_user
 from sqlalchemy.exc import NoResultFound
 
-from monolith import lottery
-from monolith.delete import delete_for_sender, delete_for_receiver
+from monolith.delete import delete_for_sender
 from monolith.database import Message
 
 outbox = Blueprint('outbox', __name__)

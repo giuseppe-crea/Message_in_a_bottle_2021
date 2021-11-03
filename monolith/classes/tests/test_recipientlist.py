@@ -32,7 +32,6 @@ class TestRecipientList(unittest.TestCase):
             # login with the tester user
             response = login(tested_app, 'tester@example.com', 'password')
             assert response.status_code == 200
-            self.assertIn(b'Hi tester', response.data)
 
             # retrieve list_of_recipients.html
             rv = tested_app.get('/list_of_recipients')

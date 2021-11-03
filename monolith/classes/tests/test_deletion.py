@@ -57,7 +57,7 @@ class TestSend(unittest.TestCase):
             assert rv.status_code == 200
             assert bytes(user2, 'utf-8') in rv.data
             # now delete it for the sender
-            rv = tested_app.get('/outbox_delete/1', follow_redirects=True)
+            rv = tested_app.delete('/outbox/1', follow_redirects=True)
             assert rv.status_code == 200
             assert bytes(user2, 'utf-8') not in rv.data
             # check that the message is still present for user2
@@ -68,7 +68,7 @@ class TestSend(unittest.TestCase):
             assert rv.status_code == 200
             assert bytes(user1, 'utf-8') in rv.data
             # now delete it for the receiver
-            rv = tested_app.get('/inbox_delete/1', follow_redirects=True)
+            rv = tested_app.delete('/inbox/1', follow_redirects=True)
             assert rv.status_code == 200
             assert bytes(user1, 'utf-8') not in rv.data
             # check that the message has been deleted from the database
@@ -82,7 +82,7 @@ class TestSend(unittest.TestCase):
             # now delete it for user3 too
             rv = login(tested_app, user3, password3)
             assert rv.status_code == 200
-            rv = tested_app.get('/inbox_delete/2', follow_redirects=True)
+            rv = tested_app.delete('/inbox/2', follow_redirects=True)
             assert rv.status_code == 200
             assert bytes(user1, 'utf-8') not in rv.data
             # check that the message hasn't been deleted from the database
@@ -96,7 +96,7 @@ class TestSend(unittest.TestCase):
             # finally, log back as user1, delete message 2
             rv = login(tested_app, user1, password1)
             assert rv.status_code == 200
-            rv = tested_app.get('/outbox_delete/2', follow_redirects=True)
+            rv = tested_app.delete('/outbox/2', follow_redirects=True)
             assert rv.status_code == 200
             assert bytes(user3, 'utf-8') not in rv.data
             # call pic cleanup service
@@ -112,7 +112,7 @@ class TestSend(unittest.TestCase):
             users = create_ex_users(tested_app, 1)
             user1, password1 = users[0]
             login(tested_app, user1, password1)
-            rv = tested_app.get('/outbox_delete/1', follow_redirects=True)
+            rv = tested_app.delete('/outbox/1', follow_redirects=True)
             assert rv.status_code == 403
 
     def test_delete_unauthorized(self):
@@ -126,11 +126,11 @@ class TestSend(unittest.TestCase):
             # create a delivered message in the database, from user2 to user1
             create_message("test", user2, user1, "2199-01-01T01:01", None, 2)
             # try and delete it from user2's outbox
-            rv = tested_app.get('/outbox_delete/1', follow_redirects=True)
+            rv = tested_app.delete('/outbox/1', follow_redirects=True)
             assert rv.status_code == 403
             tested_app.get('/logout')
             # login as user2
             login(tested_app, user2, password2)
             # try and delete it from user1's inbox
-            rv = tested_app.get('/inbox_delete/1', follow_redirects=True)
+            rv = tested_app.delete('/inbox/1', follow_redirects=True)
             assert rv.status_code == 403
