@@ -5,7 +5,7 @@ from sqlalchemy.exc import NoResultFound
 
 from monolith import send, lottery
 from monolith.database import Message
-from monolith.delete import delete_for_receiver, delete_for_sender
+from monolith.delete import delete_for_receiver
 from monolith.forms import ForwardForm
 
 inbox = Blueprint('inbox', __name__)
@@ -87,24 +87,3 @@ def forward(_id):
             return render_template('request_form.html', form=form)
         except NoResultFound:
             abort(403)
-
-
-@inbox.route("/inbox/withdraw/<_id>", methods=["GET"])
-@login_required
-def withdraw(_id):
-    if _id is not None:
-        points = lottery.get_usr_points(current_user.get_id())
-        if points >= lottery.price:
-            message = None
-            try:
-                message = Message().query.filter_by(
-                    id=int(_id)).one()
-            except NoResultFound:
-                abort(403)
-            delete_for_receiver(message)
-            delete_for_sender(message)
-            points -= lottery.price
-            lottery.set_points(current_user.get_id(), points)
-            return redirect('/inbox')
-        else:
-            abort(401)

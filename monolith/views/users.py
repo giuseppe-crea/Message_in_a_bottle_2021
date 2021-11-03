@@ -74,7 +74,7 @@ def user_data():
     # get the user's data fom the database
     data = db.session.query(User).filter(User.id == user.get_id()).first()
     # get the user's lottery points
-    points = monolith.lottery.get_usr_points(user.get_id())
+    points = monolith.lottery.get_usr_points(user)
     # convert user data into a dictionary for easy display.
     result = _user_data2dict(data, points)
     return render_template('user_data.html', result=result)

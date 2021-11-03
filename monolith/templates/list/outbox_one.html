@@ -21,4 +21,7 @@
                 <img src="{{ url_for('static', filename=message['image']|safe) }}" width="100%" height="auto"/>
             </div>
         {% endif %}
+
+    You can spend {{price}} lottery points to withdraw this message.<br>
+    <a href="withdraw/{{message['id']}}">Withdraw</a>
 {% endblock %}
