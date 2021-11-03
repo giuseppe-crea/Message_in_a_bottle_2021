@@ -87,4 +87,4 @@ class Lottery:
 
 
 def unlock_message(user):
-    return None
+    return -1, 0
