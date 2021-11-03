@@ -2,13 +2,11 @@ from datetime import datetime
 import pathlib
 
 from celery import Celery
-
-from monolith.database import db, Message, Notification
-
 from sqlalchemy import and_
 from sqlalchemy.exc import NoResultFound
 import os
-from datetime import datetime
+
+from monolith.database import db, Message, Notification
 
 if os.environ.get('DOCKER') is not None:
     BACKEND = BROKER = 'redis://redis:6379/0'
