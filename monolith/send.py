@@ -26,7 +26,7 @@ def send_messages(to_parse, current_user_mail, time, message, image):
     for address in to_parse:
         address = address.strip()
         exists = db.session.query(User.id). \
-                     filter_by(email=address).first() is not None
+            filter_by(email=address).first() is not None
         if exists and not address == current_user_mail:
             # check if the receiver has this sender blacklisted
             if not is_blacklisted(sender=current_user_mail, receiver=address) \

@@ -97,8 +97,6 @@ def _send(_id, data=""):
                                    slugify(current_user_mail) + \
                                    '/' + filename
 
-
-
             # go ahead and deliver the messages
             correctly_sent, not_correctly_sent = send_messages(
                 to_parse,
