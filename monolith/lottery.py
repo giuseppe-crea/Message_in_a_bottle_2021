@@ -85,6 +85,3 @@ class Lottery:
     def cancel(self):
         self.cancelled = True
 
-
-def unlock_message(user):
-    return -1, 0

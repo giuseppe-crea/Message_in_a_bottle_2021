@@ -1,4 +1,3 @@
-from .lottery import lottery
 from .auth import auth
 from .home import home
 from .inbox import inbox
@@ -22,6 +21,5 @@ blueprints = [
   admin,
   list_blueprint,
   blacklist,
-  report,
-  lottery
+  report
 ]

@@ -2,7 +2,9 @@ import datetime
 import unittest
 
 import flask
+import flask_login
 
+from monolith import lottery
 from monolith.background import deliver_message
 from monolith.classes.tests import utils
 from monolith.classes.tests.utils import get_testing_app, create_user, login, \
@@ -144,3 +146,41 @@ class TestHome(unittest.TestCase):
             )
             # the message is correctly sent
             self.assertIn(b'Successfully Sent to:', rv.data)
+
+    def test_withdraw(self):
+        """
+        Test the message withdraw functionality.
+        """
+        tested_app = get_testing_app()
+        with tested_app:
+            # create and log a new user
+            user, psw = utils.create_ex_usr(tested_app)
+            utils.login(tested_app, user, psw)
+            user = flask_login.current_user
+            # give some points to the user
+            lottery.set_points(user.get_id(), lottery.price * 2)
+            # internally send a message from user2 to default user
+            delivery_time = datetime.datetime(year=2030, month=3, day=12,
+                                              hour=12, minute=30)
+            message = create_message(
+                "Test1",
+                user,
+                "default@example.com",
+                delivery_time.strftime('%Y-%m-%dT%H:%M'),
+                None,
+                1
+            )
+            deliver_message(
+                flask.current_app,
+                message.get_id()
+            )
+            # the message is in the outbox
+            rv = tested_app.get("/outbox")
+            self.assertIn(b"default@example.com", rv.data)
+
+            # withdraw the message
+            tested_app.get("/outbox/withdraw/" + str(message.get_id()))
+
+            # message removed from outbox
+            rv = tested_app.get("/outbox")
+            self.assertNotIn(b"default@example.com", rv.data)
