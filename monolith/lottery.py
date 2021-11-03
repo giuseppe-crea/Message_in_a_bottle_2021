@@ -45,8 +45,9 @@ def set_points(winner_id, points):
 
 
 class Lottery:
-    def __init__(self):
+    def __init__(self, app):
         # self.difficulty = difficulty
+        self.app = app
         self.period = float(period)
         self.prize = prize
         self.cancelled = False
@@ -60,12 +61,13 @@ class Lottery:
         if self.cancelled:
             return
         try:
-            users = [u.id for u in db.session.query(User).all()]
-            winner_id = random.choice(users)
-            give_points(winner_id, self.prize)
-            # TODO send a notification
-            #self.cancelled = True
-            self._iter()
+            with self.app:
+                users = [u.id for u in db.session.query(User).all()]
+                winner_id = random.choice(users)
+                give_points(winner_id, self.prize)
+                # TODO send a notification
+                #self.cancelled = True
+                #self._iter()
         except Exception as e:
             self.cancelled = True
             self.error = e
