@@ -38,19 +38,11 @@ def _content_filter():
 @content_filter.route('/content_filter/list', methods=['GET'])
 @login_required
 def _content_filter_list():
-    pass
-
-
-@content_filter.route('/content_filter/add', methods=['GET', 'POST'])
-@login_required
-def _content_filter_add():
-    pass
-
-
-@content_filter.route('/content_filter/remove', methods=['GET', 'POST'])
-@login_required
-def _content_filter_remove():
-    pass
+    file = open(r"./monolith/static/default_badwords.txt", "r")
+    wordlist = []
+    for line in file:
+        wordlist.append(line)
+    return render_template("badwords.html", wordlist=wordlist)
 
 
 def check_content_filter(receiver_address, message_to_send):

@@ -129,3 +129,4 @@ class Report(db.Model):
 
     def get_id(self):
         return self.id
+
