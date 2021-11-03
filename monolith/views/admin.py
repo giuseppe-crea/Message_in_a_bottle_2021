@@ -2,7 +2,6 @@ from flask import Blueprint, render_template
 from flask_login import login_required
 import flask_login
 from monolith.auth import admin_required
-from monolith.database import Notification, db
 from monolith.views.alerts import get_notifincations_count
 
 

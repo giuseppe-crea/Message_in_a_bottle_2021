@@ -33,8 +33,7 @@ def notifications():
 
 # return the number of unread notifications for user_email
 def get_notifincations_count(user_email):
-        query = db.session.query(Notification).\
+    query = db.session.query(Notification).\
                 filter_by(user_email=user_email, is_read=False)
-        notifications_count = query.count()
-
-        return notifications_count
+    notifications_count = query.count()
+    return notifications_count

@@ -48,7 +48,7 @@ class TestNotifications(unittest.TestCase):
             assert rv.status_code == 200
             # the message is not present in receiver's notifications
             self.assertTrue(
-                'sender@example.com Sent You a Message'\
+                'sender@example.com Sent You a Message'
                 not in rv.get_data(as_text=True)
                 )
             # receiver logs out
@@ -81,6 +81,6 @@ class TestNotifications(unittest.TestCase):
             rv = tested_app.get('/notifications')
             assert rv.status_code == 200
             self.assertTrue(
-                'sender@example.com Sent You a Message'\
+                'sender@example.com Sent You a Message'
                 in rv.get_data(as_text=True)
                 )
