@@ -133,7 +133,7 @@ class TestSend(unittest.TestCase):
                     'time': "2199-01-01T01:01"},
                 follow_redirects=True
             )
-            assert b'You must specify at least one valid sender!' in rv.data
+            assert b'You must specify at least one valid address!' in rv.data
             # try to logout and access send
             tested_app.get('/logout')
             rv = tested_app.post(
