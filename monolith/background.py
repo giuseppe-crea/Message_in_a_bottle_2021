@@ -1,11 +1,12 @@
-from datetime import datetime
+import os
 import pathlib
+from datetime import datetime
 
 from celery import Celery
 from sqlalchemy import and_
 from sqlalchemy.exc import NoResultFound
-import os
 
+from monolith import lottery
 from monolith.database import db, Message, Notification
 
 if os.environ.get('DOCKER') is not None:
@@ -49,6 +50,12 @@ def setup_periodic_tasks(sender, **kwargs):
         3600.0,
         cleanup_pictures.s(_APP),
         name='expired images cleanup'
+    )
+
+    sender.add_periodic_task(
+        float(lottery.period),
+        lottery_task.s(_APP),
+        name='lottery task'
     )
 
 
@@ -116,9 +123,18 @@ def deliver_message(app, message_id):
                 description,
                 timestamp,
                 False
-                )
+            )
             db.session.add(notification)
             db.session.commit()
         except NoResultFound:
             quit(0)  # this means the message was retracted
     return "Done"
+
+
+@celery.task
+def lottery_task(app):
+    global _APP
+    do_task(app)
+    # noinspection PyUnresolvedReferences
+    with _APP.app_context():
+        lottery.execute()

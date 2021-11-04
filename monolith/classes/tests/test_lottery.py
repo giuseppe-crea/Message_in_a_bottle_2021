@@ -5,18 +5,6 @@ import flask_login
 from monolith import lottery
 from monolith.classes.tests import utils
 from monolith.classes.tests.utils import get_testing_app
-from monolith.lottery import Lottery
-
-
-class DebugLottery(Lottery):
-    """
-    Subclass of Lottery,
-    provides additional functionalities for testing and debug"
-    """
-
-    def __init__(self, app, period):
-        super().__init__(app)
-        self.period = period
 
 
 class TestLottery(unittest.TestCase):
@@ -45,7 +33,7 @@ class TestLottery(unittest.TestCase):
             lottery.set_points(user.get_id(), lottery.price * 2)
 
             # send a message from user to default user
-            rv = tested_app.post(
+            tested_app.post(
                 '/send',
                 data={
                     'message': "Short test message",
@@ -65,28 +53,21 @@ class TestLottery(unittest.TestCase):
             rv = tested_app.get("/outbox")
             self.assertNotIn(b"default@example.com", rv.data)
 
+    def test_lottery(self):
+        """
+        Test the lottery execution
+        """
+        with self.app:
+            # log the default and unique user
+            email, psw = "default@example.com", "admin"
+            utils.login(self.app, email, psw)
+            user = flask_login.current_user
+            # set the user's points to 0
+            lottery.set_points(user.get_id(), 0)
 
-"""
-def test_lottery(self):
-    period = 2
-    db_lottery = DebugLottery(self.app, period)
-    db_lottery.start()
-    with self.app:
-        user, psw = "default@example.com", "admin"
-        utils.login(self.app, user, psw)
-        user = flask_login.current_user
-        lottery.set_points(user.get_id(), 0)
-        #iterations = 2
+            # execute a lottery round
+            lottery.execute()
 
-        sleep(period + 1)
-
-        db_lottery.cancel()
-        self.assertEqual(True, db_lottery.cancelled)
-        self.assertEqual(None, db_lottery.error)
-        #expected_points = iterations * lottery.prize
-        #expected = "You have " + str(expected_points) + " lottery points!"
-        #expected = bytes(expected, 'utf-8')
-        rv = self.app.get("/lottery")
-        #self.assertIn(expected, rv.data)
-        self.assertNotIn(b"You have 0 lottery points!", rv.data)
-"""
+            # expect non zero lottery points
+            points = lottery.get_usr_points(user)
+            self.assertNotEqual(points, 0)
