@@ -1,3 +1,4 @@
+import os
 import unittest
 from monolith.classes.tests import utils
 from monolith.database import User, Message, db
@@ -33,7 +34,7 @@ class TestContentFilter(unittest.TestCase):
                              filter(User.email == email).
                              first().content_filter, False)
 
-    def test_activation(self):
+    def test_on_off(self):
         """
             Test content filter activation
         """
@@ -63,10 +64,26 @@ class TestContentFilter(unittest.TestCase):
                              filter(User.email == email).
                              first().content_filter, True)
 
+            self.assertEqual(os.path.exists(
+                './monolith/static/default_badwords.txt'), True)
             # check the list of badwords list
             rv = self.app.get('/content_filter/list')
             assert rv.status_code == 200
             self.assertIn(b'fuck', rv.data)
+
+            # checkbox click
+            rv = self.app.post(
+                '/content_filter',
+                data={},
+                follow_redirects=True
+            )
+            assert rv.status_code == 200
+            assert b'disabled' in rv.data
+
+            # check DB state
+            self.assertEqual(db.session.query(User).
+                             filter(User.email == email).
+                             first().content_filter, False)
 
     def test_contentfilter(self):
         """
