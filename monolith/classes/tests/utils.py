@@ -85,8 +85,8 @@ def cleanup():
     if os.path.exists('./T_mmiab.db'):
         print("Removing old database...")
         os.remove('./T_mmiab.db')
-    if os.path.exists('./monolith/static/images/test_uploads'):
-        folder = './monolith/static/images/test_uploads'
+    folder = './monolith/static/images/test_uploads'
+    if os.path.isdir(folder):
         for filename in os.listdir(folder):
             file_path = os.path.join(folder, filename)
             try:

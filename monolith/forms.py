@@ -7,7 +7,7 @@ from flask_wtf.file import FileField, FileAllowed
 from flask_uploads import UploadSet, IMAGES
 from wtforms import widgets, SelectMultipleField
 from wtforms.fields.html5 import DateTimeLocalField
-from wtforms.validators import StopValidation, InputRequired, Length
+from wtforms.validators import StopValidation, InputRequired, Length, Optional
 
 images = UploadSet('images', IMAGES, default_dest=None)
 
@@ -32,7 +32,6 @@ class TimeValidator(object):
 
 
 class MailValidator(object):
-    field_flags = ('required',)
 
     @staticmethod
     def check(email):
@@ -44,10 +43,11 @@ class MailValidator(object):
         else:
             return False
 
-    def __init__(self, mails=None, message=None):
+    def __init__(self, mails=None, message=None, single=False):
         if mails is None:
             mails = []
         self.mails = mails
+        self.single = single
         if not message:
             message = "You must specify at least one valid address!"
         self.message = message
@@ -59,6 +59,9 @@ class MailValidator(object):
             address = address.strip()
             if self.check(address):
                 self.mails.append(address)
+        if len(self.mails) > 1 and self.single:
+            field.errors[:] = []
+            raise StopValidation(self.message)
         if len(self.mails) < 1:
             field.errors[:] = []
             raise StopValidation(self.message)
@@ -182,6 +185,24 @@ class ReportForm(FlaskForm):
         )
 
     display = ['user', 'description', 'block_user']
+
+
+class CredentialsForm(FlaskForm):
+    email = f.StringField(
+        'email',
+        validators=[
+            Optional(),
+            mail_validator(single=True, message="Not a valid address."),
+            Length(max=128)
+        ]
+    )
+    firstname = f.StringField('firstname', validators=[Length(max=128)])
+    lastname = f.StringField('lastname', validators=[Length(max=128)])
+    old_password = f.PasswordField(
+        'old password',
+        validators=[InputRequired(), Length(max=128)])
+    password = f.PasswordField('new password', validators=[Length(max=128)])
+    display = ['email', 'firstname', 'lastname', 'password', 'old_password']
 
 
 class ContentFilterForm(FlaskForm):

@@ -50,6 +50,14 @@ class User(db.Model):
     def get_email(self):
         return self.email
 
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            if key == 'password':
+                self.set_password(value)
+            # prevent privilege de/escalation
+            elif key != 'is_admin' or key != 'is_anonymous':
+                setattr(self, key, value)
+
     def get_content_filter_status(self):
         return self.content_filter
 

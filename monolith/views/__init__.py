@@ -10,6 +10,7 @@ from .blacklist import blacklist
 from .report import report
 from .content_filter import content_filter
 from .alerts import alerts
+from .credentials import credentials
 
 
 blueprints = [
@@ -23,6 +24,7 @@ blueprints = [
   list_blueprint,
   blacklist,
   report,
+  alerts,
   content_filter,
-  alerts
+  credentials
 ]
