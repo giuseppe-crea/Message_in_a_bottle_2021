@@ -204,7 +204,6 @@ class CredentialsForm(FlaskForm):
     password = f.PasswordField('new password', validators=[Length(max=128)])
     display = ['email', 'firstname', 'lastname', 'password', 'old_password']
 
-    
+
 class ContentFilterForm(FlaskForm):
     content_filter_status = f.BooleanField()
-
