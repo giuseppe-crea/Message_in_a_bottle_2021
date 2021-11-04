@@ -227,3 +227,11 @@ class TestSend(unittest.TestCase):
             rv = tested_app.get('/inbox')
             assert rv.status_code == 200
             assert bytes(user1, 'utf-8') in rv.data
+
+    def test_send_non_existing_message(self):
+        tested_app = get_testing_app()
+        with tested_app:
+            create_ex_users(tested_app, 1)
+            deliver_message(flask.current_app, 1)
+            # nothing to assert as a result but all exceptions were handled
+            pass

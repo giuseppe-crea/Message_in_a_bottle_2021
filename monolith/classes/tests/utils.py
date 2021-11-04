@@ -10,6 +10,7 @@ def get_testing_app():
     app.config['WTF_CSRF_ENABLED'] = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../T_mmiab.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['UPLOADED_IMAGES_DEST'] = './monolith/static/images/uploads/'
     # clean old db
     if os.path.exists('./T_mmiab.db'):
         os.remove('./T_mmiab.db')

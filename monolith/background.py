@@ -120,5 +120,5 @@ def deliver_message(app, message_id):
             db.session.add(notification)
             db.session.commit()
         except NoResultFound:
-            quit(0)  # this means the message was retracted
+            pass  # this means the message was retracted
     return "Done"
