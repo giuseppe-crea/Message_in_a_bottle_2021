@@ -39,6 +39,7 @@ def _send(_id, data=""):
     # instantiate arrays of mail addresses to display for our sender
     correctly_sent = []
     not_correctly_sent = []
+
     if request.method == 'POST':
         if form.validate_on_submit():
             current_user_mail = getattr(current_user, 'email')
@@ -64,6 +65,7 @@ def _send(_id, data=""):
             # check if the post request has the optional file part
             if 'file' in request.files:
                 file = request.files['file']
+
             # go ahead and deliver the messages
             try:
                 correctly_sent, not_correctly_sent = send_messages(

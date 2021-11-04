@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Badwords</title>
+</head>
+<body>
+    <a href="/">Home</a><br>
+    {% if wordlist != [] %}
+    <h1>Your bad-words list:</h1>
+    <ul>
+        {% for value in wordlist %}
+            <li> {{ value }} </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <br>Your badword list is empty!
+    {% endif %}
+</body>
+</html>
