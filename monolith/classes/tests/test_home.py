@@ -7,4 +7,4 @@ class TestHome(unittest.TestCase):
         # start by loading the home as anonymous
         client = app.test_client()
         rv = client.get('/')
-        assert b'Hi Anonymous' in rv.data
+        assert rv.status_code == 200

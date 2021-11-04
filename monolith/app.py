@@ -1,4 +1,5 @@
 import datetime
+import sys
 
 from flask import Flask
 from flask_uploads import configure_uploads
@@ -16,10 +17,14 @@ def create_app():
     _app.config['SECRET_KEY'] = 'ANOTHER ONE'
     _app.config['UPLOADED_IMAGES_DEST'] = UPLOAD_FOLDER
     _app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
-    # disable CSRF protection when the app is running in dev mode
-    if _app.config['ENV'] == 'development':
+    # disable CSRF protection when the app is running in dev or test mode
+    if _app.config['ENV'] == 'development' or "pytest" in sys.modules:
         _app.config['WTF_CSRF_ENABLED'] = False
-    _app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../mmiab.db'
+    if "pytest" in sys.modules:
+        _app.config['TESTING'] = True
+        _app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../T_mmiab.db'
+    else:
+        _app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../mmiab.db'
     _app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     configure_uploads(_app, images)
     for bp in blueprints:

@@ -1,0 +1,115 @@
+span.notification-badge {
+    background: #FFA384;
+    position: relative;
+    top: -10px;
+    left: -15px;
+    margin-left: -18px;
+  }
+
+  .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #74BDCB !important;
+    border-color: #74BDCB !important;
+    outline: none !important;
+    box-shadow: none !important
+  }
+  
+  .tiles {
+    margin-top: 100px;
+}
+@media (max-width: 992px) and (min-width: 768px) {
+    .tiles {
+        margin-top: 50px;
+   }
+}
+@media (max-width: 768px) {
+    .tiles {
+        padding: 0 15px;
+        margin-top: 60px;
+   }
+}
+.tiles h2 {
+    margin-bottom: 50px;
+}
+@media (max-width: 992px) {
+    .tiles h2 {
+        margin-bottom: 40px;
+   }
+}
+.tiles .link-tiles {
+    margin-bottom: 20px;
+    background: #74BDCB;
+    height: 137px;
+}
+@media (max-width: 992px) and (min-width: 768px) {
+    .tiles .link-tiles {
+        height: 100px;
+   }
+}
+@media (max-width: 768px) {
+    .tiles .link-tiles {
+        height: 90px;
+   }
+}
+.tiles .link-tiles a {
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    position: relative;
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 20px;
+    padding-left: 40px;
+    text-transform: uppercase;
+}
+@media (max-width: 992px) and (min-width: 768px) {
+    .tiles .link-tiles a {
+        padding-left: 15px;
+        font-size: 15px;
+        line-height: 18px;
+   }
+}
+@media (max-width: 768px) {
+    .tiles .link-tiles a {
+        font-size: 14px;
+        line-height: 18px;
+        padding-left: 15px;
+   }
+}
+@media (max-width: 350px) {
+    .tiles .link-tiles a {
+        font-size: 12px;
+        line-height: 14px;
+   }
+}
+.link-tiles a:after {
+    top: 38%;
+    right: 30px;
+    position: absolute;
+    font-size: 73px;
+    font-weight: 300;
+}
+.link-tiles:hover {
+    background: #FFA384;
+    transition: all, 0.4s, ease;
+}
+.link-tiles:hover a {
+    color: #f1f1f1;
+}
+@media (max-width: 992px) and (min-width: 768px) {
+    .tiles .link-tiles a:after {
+        right: 15px;
+        font-size: 30px;
+   }
+}
+@media (max-width: 768px) {
+    .link-tiles a:after {
+        right: 10px;
+        font-size: 30px;
+   }
+}
+.link-tiles:hover a {
+    color: #f1f1f1;
+}
+

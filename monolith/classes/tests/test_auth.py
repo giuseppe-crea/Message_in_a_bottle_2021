@@ -23,7 +23,7 @@ class TestAuth(unittest.TestCase):
                 "admin")
             assert rv.status_code == 200
             response = login(tested_app, 'example@example.com', 'admin')
-            self.assertIn(b'Hi Admin', response.data)
+            assert response.status_code == 200
 
     def test_bad_login(self):
         tested_app = get_testing_app()
@@ -51,6 +51,8 @@ class TestAuth(unittest.TestCase):
                 "admin")
             assert response.status_code == 200
             response = login(tested_app, 'example@example.com', 'admin')
-            self.assertIn(b'Hi Admin', response.data)
+            assert response.status_code == 200
             response = tested_app.get("/logout", follow_redirects=True)
-            assert b'Hi Anonymous' in response.data
+            # the user tries to access his data but he's logged out
+            response = tested_app.get('/user_data')
+            assert response.status_code == 401

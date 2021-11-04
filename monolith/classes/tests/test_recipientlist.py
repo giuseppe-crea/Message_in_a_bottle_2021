@@ -32,7 +32,6 @@ class TestRecipientList(unittest.TestCase):
             # login with the tester user
             response = login(tested_app, 'tester@example.com', 'password')
             assert response.status_code == 200
-            self.assertIn(b'Hi tester', response.data)
 
             # retrieve list_of_recipients.html
             rv = tested_app.get('/list_of_recipients')
@@ -49,7 +48,7 @@ class TestRecipientList(unittest.TestCase):
             assert rv.status_code == 200
             # tester address and admin address
             assert b'Choose Recipients' in rv.data
-            assert b'default@example.com' in rv.data
+            assert b'example@example.com' in rv.data
             assert b'tester@example.com' in rv.data
 
             # try to select an existing user
