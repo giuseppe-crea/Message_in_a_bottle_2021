@@ -1,0 +1,57 @@
+{% extends 'body.html' %}
+{% block content %}
+    <script>
+    function deleteRecord(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", url);
+        xhr.send();
+        xhr.onload = function() {
+            if (xhr.status != 200) {
+                console.log('ERROR');
+            } else {
+                console.log('DELETED!');
+            }
+            location.reload();
+        };
+        xhr.onerror = function() {
+            console.log('NO CONNECTION');
+        };
+    }
+    </script>
+    {% if role == "/inbox" %}
+        <h1>Welcome to your Inbox folder!</h1>
+    {% else %}
+        <h1>Welcome to your Sent Messages folder!</h1>
+    {% endif %}
+        <div>
+        {% if role == "/outbox" %}
+            <h2>Messages Already Delivered:</h2>
+        {% else %}
+            <h2>Your messages:</h2>
+        {% endif %}
+            <ul style="list-style-type: none;">
+                {% for message in messages %}
+                    {% if role == "/outbox" %}
+                    <li><b>to:</b> {{ message['receiver_email'] }}</li>
+                    <a href="outbox/{{message['id']}}">Read more...</a> or <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">Delete</a>
+                    {% else %}
+                    <li><b>to:</b> {{ message['sender_email'] }}</li>
+                    <a href="inbox/{{message['id']}}">Read more...</a> or <a onclick=deleteRecord("inbox/{{message['id']}}") href="#">Delete</a>
+                    {% endif %}
+                    <br>
+                {% endfor %}
+            </ul>
+        </div>
+    {% if role == "/outbox" %}
+        <div>
+            <h2>Messages Pending Delivery:</h2>
+            <ul style="list-style-type: none;">
+                {% for message in pending_delivery %}
+                    <li><b>to:</b> {{ message['receiver_email'] }}</li>
+                    <a href="outbox/{{message['id']}}">Read more...</a> or <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">Delete</a>
+                    <br>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

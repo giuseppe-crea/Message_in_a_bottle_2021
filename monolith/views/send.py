@@ -1,18 +1,13 @@
-import os
 from datetime import datetime
-from pathlib import Path
 
-import flask
 from flask import Blueprint, render_template, request, redirect, abort
 from flask_login import login_required
 from sqlalchemy.exc import NoResultFound
-from werkzeug.utils import secure_filename
-from slugify import slugify
 
 from monolith.auth import current_user
 from monolith.database import Message
 from monolith.forms import SendForm, ReplayForm
-from monolith.send import send_messages, save_draft, allowed_file
+from monolith.send import send_messages, save_draft
 
 send = Blueprint('send', __name__)
 
@@ -48,7 +43,7 @@ def _send(_id, data=""):
     if request.method == 'POST':
         if form.validate_on_submit():
             current_user_mail = getattr(current_user, 'email')
-            path_to_save = None
+            file = None
             # grab must-have data which we are guaranteed to have
             message, user_input = form.data['message'], form.data['recipient']
             time = form.data['time']
@@ -70,41 +65,19 @@ def _send(_id, data=""):
             # check if the post request has the optional file part
             if 'file' in request.files:
                 file = request.files['file']
-                # if user does not select file, browser also
-                # submit an empty part without filename
-                # also checks if the file is an image
-                # despite the validator having already done so
-                if file.filename != '' and allowed_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    # files are saved in a unique folder per each user
-                    folder_path = os.path.join(
-                        flask.current_app.config['UPLOADED_IMAGES_DEST'],
-                        slugify(current_user_mail),
-                    )
-                    if not os.path.exists(folder_path):
-                        Path(folder_path).mkdir(parents=True, exist_ok=True)
-                    file_path = os.path.join(folder_path, filename)
-                    # make sure the path fits in our db field of 1024 char
-                    if len(file_path) > 1024:
-                        form.file.errors.append("Filename too big.")
-                        return render_template(
-                            'error_template.html',
-                            form=form
-                        )
-                    file.save(file_path)
-                    # creating a webserver-approved file path
-                    path_to_save = 'images/uploads/' + \
-                                   slugify(current_user_mail) + \
-                                   '/' + filename
 
             # go ahead and deliver the messages
-            correctly_sent, not_correctly_sent = send_messages(
-                to_parse,
-                current_user_mail,
-                time,
-                message,
-                path_to_save
-            )
+            try:
+                correctly_sent, not_correctly_sent = send_messages(
+                    to_parse,
+                    current_user_mail,
+                    time,
+                    message,
+                    file
+                )
+            except (FileExistsError, NameError) as e:
+                form.file.errors.append(str(e))
+                return render_template('error_template.html', form=form)
         else:
             return render_template('error_template.html', form=form)
         return render_template(

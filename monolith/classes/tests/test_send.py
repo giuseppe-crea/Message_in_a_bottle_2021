@@ -3,10 +3,10 @@ import unittest
 
 import flask
 
-from monolith.background import deliver_message
+from monolith.background import deliver_message, send_unsent_past_due
 from monolith.classes.tests import utils
 from monolith.classes.tests.utils import get_testing_app, login, create_user, \
-    create_message
+    create_message, create_ex_users
 
 
 class TestSend(unittest.TestCase):
@@ -30,7 +30,7 @@ class TestSend(unittest.TestCase):
                 "bob")
             assert rv.status_code == 200
             response = login(tested_app, 'sender@example.com', 'alice')
-            self.assertIn(b'Hi Alice', response.data)
+            assert response.status_code == 200
             # completed the registration and login procedures
             # get the send message page
             rv = tested_app.get('/send')
@@ -133,7 +133,7 @@ class TestSend(unittest.TestCase):
                     'time': "2199-01-01T01:01"},
                 follow_redirects=True
             )
-            assert b'You must specify at least one valid sender!' in rv.data
+            assert b'You must specify at least one valid address!' in rv.data
             # try to logout and access send
             tested_app.get('/logout')
             rv = tested_app.post(
@@ -200,3 +200,38 @@ class TestSend(unittest.TestCase):
             )
             # the message is correctly sent
             self.assertIn(b'Successfully Sent to:', rv.data)
+
+    def test_periodic_send(self):
+        tested_app = get_testing_app()
+        with tested_app:
+            users = create_ex_users(tested_app, 2)
+            user1, pass1 = users[0]
+            user2, pass2 = users[1]
+            create_message(
+                "old message not yet sent by mistake",
+                user1,
+                user2,
+                "2000-01-01T01:01",
+                None,
+                1
+            )
+            # check that the message isn't in user2's inbox
+            rv = login(tested_app, user2, pass2)
+            assert rv.status_code == 200
+            rv = tested_app.get('/inbox')
+            assert rv.status_code == 200
+            assert bytes(user1, 'utf-8') not in rv.data
+            # call the periodic send method
+            send_unsent_past_due(flask.current_app)
+            # check that the message is now there
+            rv = tested_app.get('/inbox')
+            assert rv.status_code == 200
+            assert bytes(user1, 'utf-8') in rv.data
+
+    def test_send_non_existing_message(self):
+        tested_app = get_testing_app()
+        with tested_app:
+            create_ex_users(tested_app, 1)
+            deliver_message(flask.current_app, 1)
+            # nothing to assert as a result but all exceptions were handled
+            pass

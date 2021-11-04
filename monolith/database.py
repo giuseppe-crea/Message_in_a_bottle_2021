@@ -23,6 +23,7 @@ class User(db.Model):
         super(User, self).__init__(*args, **kw)
         self._authenticated = False
 
+    # this method is never used
     def register_new_user(self, email, first_name, last_name, password,
                           date_of_birth):
         self.firstname = first_name
@@ -66,6 +67,9 @@ class Message(db.Model):
     image = db.Column(db.Unicode(1024), nullable=False)
     # 0 draft, 1 sent, 2 delivered
     status = db.Column(db.Integer, nullable=False)
+    # two columns: visible to sender, visible to receiver, for deletion
+    visible_to_sender = db.Column(db.Boolean, nullable=False)
+    visible_to_receiver = db.Column(db.Boolean, nullable=False)
 
     def __init__(self, *args, **kw):
         super(Message, self).__init__(*args, **kw)
@@ -81,6 +85,8 @@ class Message(db.Model):
         else:
             self.image = ''
         self.status = status
+        self.visible_to_sender = True
+        self.visible_to_receiver = True
 
     def get_id(self):
         return self.id
@@ -126,6 +132,32 @@ class Report(db.Model):
         self.reported_email = reported_email
         self.description = description
         self.timestamp = timestamp
+
+    def get_id(self):
+        return self.id
+
+
+class Notification(db.Model):
+
+    __tablename__ = 'notification'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_email = db.Column(db.Unicode(128), nullable=False)
+    title = db.Column(db.Unicode(256), nullable=False)
+    description = db.Column(db.Unicode(1024), nullable=False)
+    timestamp = db.Column(db.Unicode(128), nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
+
+    def __init__(self, *args, **kw):
+        super(Notification, self).__init__(*args, **kw)
+
+    def add_notification(self, user_email, title, description,
+                         timestamp, is_read):
+        self.user_email = user_email
+        self.title = title
+        self.description = description
+        self.timestamp = timestamp
+        self.is_read = is_read
 
     def get_id(self):
         return self.id

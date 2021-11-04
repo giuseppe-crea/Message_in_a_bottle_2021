@@ -1,15 +1,16 @@
 from .auth import auth
 from .home import home
-from .inbox import inbox
+from .box import box
 from .users import users
 from .unreg import unreg
 from .send import send
-from .outbox import outbox
 from .admin import admin
 from .list import list_blueprint
 from .blacklist import blacklist
 from .report import report
 from .content_filter import content_filter
+from .alerts import alerts
+
 
 blueprints = [
   home,
@@ -17,11 +18,11 @@ blueprints = [
   users,
   send,
   unreg,
-  outbox,
-  inbox,
+  box,
   admin,
   list_blueprint,
   blacklist,
   report,
-  content_filter
+  content_filter,
+  alerts
 ]

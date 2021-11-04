@@ -27,14 +27,13 @@ class TestHome(unittest.TestCase):
             # login as Alice
             rv = login(tested_app, 'sender@example.com', 'alice')
             assert rv.status_code == 200
-            assert b'Hi Alice' in rv.data
-            # send a message to default@example.com with no wait
+            # send a message to example@example.com with no wait
             # this doesn't actually use celery
             delivery_time = datetime.datetime.now()
             message = create_message(
                 "Test1",
                 "sender@example.com",
-                "default@example.com",
+                "example@example.com",
                 delivery_time.strftime('%Y-%m-%dT%H:%M'),
                 None,
                 1
@@ -46,18 +45,18 @@ class TestHome(unittest.TestCase):
             # check the outbox
             rv = tested_app.get('/outbox', follow_redirects=True)
             assert rv.status_code == 200
-            assert b'default@example.com' in rv.data
+            assert b'example@example.com' in rv.data
             # check that specific message
             rv = tested_app.get('/outbox/1', follow_redirects=True)
             assert rv.status_code == 200
             assert b'Test1' in rv.data
-            # let's log out and see if we can find it on default@example.com
+            # let's log out and see if we can find it on example@example.com
             rv = tested_app.get('/logout', follow_redirects=True)
             assert rv.status_code == 200
-            assert b'Hi Anonymous' in rv.data
-            rv = login(tested_app, 'default@example.com', 'admin')
+            rv = tested_app.get('/user_data')
+            assert rv.status_code == 401  # user is logged out
+            rv = login(tested_app, 'example@example.com', 'admin')
             assert rv.status_code == 200
-            assert b'Hi Admin' in rv.data
             rv = tested_app.get('/inbox', follow_redirects=True)
             assert rv.status_code == 200
             assert b'sender@example.com' in rv.data
@@ -67,7 +66,8 @@ class TestHome(unittest.TestCase):
             # logout, make sure nobody else can see this message
             rv = tested_app.get('/logout', follow_redirects=True)
             assert rv.status_code == 200
-            assert b'Hi Anonymous' in rv.data
+            rv = tested_app.get('/user_data')
+            assert rv.status_code == 401  # user is logged out
             # check both outbox and inbox as anonymous user
             rv = tested_app.get('/outbox', follow_redirects=True)
             assert rv.status_code == 401
@@ -90,7 +90,6 @@ class TestHome(unittest.TestCase):
             assert b'Eve Nosy' in rv.data
             rv = login(tested_app, 'intruder@example.com', 'eve')
             assert rv.status_code == 200
-            assert b'Hi Eve' in rv.data
             rv = tested_app.get('/outbox', follow_redirects=True)
             assert rv.status_code == 200
             rv = tested_app.get('/outbox/1', follow_redirects=True)

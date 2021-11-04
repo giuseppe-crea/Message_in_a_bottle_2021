@@ -49,7 +49,7 @@ class MailValidator(object):
             mails = []
         self.mails = mails
         if not message:
-            message = "You must specify at least one valid sender!"
+            message = "You must specify at least one valid address!"
         self.message = message
 
     def __call__(self, form, field):
