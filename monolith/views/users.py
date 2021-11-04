@@ -61,7 +61,6 @@ def _user_data2dict(data: User, points):
     }
 
 
-
 @users.route('/user_data', methods=['GET'])
 @login_required
 def user_data():
