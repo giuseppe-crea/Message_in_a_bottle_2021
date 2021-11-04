@@ -9,6 +9,7 @@ from .list import list_blueprint
 from .blacklist import blacklist
 from .report import report
 from .alerts import alerts
+from .credentials import credentials
 
 blueprints = [
   home,
@@ -21,5 +22,6 @@ blueprints = [
   list_blueprint,
   blacklist,
   report,
-  alerts
+  alerts,
+  credentials
 ]
