@@ -39,7 +39,8 @@ class TestSend(unittest.TestCase):
             lenna_src = './monolith/static/images/Lenna.png'
             # declare expected loc of received Lenna.png
             lenna_dst = \
-                './monolith/static/images/uploads/sender-example-com/Lenna.png'
+                './monolith/static/images/test_uploads/' \
+                'sender-example-com/Lenna.png'
             # assert existence of one, non existence of the other
             assert os.path.isfile(lenna_src)
             assert not os.path.isfile(lenna_dst)
@@ -150,7 +151,8 @@ class TestSend(unittest.TestCase):
             lenna_src = './monolith/static/images/Lenna.png'
             # declare expected loc of received Lenna.png
             lenna_dst = \
-                './monolith/static/images/uploads/sender-example-com/Lenna.png'
+                './monolith/static/images/test_uploads/' \
+                'sender-example-com/Lenna.png'
             # assert existence of one, non existence of the other
             assert os.path.isfile(lenna_src)
             assert not os.path.isfile(lenna_dst)

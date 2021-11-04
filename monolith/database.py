@@ -21,6 +21,7 @@ class User(db.Model):
         super(User, self).__init__(*args, **kw)
         self._authenticated = False
 
+    # this method is never used
     def register_new_user(self, email, first_name, last_name, password,
                           date_of_birth):
         self.firstname = first_name

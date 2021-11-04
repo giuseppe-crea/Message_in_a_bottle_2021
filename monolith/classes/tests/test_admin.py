@@ -9,7 +9,7 @@ class TestHome(unittest.TestCase):
         tested_app = get_testing_app()
         with tested_app:
             # admin can access the page
-            rv = login(tested_app, 'default@example.com', 'admin')
+            rv = login(tested_app, 'example@example.com', 'admin')
             assert rv.status_code == 200
             rv = tested_app.get('/admin')
             assert rv.status_code == 200

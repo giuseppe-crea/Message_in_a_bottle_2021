@@ -12,7 +12,7 @@ class TestCreate(unittest.TestCase):
             assert b'email' in rv.data
             rv = create_user(
                 tested_app,
-                "example@example.com",
+                "axample@example.com",
                 "Admin",
                 "Amint",
                 "01/01/1990",
