@@ -3,6 +3,7 @@ from monolith.classes.tests import utils
 from monolith.database import User, Message, db
 
 
+# noinspection DuplicatedCode
 class TestContentFilter(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
@@ -118,8 +119,3 @@ class TestContentFilter(unittest.TestCase):
                                     Message.receiver_email == email2,
                                     Message.message == "fuck you").first(),
                              None)
-
-
-
-
-
