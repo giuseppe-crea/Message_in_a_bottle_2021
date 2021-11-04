@@ -47,6 +47,7 @@ def create_app():
             example.email = 'example@example.com'
             example.date_of_birth = datetime.datetime(2020, 10, 5)
             example.is_admin = True
+            example.content_filter = False
             example.set_password('admin')
             db.session.add(example)
             db.session.commit()

@@ -1,10 +1,12 @@
 import os
 import pathlib
 from datetime import datetime
+import pathlib
 
 from celery import Celery
 from sqlalchemy import and_
 from sqlalchemy.exc import NoResultFound
+import os
 
 from monolith import lottery
 from monolith.database import db, Message, Notification
@@ -123,7 +125,7 @@ def deliver_message(app, message_id):
                 description,
                 timestamp,
                 False
-            )
+                )
             db.session.add(notification)
             db.session.commit()
         except NoResultFound:

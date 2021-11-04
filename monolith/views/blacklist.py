@@ -23,6 +23,7 @@ def get_blacklist():
         Blacklist.owner == user.get_id()
     ).all()
     _blacklist = [e.email for e in _blacklist]
+    # noinspection PyUnresolvedReferences
     return render_template('blacklist.html', result=_blacklist)
 
 
@@ -77,6 +78,7 @@ def add2blacklist():
         add2blacklist_local(user, email)
         return redirect('/blacklist')
 
+    # noinspection PyUnresolvedReferences
     return render_template('request_form.html', form=form)
 
 
@@ -106,6 +108,7 @@ def delete_from_blacklist():
         db.session.commit()
         return redirect('/blacklist')
 
+    # noinspection PyUnresolvedReferences
     return render_template('request_form.html', form=form)
 
 

@@ -182,3 +182,7 @@ class ReportForm(FlaskForm):
         )
 
     display = ['user', 'description', 'block_user']
+
+
+class ContentFilterForm(FlaskForm):
+    content_filter_status = f.BooleanField()
