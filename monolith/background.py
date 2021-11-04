@@ -36,6 +36,7 @@ def do_task(app):
     return app
 
 
+# noinspection PyUnusedLocal
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     # Checks for unsent and overdue messages every 5 minutes

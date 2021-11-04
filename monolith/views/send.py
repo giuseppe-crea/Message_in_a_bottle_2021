@@ -75,9 +75,12 @@ def _send(_id, data=""):
                 )
             except (FileExistsError, NameError) as e:
                 form.file.errors.append(str(e))
+                # noinspection PyUnresolvedReferences
                 return render_template('error_template.html', form=form)
         else:
+            # noinspection PyUnresolvedReferences
             return render_template('error_template.html', form=form)
+        # noinspection PyUnresolvedReferences
         return render_template(
             'done_sending.html',
             users1=correctly_sent,
@@ -85,6 +88,7 @@ def _send(_id, data=""):
             text=message
         )
     else:
+        # noinspection PyUnresolvedReferences
         return render_template('send.html', form=form)
 
 
@@ -93,6 +97,7 @@ def _send(_id, data=""):
 def get_message():
     drafts = Message().query.filter_by(sender_email=current_user.email,
                                        status=0).all()
+    # noinspection PyUnresolvedReferences
     return render_template('list/draft_list.html', drafts=drafts)
 
 
@@ -128,7 +133,9 @@ def replay(_id):
             correctly_sent, not_correctly_sent = \
                 send_messages(to_parse, current_user_mail, time, message, None)
         else:
+            # noinspection PyUnresolvedReferences
             return render_template('error_template.html', form=form)
+        # noinspection PyUnresolvedReferences
         return render_template(
             'done_sending.html',
             users1=correctly_sent,
@@ -136,4 +143,5 @@ def replay(_id):
             text=message
         )
     else:
+        # noinspection PyUnresolvedReferences
         return render_template('send.html', form=form)
