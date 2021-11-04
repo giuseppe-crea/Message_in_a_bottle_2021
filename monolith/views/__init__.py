@@ -8,8 +8,10 @@ from .admin import admin
 from .list import list_blueprint
 from .blacklist import blacklist
 from .report import report
+from .content_filter import content_filter
 from .alerts import alerts
 from .credentials import credentials
+
 
 blueprints = [
   home,
@@ -23,5 +25,6 @@ blueprints = [
   blacklist,
   report,
   alerts,
+  content_filter,
   credentials
 ]

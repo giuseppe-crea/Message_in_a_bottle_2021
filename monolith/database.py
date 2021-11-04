@@ -14,6 +14,7 @@ class User(db.Model):
     lastname = db.Column(db.Unicode(128))
     password = db.Column(db.Unicode(128))
     date_of_birth = db.Column(db.DateTime)
+    content_filter = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
     is_anonymous = False
@@ -56,6 +57,9 @@ class User(db.Model):
             # prevent privilege de/escalation
             elif key != 'is_admin' or key != 'is_anonymous':
                 setattr(self, key, value)
+
+    def get_content_filter_status(self):
+        return self.content_filter
 
 
 class Message(db.Model):

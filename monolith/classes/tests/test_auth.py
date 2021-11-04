@@ -39,6 +39,7 @@ class TestAuth(unittest.TestCase):
             login_reply = login(tested_app, 'baduser@mail.com', '')
             assert b'This field is required.' in login_reply.data
 
+    # noinspection PyUnusedLocal
     def test_login_logout(self):
         tested_app = get_testing_app()
         with tested_app:

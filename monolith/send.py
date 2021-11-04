@@ -10,6 +10,7 @@ from monolith.database import db, User, Message
 import pytz
 
 from monolith.views.blacklist import is_blacklisted
+from monolith.views.content_filter import check_content_filter
 
 if 'pytest' in sys.modules:
     UPLOAD_FOLDER = './monolith/static/images/test_uploads/'
@@ -35,14 +36,17 @@ def send_messages(to_parse, current_user_mail, time, message, file):
     time_aware = pytz.timezone('Europe/Rome').localize(time)
     for address in to_parse:
         address = address.strip()
-        exists = db.session.query(User.id).\
+        exists = db.session.query(User.id). \
             filter_by(email=address).first() is not None
         if exists and not address == current_user_mail:
             # check if the receiver has this sender blacklisted
-            if not is_blacklisted(sender=current_user_mail, receiver=address):
+
+            if not is_blacklisted(sender=current_user_mail, receiver=address) \
+                    and check_content_filter(address, message):
                 # if we were handed a file but haven't saved it yet
                 if file is not None and image is None:
                     image = save_picture(file, current_user_mail)
+
                 # create a message entry in the database with status = pending
                 unsent_message = Message()
                 unsent_message.add_message(

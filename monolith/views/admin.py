@@ -17,4 +17,5 @@ def placeholder():
     current_user_email = current_user.email
     notifications_count = get_notifincations_count(current_user_email)
 
+    # noinspection PyUnresolvedReferences
     return render_template("index.html", notifications=notifications_count)
