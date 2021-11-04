@@ -48,7 +48,7 @@ class TestRecipientList(unittest.TestCase):
             assert rv.status_code == 200
             # tester address and admin address
             assert b'Choose Recipients' in rv.data
-            assert b'default@example.com' in rv.data
+            assert b'example@example.com' in rv.data
             assert b'tester@example.com' in rv.data
 
             # try to select an existing user

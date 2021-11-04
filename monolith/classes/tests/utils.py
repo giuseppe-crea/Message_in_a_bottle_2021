@@ -1,33 +1,14 @@
-import datetime
 import os
-from monolith import app
-from monolith.auth import login_manager
-from monolith.database import db, User, Message
+import shutil
+
+from monolith.app import create_app
+from monolith.database import db, Message
 
 
 def get_testing_app():
-    app.config['TESTING'] = True
-    app.config['WTF_CSRF_ENABLED'] = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../T_mmiab.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['UPLOADED_IMAGES_DEST'] = './monolith/static/images/uploads/'
-    # clean old db
-    if os.path.exists('./T_mmiab.db'):
-        os.remove('./T_mmiab.db')
-    db.init_app(app)
-    login_manager.init_app(app)
-    db.create_all(app=app)
-    with app.app_context():
-        example = User()
-        example.firstname = 'Admin'
-        example.lastname = 'Admin'
-        example.email = 'default@example.com'
-        example.date_of_birth = datetime.datetime(2020, 10, 5)
-        example.is_admin = True
-        example.set_password('admin')
-        db.session.add(example)
-        db.session.commit()
-    return app.test_client()
+    cleanup()
+    _app = create_app()
+    return _app.test_client()
 
 
 # utility function to log in a user in the tests
@@ -98,3 +79,19 @@ def create_message(message, sender, receiver, time, image, status):
     db.session.add(unsent_message)
     db.session.commit()
     return unsent_message
+
+
+def cleanup():
+    if os.path.exists('./T_mmiab.db'):
+        print("Removing old database...")
+        os.remove('./T_mmiab.db')
+    folder = './monolith/static/images/test_uploads'
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))

@@ -23,7 +23,7 @@ class TestSend(unittest.TestCase):
             # unused pics are removed from the server
             lenna_src = './monolith/static/images/Lenna.png'
             lenna_dst = \
-                './monolith/static/images/uploads/' + \
+                './monolith/static/images/test_uploads/' + \
                 slugify(user1) + \
                 '/Lenna.png'
             lenna = open(lenna_src, 'rb')

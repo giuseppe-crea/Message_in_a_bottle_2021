@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 from slugify import slugify
@@ -10,7 +11,10 @@ import pytz
 
 from monolith.views.blacklist import is_blacklisted
 
-UPLOAD_FOLDER = './monolith/static/images/uploads/'
+if 'pytest' in sys.modules:
+    UPLOAD_FOLDER = './monolith/static/images/test_uploads/'
+else:
+    UPLOAD_FOLDER = './monolith/static/images/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
 
@@ -84,9 +88,10 @@ def save_picture(file, current_user_mail):
         )
         file_path = os.path.join(folder_path, filename)
         # creating a webserver-approved file path
-        path_to_save = 'images/uploads/' + \
-                       slugify(current_user_mail) + \
-                       '/' + filename
+        path_to_save = \
+            UPLOAD_FOLDER.split('/', 3)[-1] + \
+            slugify(current_user_mail) + \
+            '/' + filename
         # make sure the path fits in our db field of 1024 char
         if len(file_path) > 1024:
             raise FileExistsError("Filename too long.")

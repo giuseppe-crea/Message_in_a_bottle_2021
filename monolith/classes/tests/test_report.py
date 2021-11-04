@@ -116,7 +116,7 @@ class TestReport(unittest.TestCase):
         with tested_app:
 
             # an admin logs in
-            response = login(tested_app, 'default@example.com', 'admin')
+            response = login(tested_app, 'example@example.com', 'admin')
             assert response.status_code == 200
 
             # an admin can access the reports

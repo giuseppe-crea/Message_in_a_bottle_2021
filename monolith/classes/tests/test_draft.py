@@ -1,5 +1,5 @@
 import unittest
-from monolith.classes.tests.utils import get_testing_app, login, create_user
+from monolith.classes.tests.utils import get_testing_app, login, create_ex_usr
 
 
 class TestHome(unittest.TestCase):
@@ -9,7 +9,7 @@ class TestHome(unittest.TestCase):
         with tested_app:
             rv = tested_app.get('/send_draft_list')
             assert rv.status_code == 401
-            login(tested_app, 'default@example.com', 'admin')
+            login(tested_app, 'example@example.com', 'admin')
             rv = tested_app.get('/send_draft_list')
             assert rv.status_code == 200
             assert b'Home' in rv.data
@@ -17,15 +17,8 @@ class TestHome(unittest.TestCase):
     def test_saving_loading(self):
         tested_app = get_testing_app()
         with tested_app:
-            rv = create_user(
-                tested_app,
-                "example@example.com",
-                "Admin",
-                "Admin",
-                "01/01/1990",
-                "admin")
-            assert rv.status_code == 200
-            login(tested_app, 'default@example.com', 'admin')
+            mail, password = create_ex_usr(tested_app)
+            login(tested_app, mail, password)
             rv = tested_app.post(
                 '/send',
                 data={
@@ -37,8 +30,10 @@ class TestHome(unittest.TestCase):
                 },
                 follow_redirects=True
             )
+            # we are redirected to the frontpage after saving a draft
             assert rv.status_code == 200
-            self.assertTrue('Hi, Admin!' in rv.get_data(as_text=True))
+            self.assertTrue(bytes("Hi, " + mail.split('@')[0], 'utf-8') in
+                            rv.get_data())
             # get the list, we expect to see a mail addressed to example
             rv = tested_app.get('/send_draft_list')
             assert rv.status_code == 200
