@@ -30,7 +30,7 @@ class TestContentFilter(unittest.TestCase):
 
             # check DB state
             self.assertEqual(db.session.query(User).
-                             filter(User.email == "default@example.com").
+                             filter(User.email == email).
                              first().content_filter, False)
 
     def test_activation(self):
