@@ -6,10 +6,10 @@ from flask_uploads import configure_uploads
 
 from monolith import lottery
 from monolith.auth import login_manager
-from monolith.database import User, db, LotteryPoints
-from monolith.views import blueprints
-from monolith.send import UPLOAD_FOLDER, MAX_CONTENT_LENGTH
+from monolith.database import User, db
 from monolith.forms import images
+from monolith.send import UPLOAD_FOLDER, MAX_CONTENT_LENGTH
+from monolith.views import blueprints
 
 
 def create_app():

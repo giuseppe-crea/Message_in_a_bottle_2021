@@ -4,6 +4,7 @@ import flask_login
 
 from monolith import lottery
 from monolith.classes.tests import utils
+from monolith.classes.tests.utils import get_testing_app
 
 
 class TestLottery(unittest.TestCase):
@@ -11,11 +12,10 @@ class TestLottery(unittest.TestCase):
     Tests for the lottery feature.
     """
 
-    # TODO move the method and reactivete the test
-    """def test_withdraw(self):
-        
+    def test_withdraw(self):
+        """
         Test the message withdraw functionality.
-        
+        """
         tested_app = get_testing_app()
         with tested_app:
             # create and log a new user
@@ -30,13 +30,13 @@ class TestLottery(unittest.TestCase):
                 '/send',
                 data={
                     'message': "Short test message",
-                    'recipient': "default@example.com",
+                    'recipient': "example@example.com",
                     'time': "2030-01-01T01:01"},
                 follow_redirects=True
             )
             # the message is in the outbox
             rv = tested_app.get("/outbox")
-            self.assertIn(b"default@example.com", rv.data)
+            self.assertIn(b"example@example.com", rv.data)
 
             # withdraw the message
             rv = tested_app.get("/outbox/withdraw/1")
@@ -44,7 +44,7 @@ class TestLottery(unittest.TestCase):
 
             # message removed from outbox
             rv = tested_app.get("/outbox")
-            self.assertNotIn(b"default@example.com", rv.data)"""
+            self.assertNotIn(b"example@example.com", rv.data)
 
     def test_lottery(self):
         """

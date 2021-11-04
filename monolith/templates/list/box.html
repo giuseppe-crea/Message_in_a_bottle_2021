@@ -46,7 +46,7 @@
         <div>
             <h2>Messages Pending Delivery:</h2>
             <ul style="list-style-type: none;">
-                {% for message in pending_delivery %}
+                {% for message in pending %}
                     <li><b>to:</b> {{ message['receiver_email'] }}</li>
                     <a href="outbox/{{message['id']}}">Read more...</a> or <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">Delete</a>
                     <br>

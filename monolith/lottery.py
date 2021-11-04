@@ -1,6 +1,7 @@
 import random
+from datetime import datetime
 
-from monolith.database import LotteryPoints, db, User
+from monolith.database import LotteryPoints, db, User, Notification
 
 # global parameters of the lottery
 price = 100
@@ -60,8 +61,25 @@ def execute():
     Execute a lottery round
     """
     # get the list of all users id
-    users = [u.id for u in db.session.query(User).all()]
+    users = db.session.query(User).all()
     # select a random id
-    winner_id = random.choice(users)
+    winner = random.choice(users)
     # add the prize to the winner's points
-    give_points(winner_id, prize)
+    give_points(winner.id, prize)
+    _send_notification(winner.email)
+
+
+def _send_notification(email):
+    notification = Notification()
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    title = "Lottery win"
+    description = "You have won" + str(prize) + "points"
+    notification.add_notification(
+        email,
+        title,
+        description,
+        timestamp,
+        False
+    )
+    db.session.add(notification)
+    db.session.commit()
