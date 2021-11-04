@@ -41,8 +41,8 @@ def send_messages(to_parse, current_user_mail, time, message, file):
         if exists and not address == current_user_mail:
             # check if the receiver has this sender blacklisted
 
-            if not is_blacklisted(sender=current_user_mail, receiver=address)
-                and check_content_filter(address, message):
+            if not is_blacklisted(sender=current_user_mail, receiver=address) \
+                    and check_content_filter(address, message):
                 # if we were handed a file but haven't saved it yet
                 if file is not None and image is None:
                     image = save_picture(file, current_user_mail)
