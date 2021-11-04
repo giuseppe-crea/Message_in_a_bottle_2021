@@ -63,6 +63,11 @@ class TestContentFilter(unittest.TestCase):
                              filter(User.email == email).
                              first().content_filter, True)
 
+            # check the list of badwords list
+            rv = self.app.get('/content_filter/list')
+            assert rv.status_code == 200
+            self.assertIn(b'fuck', rv.data)
+
     def test_contentfilter(self):
         """
             Test content filter functionality
