@@ -3,10 +3,11 @@ from flask.templating import render_template
 from flask_login import login_required, current_user
 from sqlalchemy.exc import NoResultFound
 
-from monolith import send
+from monolith import send, lottery
 from monolith.database import Message
+from monolith.delete import remove_message, delete_for_receiver, \
+    delete_for_sender
 from monolith.forms import ForwardForm
-from monolith.delete import remove_message
 
 box = Blueprint('box', __name__)
 
@@ -98,3 +99,24 @@ def forward(_id):
             return render_template('request_form.html', form=form)
         except NoResultFound:
             abort(403)
+
+
+@box.route("/outbox/withdraw/<_id>", methods=["GET"])
+@login_required
+def withdraw(_id):
+    if _id is not None:
+        points = lottery.get_usr_points(current_user)
+        if points >= lottery.price:
+            message = None
+            try:
+                message = Message().query.filter_by(
+                    id=int(_id)).one()
+            except NoResultFound:
+                abort(403)
+            if message.status == 1:
+                delete_for_receiver(message)
+                delete_for_sender(message)
+                points -= lottery.price
+                lottery.set_points(current_user.get_id(), points)
+                return redirect('/outbox')
+    abort(401)
