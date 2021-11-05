@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <title>Calendar</title>
+        <link rel="icon" href="../static/images/icon.png">
+        <link rel="stylesheet" type="text/css" href="../static/css/evo-calendar.css"/>
+        <link rel="stylesheet" type="text/css" href="../static/css/evo-calendar.midnight-blue.css"/>
+
+        
+
+    </head>
+    <body>
+
+        <div style=" margin: auto; width: 100%; padding: 10px;">
+            <div id="calendar"></div>
+        </div>
+
+
+        <div style="margin: 40px;">
+            <p style="text-align:center; font-size: 1.875em"><a href="/calendar">All Messages</a> </p>
+            <p style="text-align:center; font-size: 1.875em"><a href="/calendar/sent">Sent Messages Only</a> </p>
+            <p style="text-align:center; font-size: 1.875em"><a href="/calendar/received">Received Messages Only</a> </p>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+        <script src="../static/js/evo-calendar.js"></script>
+
+        
+        <script>
+
+            $(document).ready(function() {
+                $('#calendar').evoCalendar({
+
+                    theme: "Midnight Blue",
+
+                    calendarEvents: [
+                     
+                     // add received messages
+                     {% for message in received_messages %}
+                        {
+                            name: "Message Received", 
+                            date: "{{ message.time }}", 
+                            description: "<b>From: {{ message.sender_email }}</b> <br><br> {{ message.message }}",
+                            type: "holiday",
+                        },
+                     {% endfor %}
+                    
+                     {% for message in sent_messages %}
+                        {
+                            name: "Message Sent", 
+                            date: "{{ message.time }}", 
+                            description: "<b>To: {{ message.receiver_email }}</b> <br><br> {{ message.message }}",
+                            type: "event",
+                        },
+                     {% endfor %}
+
+                    ]
+
+                })
+            })
+            
+        </script>
+
+    </body>
+</html>
