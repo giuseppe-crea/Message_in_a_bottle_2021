@@ -4,7 +4,8 @@ from flask_login import login_required, current_user
 from sqlalchemy.exc import NoResultFound
 
 from monolith import send
-from monolith.database import Message
+from monolith.background import create_notification
+from monolith.database import Message, db
 from monolith.forms import ForwardForm
 from monolith.delete import remove_message
 
@@ -48,6 +49,7 @@ def get_box(kwargs, role):
                 #  this is actually overwritten by the JS currently
                 return redirect(role)
             else:
+                notify_sender(message)
                 return render_template(
                     'list/box_one.html',
                     message=message,
@@ -67,6 +69,27 @@ def get_box(kwargs, role):
             pending=pending_messages,
             role=role
         )
+
+
+# notifies the sender when the receiver opens for the first time a message
+def notify_sender(message):
+    if not message.is_read:
+        # send notification
+        timestamp = message.time
+        title = message.receiver_email + " Read Your Message"
+        description = \
+            "<i>" + "\"" + message.message + "\"" + "</i>"
+        create_notification(
+            title,
+            description,
+            timestamp,
+            message.sender_email
+        )
+        # set the message as is:read=True
+        db.session.query(Message).filter_by(
+            id=message.id).update(dict(is_read=True))
+        db.session.commit()
+    return
 
 
 @box.route("/inbox/forward/<_id>", methods=["GET", "POST"])
