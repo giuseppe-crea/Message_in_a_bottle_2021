@@ -1,7 +1,7 @@
 import unittest
 
 from monolith.classes.tests import utils
-from monolith.views.blacklist import is_blacklisted
+from monolith.blacklist import is_blacklisted
 
 
 class TestBlacklist(unittest.TestCase):
@@ -154,5 +154,6 @@ class TestBlacklist(unittest.TestCase):
 
             self._add_user(sender)
 
+            # the user inserted is present in the blacklist, the other not
             self.assertEqual(is_blacklisted(sender, receiver), True)
             self.assertEqual(is_blacklisted(receiver, sender), False)

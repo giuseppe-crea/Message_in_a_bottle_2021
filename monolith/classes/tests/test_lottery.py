@@ -14,15 +14,15 @@ class TestLottery(unittest.TestCase):
 
     def test_withdraw(self):
         """
-        Test the message withdraw functionality.
+        Test the message withdraw feature.
         """
         tested_app = get_testing_app()
         with tested_app:
             # create and log a new user
             user, psw = utils.create_ex_usr(tested_app)
             utils.login(tested_app, user, psw)
-            user = flask_login.current_user
             # give some points to the user
+            user = flask_login.current_user
             lottery.set_points(user.get_id(), lottery.price * 2)
 
             # send a message from user to default user

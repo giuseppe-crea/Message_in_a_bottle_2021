@@ -9,7 +9,7 @@ from monolith.background import deliver_message
 from monolith.database import db, User, Message
 import pytz
 
-from monolith.views.blacklist import is_blacklisted
+from monolith.blacklist import is_blacklisted
 from monolith.views.content_filter import check_content_filter
 
 if 'pytest' in sys.modules:
