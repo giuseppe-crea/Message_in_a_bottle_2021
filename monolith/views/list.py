@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, \
 from flask_login import login_required
 from monolith.database import User, db
 from monolith.forms import RecipientsListForm
+from monolith.auth import current_user
 from werkzeug.exceptions import BadRequestKeyError
 
 list_blueprint = Blueprint('list', __name__)
@@ -44,13 +45,15 @@ def ajax_livesearch():
     try:
         search_word = request.form['query']
     except BadRequestKeyError:
-        recipients_found = db.session.query(User).all()
+        recipients_found = db.session.query(User).filter(
+            User.id != current_user.get_id()).all()
     else:
         search = "%{}%".format(search_word)
         recipients_found = db.session.query(User). \
             filter(User.email.like(search)
                    | User.firstname.like(search)
-                   | User.lastname.like(search)). \
+                   | User.lastname.like(search),
+                   User.id != current_user.get_id()). \
             limit(100).all()  # avoiding a huge result
 
     # instantiate the form
