@@ -11,12 +11,13 @@ blacklist = Blueprint('blacklist', __name__)
 
 
 @blacklist.route('/blacklist', methods=['GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def get_blacklist():
     """
     Get the logged user's blacklist.
     Only logged users are authorized to use this function.
+
     :return: display the user's blacklist using the blacklist template.
     """
     # get the current user
@@ -30,12 +31,13 @@ def get_blacklist():
 
 
 @blacklist.route('/blacklist/add', methods=['GET', 'POST'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def add2blacklist():
     """
     The logged user adds an email to his blacklist.
     Only logged users are authorized to use this function.
+
     :return: display the user's blacklist using the blacklist template or
     a form to request an email to the user.
     """
@@ -52,12 +54,13 @@ def add2blacklist():
 
 
 @blacklist.route('/blacklist/remove', methods=['GET', 'POST'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def delete_from_blacklist():
     """
     The logged user removes an email from his blacklist.
     Only logged users are authorized to use this function.
+
     :return: display the user's blacklist using the blacklist template or
     a form to request an email to the user.
     """

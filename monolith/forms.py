@@ -24,6 +24,12 @@ class TimeValidator(object):
     # our delivery method will instantly deliver anything with a negative
     # timestamp, making this reliable
     def __init__(self, startdate=datetime.now(), message=None):
+        """
+        Initializer for the TimeValidator class
+
+        :param startdate: the earliest valid date
+        :param message: optional custom error message
+        """
         self.startdate = startdate.replace(second=0, microsecond=0)
         if not message:
             message = "You can't set a delivery date earlier than " + \
@@ -52,6 +58,13 @@ class MailValidator(object):
             return False
 
     def __init__(self, mails=None, message=None, single=False):
+        """
+        Initializer for the MailValidator class
+
+        :param mails: string to validate
+        :param message: optional custom error message
+        :param single: set to true if the mails param must validate to len 1
+        """
         if mails is None:
             mails = []
         self.mails = mails

@@ -10,7 +10,7 @@ credentials = Blueprint('credentials', __name__)
 
 # noinspection PyUnresolvedReferences
 @credentials.route('/credentials', methods=['POST', 'GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def _credentials():
     """
@@ -19,6 +19,8 @@ def _credentials():
     - First name; Last name; email address; password
     The user will be prompted for confirmation before the changes are committed
     The user's old password is required to make edits
+
+    :returns: a rendered view
     """
     form = CredentialsForm()
     kwargs = {}

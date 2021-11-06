@@ -26,6 +26,7 @@ UPLOAD_FOLDER = None
 def do_task(app):
     """
     instantiate an app if none is present
+
     :param app: the flask.current_app object, can be None
     """
     global _APP
@@ -46,6 +47,9 @@ def do_task(app):
 
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
+    """
+    celery beat support function
+    """
     # Checks for unsent and overdue messages every 5 minutes
     sender.add_periodic_task(
         300.0,
@@ -71,6 +75,7 @@ def send_unsent_past_due(app):
     """
     task to periodically send unsent messages past due
     useful in case of catastrophic failure of celery
+
     :param app: the flask.current_app object, can be None
     """
     global _APP
@@ -90,6 +95,7 @@ def cleanup_pictures(app):
     """
     task to delete pictures with no reference in the database
     this is one possible way to account for forwards and deletions
+
     :param app: the flask.current_app object, can be None
     """
     global _APP
@@ -116,6 +122,7 @@ def cleanup_pictures(app):
 def deliver_message(app, message_id):
     """
     Task to deliver a message by editing its status in the database
+
     :param app: the flask.current_app object, can be None
     :param message_id: the id of the message to deliver in the database
     """
@@ -149,19 +156,28 @@ def deliver_message(app, message_id):
 def lottery_task(app):
     """
     Runs the lottery
+
     :param app: the flask.current_app object, can be None
     """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
     with _APP.app_context():
-        lottery.execute()
+        winner = lottery.execute()
+        if winner is not None:
+            create_notification(
+                "Lottery win",
+                "You have won" + str(lottery.prize) + "points",
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                winner
+            )
 
 
 @celery.task
 def create_notification(title, description, timestamp, target):
     """
     Creates a notification element in the database
+
     :param title: Notification title
     :param description: Notification body text
     :param timestamp: timestamp to display on the Notification

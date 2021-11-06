@@ -22,15 +22,6 @@ class User(db.Model):
         super(User, self).__init__(*args, **kw)
         self._authenticated = False
 
-    # this method is never used
-    def register_new_user(self, email, first_name, last_name, password,
-                          date_of_birth):
-        self.firstname = first_name
-        self.lastname = last_name
-        self.email = email
-        self.set_password(password)
-        self.date_of_birth = date_of_birth
-
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
@@ -85,9 +76,8 @@ class Message(db.Model):
     def add_message(self, message, sender_email, receiver_email, time, image,
                     status):
         """
-        adds a message to database
+        adds a message to database, initializing to empty all missing fields
         """
-        # it's impossible for values to be missing if receiver is none
         if message is not None:
             self.message = message
         else:
@@ -111,9 +101,15 @@ class Message(db.Model):
         self.is_read = False
 
     def get_id(self):
+        """
+        :return: message id for this object
+        """
         return self.id
 
     def get_status(self):
+        """
+        :return: message status for this object
+        """
         return self.status
 
 

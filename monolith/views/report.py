@@ -14,21 +14,29 @@ report = Blueprint('report', __name__)
 
 # noinspection PyUnresolvedReferences
 @report.route('/reports', methods=['GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 @admin_required
 def reports():
+    """
+    The report management page for administrators
+
+    :return: a rendered view
+    """
     query_reports = db.session.query(Report).order_by(Report.id.desc())
     return render_template("reports.html", reports=query_reports)
 
 
-# report a user to the admins
 # noinspection PyUnresolvedReferences
 @report.route('/report_user', methods=['GET', 'POST'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def report_user():
+    """
+    Report a user to the admins
 
+    :return: a rendered view
+    """
     form = ReportForm()
 
     if request.method == 'GET':

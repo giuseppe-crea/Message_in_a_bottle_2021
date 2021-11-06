@@ -12,6 +12,7 @@ prize = 100
 def get_usr_points(user):
     """
     Get the user's lottery point from the database
+
     :param user: an User object
     :return: user's lottery points
     """
@@ -25,6 +26,9 @@ def get_usr_points(user):
 def give_points(user_id, points):
     """
     Add new points to the user's account
+
+    :param user_id: the user id in the database
+    :param points: the amount of points to add
     """
     user = db.session.query(LotteryPoints).filter(
         LotteryPoints.id == user_id).first()
@@ -42,6 +46,9 @@ def give_points(user_id, points):
 def set_points(user_id, points):
     """
     Set the total points of the user
+
+    :param user_id: the user id in the database
+    :param points: the value their points will be set to
     """
     user = db.session.query(LotteryPoints).filter(
         LotteryPoints.id == user_id).first()
@@ -66,9 +73,9 @@ def execute():
     winner = random.choice(users)
     # add the prize to the winner's points
     give_points(winner.id, prize)
-    _send_notification(winner.email)
+    return winner.email
 
-
+"""
 def _send_notification(email):
     notification = Notification()
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -83,3 +90,4 @@ def _send_notification(email):
     )
     db.session.add(notification)
     db.session.commit()
+"""

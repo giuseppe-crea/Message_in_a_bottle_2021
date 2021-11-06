@@ -12,13 +12,14 @@ list_blueprint = Blueprint('list', __name__)
 
 # noinspection PyUnresolvedReferences
 @list_blueprint.route('/list_of_recipients', methods=['POST', 'GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def _display_users():
     """
-    # ordering alphabetically, filtering admin accounts and the sender itself
-    _users = db.session.query(User).order_by(User.lastname). \
-        filter(User.firstname != 'Admin').all()
+    Displays a page with a searchable list of registered users
+    which can then be selected as recipients
+
+    :returns: a rendered view
     """
 
     if request.method == 'POST':  # POST request
@@ -41,10 +42,16 @@ def _display_users():
 
 # noinspection PyUnresolvedReferences
 @list_blueprint.route('/live_search', methods=['POST'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def ajax_livesearch():
+    """
+    The live search function for the user list
 
+    :return: a list of addresses matching the search query, excluding the
+    caller's address
+    :rtype: json string
+    """
     try:
         search_word = request.form['query']
     except BadRequestKeyError:

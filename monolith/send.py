@@ -23,6 +23,7 @@ MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
 def allowed_file(filename):
     """
     Checks the Allowed_Extensions constant to make sure we are sending an image
+
     :param filename: the file's name, extension included
     """
     return '.' in filename and \
@@ -33,14 +34,15 @@ def send_messages(to_parse, current_user_mail, time, message, file):
     """
     Enqueues a message with celery performing checks on the sender/receiver
     Saves any file it gets to a folder specific to that sender
+
     :param to_parse: list of mail recipient addresses, comma separated
     :param current_user_mail: mail of sender
     :param time: time of delivery, cannot be in the past
     :param message: the actual message, max size of 1024 char
     :param file: a file to save, images only, can be None
-    :return correctly_sent: list of mail addresses to which the message was
+    :return: correctly_sent: list of mail addresses to which the message was
     correctly sent, including messages which blacklist the sender
-    :return not_correctly_sent: list of mail addresses which were not real
+    :return: not_correctly_sent: list of mail addresses which were not real
     users or were the sender themselves
     """
     correctly_sent = []
@@ -89,7 +91,8 @@ def send_messages(to_parse, current_user_mail, time, message, file):
 
 def save_draft(current_user_mail, recipients, msg, time):
     """
-    saves a message with status of draft
+    saves a message with status of draft to the database
+
     :param current_user_mail: mail of sender
     :param time: time of delivery, cannot be in the past
     :param recipients: string containing the unparsed list of recipients
@@ -107,9 +110,10 @@ def save_picture(file, current_user_mail):
     This method is only called for message that must be sent, and not drafts
     This method creates a new folder with the user's mail if none exists
     to allow different users to send files with the same filename
+
     :param file: the file to save
     :param current_user_mail: the mail of the current user
-    :return path_to_save: the path from which the image can be displayed
+    :return: path_to_save: the path from which the image can be displayed
     """
     if file.filename != '' and allowed_file(file.filename):
         filename = secure_filename(file.filename)

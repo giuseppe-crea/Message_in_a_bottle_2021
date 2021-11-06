@@ -8,6 +8,11 @@ calendar = Blueprint('calendar', __name__)
 
 
 def get_sent_messages(user):
+    """
+    :param user: the user for which to fetch messages
+    :return: query of all messages sent from this user and already received
+    :rtype: SQLAlchemy.session.query
+    """
     sent_messages = db.session.query(Message).filter_by(
         sender_email=user,
         status=2,
@@ -17,6 +22,11 @@ def get_sent_messages(user):
 
 
 def get_received_messages(user):
+    """
+    :param user: the user for which to fetch messages
+    :return: query of all messages received from this user
+    :rtype: SQLAlchemy.session.query
+    """
     received_messages = db.session.query(Message).filter_by(
         receiver_email=user,
         status=2,
@@ -26,10 +36,14 @@ def get_received_messages(user):
 
 
 @calendar.route('/calendar', methods=['GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def get_calendar():
+    """
+    Displays messages in a calendar
 
+    :return: a rendered view
+    """
     user_email = current_user.get_email()
     user_sent_messages = get_sent_messages(user_email)
     user_received_messages = get_received_messages(user_email)
@@ -40,9 +54,14 @@ def get_calendar():
 
 
 @calendar.route('/calendar/sent', methods=['GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def get_calendar_sent():
+    """
+    Calendar view for sent messages only
+
+    :return: a rendered view
+    """
     user_email = current_user.get_email()
     user_sent_messages = get_sent_messages(user_email)
 
@@ -50,9 +69,14 @@ def get_calendar_sent():
 
 
 @calendar.route('/calendar/received', methods=['GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def get_calendar_received():
+    """
+    Calendar view for received messages only
+
+    :return: a rendered view
+    """
     user_email = current_user.get_email()
     user_received_messages = get_received_messages(user_email)
 

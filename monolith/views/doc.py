@@ -7,11 +7,11 @@ auto = Autodoc()
 
 
 @doc.route('/')
-@doc.route('/public')
+@doc.route('/routes')
 def public_doc():
-    return auto.html(groups=['public'], title='Blog Documentation')
+    return auto.html(groups=['routes'], title='API Documentation')
 
 
 @doc.route('/private')
 def private_doc():
-    return auto.html(groups=['private'], title='Private Documentation')
+    return auto.html(groups=['code'], title='Private Documentation')

@@ -16,7 +16,7 @@ send = Blueprint('send', __name__)
 # noinspection PyUnusedLocal,PyUnboundLocalVariable
 @send.route('/send', methods=['POST', 'GET'], defaults={'_id': None})
 @send.route('/send/<_id>', methods=['POST', 'GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def _send(_id, data=""):
     """
@@ -24,8 +24,10 @@ def _send(_id, data=""):
     Takes values from the related form and either saves them as draft
     or passes the values on to the controller which will then proceed to queue
     the message with celery
+
     :param _id: the draft id
     :param data: a default parameter used for recipient setting
+    :returns: a rendered view
     """
     form = SendForm()
     # if we are loading a draft:
@@ -100,11 +102,13 @@ def _send(_id, data=""):
 
 
 @send.route('/send_draft_list', methods=['GET'])
-@auto.doc(groups=['public'])
+@auto.doc(groups=['routes'])
 @login_required
 def get_message():
     """
     View of all drafts for a given user
+
+    :returns: a rendered view
     """
     drafts = Message().query.filter_by(sender_email=current_user.email,
                                        status=0).all()
