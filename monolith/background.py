@@ -71,8 +71,7 @@ def send_unsent_past_due(app):
             Message.time <= datetime.now().strftime('%Y-%m-%dT%H:%M'))
         )
         for row in query:
-            row.status = 2
-        db.session.commit()
+            deliver_message(app, row.get_id())
 
 
 # task to delete pictures with no reference in the database
@@ -111,20 +110,17 @@ def deliver_message(app, message_id):
             message = Message().query.filter_by(id=int(message_id)).one()
             message.status = 2
             # notify recipient
-            notification = Notification()
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = message.time
             title = message.sender_email + " Sent You a Message"
             description = \
                 "Check Your <a href=\"/inbox\">Inbox</a> to <a href=\"/inbox/"\
-                + str(message_id) + "\">Open It</a>"
-            notification.add_notification(
-                message.receiver_email,
+                + str(message.get_id()) + "\">Open It</a>"
+            create_notification(
                 title,
                 description,
                 timestamp,
-                False
-                )
-            db.session.add(notification)
+                message.receiver_email
+            )
             db.session.commit()
         except NoResultFound:
             pass  # this means the message was retracted
@@ -138,3 +134,16 @@ def lottery_task(app):
     # noinspection PyUnresolvedReferences
     with _APP.app_context():
         lottery.execute()
+
+
+def create_notification(title, description, timestamp, target):
+    notification = Notification()
+    notification.add_notification(
+        target,
+        title,
+        description,
+        timestamp,
+        False
+    )
+    db.session.add(notification)
+    db.session.commit()
