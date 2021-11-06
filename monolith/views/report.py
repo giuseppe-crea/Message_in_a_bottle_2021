@@ -7,12 +7,14 @@ from monolith.database import Report, db, User
 from monolith.forms import ReportForm
 from datetime import datetime
 from monolith.blacklist import add2blacklist_local
+from monolith.views.doc import auto
 
 report = Blueprint('report', __name__)
 
 
 # noinspection PyUnresolvedReferences
 @report.route('/reports', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 @admin_required
 def reports():
@@ -23,6 +25,7 @@ def reports():
 # report a user to the admins
 # noinspection PyUnresolvedReferences
 @report.route('/report_user', methods=['GET', 'POST'])
+@auto.doc(groups=['public'])
 @login_required
 def report_user():
 

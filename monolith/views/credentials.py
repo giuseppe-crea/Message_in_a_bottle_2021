@@ -3,12 +3,14 @@ from flask_login import login_required, current_user
 
 from monolith.forms import CredentialsForm
 from monolith.database import db
+from monolith.views.doc import auto
 
 credentials = Blueprint('credentials', __name__)
 
 
 # noinspection PyUnresolvedReferences
 @credentials.route('/credentials', methods=['POST', 'GET'])
+@auto.doc(groups=['public'])
 @login_required
 def _credentials():
     """

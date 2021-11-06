@@ -3,12 +3,14 @@ from flask_login import login_user, logout_user
 
 from monolith.database import User, db
 from monolith.forms import LoginForm
+from monolith.views.doc import auto
 
 auth = Blueprint('auth', __name__)
 
 
 # noinspection PyUnresolvedReferences
 @auth.route('/login', methods=['GET', 'POST'])
+@auto.doc(groups=['public'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -24,6 +26,7 @@ def login():
 
 
 @auth.route("/logout")
+@auto.doc(groups=['public'])
 def logout():
     logout_user()
     return redirect('/')

@@ -5,11 +5,13 @@ from flask_login import login_required
 from monolith.blacklist import add2blacklist_local
 from monolith.database import db, Blacklist
 from monolith.forms import EmailForm
+from monolith.views.doc import auto
 
 blacklist = Blueprint('blacklist', __name__)
 
 
 @blacklist.route('/blacklist', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 def get_blacklist():
     """
@@ -28,6 +30,7 @@ def get_blacklist():
 
 
 @blacklist.route('/blacklist/add', methods=['GET', 'POST'])
+@auto.doc(groups=['public'])
 @login_required
 def add2blacklist():
     """
@@ -49,6 +52,7 @@ def add2blacklist():
 
 
 @blacklist.route('/blacklist/remove', methods=['GET', 'POST'])
+@auto.doc(groups=['public'])
 @login_required
 def delete_from_blacklist():
     """

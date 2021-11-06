@@ -10,6 +10,7 @@ from monolith.delete import remove_message, delete_for_receiver, \
 
 from monolith.forms import ForwardForm, ReplayForm
 from monolith.send import send_messages, save_draft
+from monolith.views.doc import auto
 
 box = Blueprint('box', __name__)
 
@@ -17,6 +18,7 @@ box = Blueprint('box', __name__)
 # noinspection PyUnresolvedReferences
 @box.route("/inbox", methods=["GET"], defaults={'_id': None})
 @box.route("/inbox/<_id>", methods=["GET", "DELETE"])
+@auto.doc(groups=['public'])
 @login_required
 def prep_inbox(_id):
     user_mail = current_user.get_email()
@@ -30,6 +32,7 @@ def prep_inbox(_id):
 
 @box.route("/outbox", methods=["GET"], defaults={'_id': None})
 @box.route("/outbox/<_id>", methods=["GET", "DELETE"])
+@auto.doc(groups=['public'])
 @login_required
 def prep_outbox(_id):
     user_mail = current_user.get_email()
@@ -105,6 +108,7 @@ def notify_sender(message):
 
 
 @box.route("/inbox/forward/<m_id>", methods=["GET", "POST"])
+@auto.doc(groups=['public'])
 @login_required
 def forward(m_id):
     """
@@ -143,6 +147,7 @@ def forward(m_id):
 
 
 @box.route("/outbox/withdraw/<m_id>", methods=["GET"])
+@auto.doc(groups=['public'])
 @login_required
 def withdraw(m_id):
     """
@@ -173,6 +178,7 @@ def withdraw(m_id):
 
 
 @box.route("/inbox/replay/<m_id>", methods=["GET", "POST"])
+@auto.doc(groups=['public'])
 @login_required
 def replay(m_id):
     """

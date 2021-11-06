@@ -5,12 +5,14 @@ from monolith.database import User, db
 from monolith.forms import RecipientsListForm
 from monolith.auth import current_user
 from werkzeug.exceptions import BadRequestKeyError
+from monolith.views.doc import auto
 
 list_blueprint = Blueprint('list', __name__)
 
 
 # noinspection PyUnresolvedReferences
 @list_blueprint.route('/list_of_recipients', methods=['POST', 'GET'])
+@auto.doc(groups=['public'])
 @login_required
 def _display_users():
     """
@@ -39,6 +41,7 @@ def _display_users():
 
 # noinspection PyUnresolvedReferences
 @list_blueprint.route('/live_search', methods=['POST'])
+@auto.doc(groups=['public'])
 @login_required
 def ajax_livesearch():
 

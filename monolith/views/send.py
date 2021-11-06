@@ -8,6 +8,7 @@ from monolith.auth import current_user
 from monolith.database import Message
 from monolith.forms import SendForm
 from monolith.send import send_messages, save_draft
+from monolith.views.doc import auto
 
 send = Blueprint('send', __name__)
 
@@ -15,6 +16,7 @@ send = Blueprint('send', __name__)
 # noinspection PyUnusedLocal,PyUnboundLocalVariable
 @send.route('/send', methods=['POST', 'GET'], defaults={'_id': None})
 @send.route('/send/<_id>', methods=['POST', 'GET'])
+@auto.doc(groups=['public'])
 @login_required
 def _send(_id, data=""):
     """
@@ -98,6 +100,7 @@ def _send(_id, data=""):
 
 
 @send.route('/send_draft_list', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 def get_message():
     """

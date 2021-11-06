@@ -5,12 +5,14 @@ from flask_login import login_required
 from monolith.database import User, db
 from monolith.forms import UserForm
 from monolith.lottery import get_usr_points
+from monolith.views.doc import auto
 
 users = Blueprint('users', __name__)
 
 
 # noinspection PyUnresolvedReferences
 @users.route('/users')
+@auto.doc(groups=['public'])
 def _users():
     users_query = db.session.query(User)
     return render_template("users.html", users=users_query)
@@ -18,6 +20,7 @@ def _users():
 
 # noinspection PyUnresolvedReferences
 @users.route('/create_user', methods=['POST', 'GET'])
+@auto.doc(groups=['public'])
 def create_user():
     form = UserForm()
 
@@ -62,6 +65,7 @@ def _user_data2dict(data: User, points):
 
 
 @users.route('/user_data', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 def user_data():
     """

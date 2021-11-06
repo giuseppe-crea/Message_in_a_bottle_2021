@@ -11,6 +11,7 @@ from .content_filter import content_filter
 from .alerts import alerts
 from .credentials import credentials
 from .calendar import calendar
+from .doc import doc
 
 
 blueprints = [
@@ -26,5 +27,6 @@ blueprints = [
   alerts,
   content_filter,
   credentials,
-  calendar
+  calendar,
+  doc
 ]

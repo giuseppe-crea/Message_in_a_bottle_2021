@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from monolith.database import db, Message
+from monolith.views.doc import auto
 
 
 calendar = Blueprint('calendar', __name__)
@@ -25,6 +26,7 @@ def get_received_messages(user):
 
 
 @calendar.route('/calendar', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 def get_calendar():
 
@@ -38,6 +40,7 @@ def get_calendar():
 
 
 @calendar.route('/calendar/sent', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 def get_calendar_sent():
     user_email = current_user.get_email()
@@ -47,6 +50,7 @@ def get_calendar_sent():
 
 
 @calendar.route('/calendar/received', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 def get_calendar_received():
     user_email = current_user.get_email()

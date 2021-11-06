@@ -2,6 +2,7 @@ from flask import Blueprint, render_template
 from monolith.database import Notification, db
 import flask_login
 from flask_login.utils import login_required
+from monolith.views.doc import auto
 
 
 alerts = Blueprint('alerts', __name__)
@@ -10,6 +11,7 @@ alerts = Blueprint('alerts', __name__)
 # get user notifications
 # noinspection PyUnresolvedReferences
 @alerts.route('/notifications', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 def notifications():
 

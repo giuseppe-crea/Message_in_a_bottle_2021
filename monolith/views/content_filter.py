@@ -5,12 +5,14 @@ from monolith.database import User, db
 from monolith.forms import ContentFilterForm
 from better_profanity import profanity
 from werkzeug.exceptions import BadRequestKeyError
+from monolith.views.doc import auto
 
 
 content_filter = Blueprint('content_filter', __name__)
 
 
 @content_filter.route('/content_filter', methods=['GET', 'POST'])
+@auto.doc(groups=['public'])
 @login_required
 def _content_filter():
     form = ContentFilterForm()
@@ -35,6 +37,7 @@ def _content_filter():
 
 
 @content_filter.route('/content_filter/list', methods=['GET'])
+@auto.doc(groups=['public'])
 @login_required
 def _content_filter_list():
     file = open(r"./monolith/static/default_badwords.txt", "r")

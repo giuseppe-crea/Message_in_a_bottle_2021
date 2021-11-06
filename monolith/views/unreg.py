@@ -4,6 +4,7 @@ from flask_login.utils import login_required
 from werkzeug.utils import redirect
 from monolith.database import User, db
 from monolith.forms import UnregisterForm
+from monolith.views.doc import auto
 
 
 unreg = Blueprint('unreg', __name__)
@@ -12,6 +13,7 @@ unreg = Blueprint('unreg', __name__)
 # delete user account
 # noinspection PyUnresolvedReferences
 @unreg.route('/unregister', methods=['GET', 'POST'])
+@auto.doc(groups=['public'])
 @login_required
 def unregister():
 
