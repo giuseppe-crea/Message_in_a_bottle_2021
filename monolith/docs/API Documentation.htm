@@ -1,0 +1,832 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>
+            API Documentation
+            </title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+            }
+
+            body {
+                margin: 10px;
+            }
+
+            div.mapping {
+                margin: 20px 20px;
+            }
+
+            ul.methods:before { content: "Methods: "; }
+            ul.methods li {
+                display: inline;
+                list-style: none;
+            }
+            ul.methods li:after { content: ","; }
+            ul.methods li:last-child:after { content: ""; }
+
+            ul.arguments:before { content: "Arguments: "; }
+            ul.arguments li {
+                display: inline;
+                list-style: none;
+            }
+            ul.arguments .argument { font-style:italic }
+            ul.arguments .default:not(:empty):before { content: "("; }
+            ul.arguments .default:not(:empty):after { content: ")"; }
+            ul.arguments li:after { content: ","; }
+            ul.arguments li:last-child:after { content: ""; }
+
+            .docstring:before { content: "Description: "; }
+        </style>
+    </head>
+    <body>
+        <h1>
+            API Documentation
+            </h1>
+
+        
+        <div class="mapping">
+            <a id="rule-/" class="rule"><h2>/</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Homepage view</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/blacklist" class="rule"><h2>/blacklist</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Get the logged user's blacklist.<br>
+    Only logged users are authorized to use this function.</p>
+
+<p>    :return: display the user's blacklist using the blacklist template.<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/blacklist/add" class="rule"><h2>/blacklist/add</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    The logged user adds an email to his blacklist.<br>
+    Only logged users are authorized to use this function.</p>
+
+<p>    :return: display the user's blacklist using the blacklist template or<br>
+    a form to request an email to the user.<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/blacklist/remove" class="rule"><h2>/blacklist/remove</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    The logged user removes an email from his blacklist.<br>
+    Only logged users are authorized to use this function.</p>
+
+<p>    :return: display the user's blacklist using the blacklist template or<br>
+    a form to request an email to the user.<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/calendar" class="rule"><h2>/calendar</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Displays messages in a calendar</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/calendar/received" class="rule"><h2>/calendar/received</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Calendar view for received messages only</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/calendar/sent" class="rule"><h2>/calendar/sent</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Calendar view for sent messages only</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/content_filter" class="rule"><h2>/content_filter</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    A view from which a user can activate or deactivate the content filter</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/content_filter/list" class="rule"><h2>/content_filter/list</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Shows a list of all words that make up the filter</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/create_user" class="rule"><h2>/create_user</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Registration view from which new users can enroll to the system<br>
+    in doing so it modifies the database</p>
+
+<p>    :return: a rendered view<br>
+    :raises: :class:`RuntimeError`:impossible conditions<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/credentials" class="rule"><h2>/credentials</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Route from which users can modify their account data<br>
+    data which can be modified includes:<br>
+    - First name; Last name; email address; password<br>
+    The user will be prompted for confirmation before the changes are committed<br>
+    The user's old password is required to make edits</p>
+
+<p>    :returns: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/inbox" class="rule"><h2>/inbox</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">_id</span>
+                    <span class="default">None</span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Prepares the query arguments to populate the message list as if the user<br>
+    had accessed the inbox functionality<br>
+    If the optional message id is passed, the query will return only the<br>
+    specific message with that id<br>
+    Performs all necessary checks to make sure the user is authorized to view<br>
+    a specific message</p>
+
+<p>    :param _id: optional message id<br>
+    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/inbox/%3C_id%3E" class="rule"><h2>/inbox/&lt;_id&gt;</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">DELETE</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">_id</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Prepares the query arguments to populate the message list as if the user<br>
+    had accessed the inbox functionality<br>
+    If the optional message id is passed, the query will return only the<br>
+    specific message with that id<br>
+    Performs all necessary checks to make sure the user is authorized to view<br>
+    a specific message</p>
+
+<p>    :param _id: optional message id<br>
+    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/inbox/forward/%3Cm_id%3E" class="rule"><h2>/inbox/forward/&lt;m_id&gt;</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">m_id</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Implements the forward message feature.</p>
+
+<p>    :param m_id: message id<br>
+    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/inbox/replay/%3Cm_id%3E" class="rule"><h2>/inbox/replay/&lt;m_id&gt;</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">m_id</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Implements the replay message feature.</p>
+
+<p>    :param m_id: message id<br>
+    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/list_of_recipients" class="rule"><h2>/list_of_recipients</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Displays a page with a searchable list of registered users<br>
+    which can then be selected as recipients</p>
+
+<p>    :returns: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/live_search" class="rule"><h2>/live_search</h2></a>
+            <ul class="methods">
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    The live search function for the user list</p>
+
+<p>    :return: a list of addresses matching the search query, excluding the<br>
+    caller's address<br>
+    :rtype: json string<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/login" class="rule"><h2>/login</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Login functionality based upon flask_logins</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/logout" class="rule"><h2>/logout</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Logout functionality</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/notifications" class="rule"><h2>/notifications</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Displays the currently pending user notifications</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/outbox" class="rule"><h2>/outbox</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">_id</span>
+                    <span class="default">None</span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Prepares the query arguments to populate the message list as if the user<br>
+    had accessed the sent messages functionality<br>
+    If the optional message id is passed, the query will return only the<br>
+    specific message with that id<br>
+    Performs all necessary checks to make sure the user is authorized to view<br>
+    a specific message</p>
+
+<p>    :param _id: optional message id<br>
+    :return: a list of sent messages, divided in delivered and pending<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/outbox/%3C_id%3E" class="rule"><h2>/outbox/&lt;_id&gt;</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">DELETE</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">_id</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Prepares the query arguments to populate the message list as if the user<br>
+    had accessed the sent messages functionality<br>
+    If the optional message id is passed, the query will return only the<br>
+    specific message with that id<br>
+    Performs all necessary checks to make sure the user is authorized to view<br>
+    a specific message</p>
+
+<p>    :param _id: optional message id<br>
+    :return: a list of sent messages, divided in delivered and pending<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/outbox/withdraw/%3Cm_id%3E" class="rule"><h2>/outbox/withdraw/&lt;m_id&gt;</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">m_id</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Implements the withdraw message feature.<br>
+    The user can spend lottery points to withdraw a message.</p>
+
+<p>    :param m_id: message id<br>
+    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/report_user" class="rule"><h2>/report_user</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Report a user to the admins</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/reports" class="rule"><h2>/reports</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    The report management page for administrators</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/send" class="rule"><h2>/send</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">_id</span>
+                    <span class="default">None</span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Endpoint for saving drafts and sending messages<br>
+    Takes values from the related form and either saves them as draft<br>
+    or passes the values on to the controller which will then proceed to queue<br>
+    the message with celery</p>
+
+<p>    :param _id: the draft id<br>
+    :param data: a default parameter used for recipient setting<br>
+    :returns: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/send/%3C_id%3E" class="rule"><h2>/send/&lt;_id&gt;</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">_id</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Endpoint for saving drafts and sending messages<br>
+    Takes values from the related form and either saves them as draft<br>
+    or passes the values on to the controller which will then proceed to queue<br>
+    the message with celery</p>
+
+<p>    :param _id: the draft id<br>
+    :param data: a default parameter used for recipient setting<br>
+    :returns: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/send_draft_list" class="rule"><h2>/send_draft_list</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    View of all drafts for a given user</p>
+
+<p>    :returns: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/unregister" class="rule"><h2>/unregister</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">POST</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Deletes the caller's user account</p>
+
+<p>    :return: a rendered view<br>
+    :raises: :class:`RuntimeError`:impossible conditions<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/user_data" class="rule"><h2>/user_data</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    The user can read his account's data.<br>
+    Only logged users are authorized to use this function.</p>
+
+<p>    :returns: display the user's data using the user_data template.<br>
+    :rtype: View<br>
+    </p><p></p>
+        </div>
+        
+        <div class="mapping">
+            <a id="rule-/users" class="rule"><h2>/users</h2></a>
+            <ul class="methods">
+                    <li class="method">GET</li>
+                    <li class="method">OPTIONS</li>
+                    <li class="method">HEAD</li>
+                    
+            </ul>
+            <ul class="arguments">
+                
+                <li>
+                    <span class="argument">None</span>
+                    <span class="default"></span>
+                </li>
+                
+            </ul>
+            <p class="docstring"></p><p><br>
+    Displays a list of all users by first and last name</p>
+
+<p>    :return: a rendered view<br>
+    </p><p></p>
+        </div>
+        
+    
+</body></html>

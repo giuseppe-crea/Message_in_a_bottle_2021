@@ -10,6 +10,7 @@ from monolith.delete import remove_message, delete_for_receiver, \
 
 from monolith.forms import ForwardForm, ReplayForm
 from monolith.send import send_messages, save_draft
+from monolith.views.doc import auto
 
 box = Blueprint('box', __name__)
 
@@ -17,8 +18,20 @@ box = Blueprint('box', __name__)
 # noinspection PyUnresolvedReferences
 @box.route("/inbox", methods=["GET"], defaults={'_id': None})
 @box.route("/inbox/<_id>", methods=["GET", "DELETE"])
+@auto.doc(groups=['routes'])
 @login_required
 def prep_inbox(_id):
+    """
+    Prepares the query arguments to populate the message list as if the user
+    had accessed the inbox functionality
+    If the optional message id is passed, the query will return only the
+    specific message with that id
+    Performs all necessary checks to make sure the user is authorized to view
+    a specific message
+
+    :param _id: optional message id
+    :return: a rendered view
+    """
     user_mail = current_user.get_email()
     role = '/inbox'
     kwargs = {'status': 2, 'receiver_email': user_mail,
@@ -30,8 +43,20 @@ def prep_inbox(_id):
 
 @box.route("/outbox", methods=["GET"], defaults={'_id': None})
 @box.route("/outbox/<_id>", methods=["GET", "DELETE"])
+@auto.doc(groups=['routes'])
 @login_required
 def prep_outbox(_id):
+    """
+    Prepares the query arguments to populate the message list as if the user
+    had accessed the sent messages functionality
+    If the optional message id is passed, the query will return only the
+    specific message with that id
+    Performs all necessary checks to make sure the user is authorized to view
+    a specific message
+
+    :param _id: optional message id
+    :return: a list of sent messages, divided in delivered and pending
+    """
     user_mail = current_user.get_email()
     role = '/outbox'
     kwargs = {'status': 2, 'sender_email': user_mail,
@@ -48,8 +73,10 @@ def get_box(kwargs, role):
     finally renders everything in a proper page
     works for both a single message and a list of messages
     DELETE will only delete the message for the current user, not their partner
+
     :param kwargs: query keyword arguments
     :param role: either /inbox or /outbox depending on the route
+    :return: a rendered view
     """
     if 'id' in kwargs:
         try:
@@ -83,7 +110,9 @@ def get_box(kwargs, role):
 def notify_sender(message):
     """
     notifies the sender when the receiver opens for the first time a message
+
     :param message: message object
+    :return: a rendered view
     """
     if not message.is_read:
         # send notification
@@ -105,11 +134,14 @@ def notify_sender(message):
 
 
 @box.route("/inbox/forward/<m_id>", methods=["GET", "POST"])
+@auto.doc(groups=['routes'])
 @login_required
 def forward(m_id):
     """
     Implements the forward message feature.
+
     :param m_id: message id
+    :return: a rendered view
     """
     if m_id is not None:
         # get the message from the database
@@ -143,12 +175,15 @@ def forward(m_id):
 
 
 @box.route("/outbox/withdraw/<m_id>", methods=["GET"])
+@auto.doc(groups=['routes'])
 @login_required
 def withdraw(m_id):
     """
     Implements the withdraw message feature.
     The user can spend lottery points to withdraw a message.
+
     :param m_id: message id
+    :return: a rendered view
     """
     if m_id is not None:
         # get the user's total lottery points
@@ -173,11 +208,14 @@ def withdraw(m_id):
 
 
 @box.route("/inbox/replay/<m_id>", methods=["GET", "POST"])
+@auto.doc(groups=['routes'])
 @login_required
 def replay(m_id):
     """
     Implements the replay message feature.
+
     :param m_id: message id
+    :return: a rendered view
     """
     if m_id is None:
         return redirect('/inbox')

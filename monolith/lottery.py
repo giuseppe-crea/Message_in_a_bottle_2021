@@ -1,7 +1,6 @@
 import random
-from datetime import datetime
 
-from monolith.database import LotteryPoints, db, User, Notification
+from monolith.database import LotteryPoints, db, User
 
 # global parameters of the lottery
 price = 100
@@ -12,6 +11,7 @@ prize = 100
 def get_usr_points(user):
     """
     Get the user's lottery point from the database
+
     :param user: an User object
     :return: user's lottery points
     """
@@ -25,6 +25,9 @@ def get_usr_points(user):
 def give_points(user_id, points):
     """
     Add new points to the user's account
+
+    :param user_id: the user id in the database
+    :param points: the amount of points to add
     """
     user = db.session.query(LotteryPoints).filter(
         LotteryPoints.id == user_id).first()
@@ -42,6 +45,9 @@ def give_points(user_id, points):
 def set_points(user_id, points):
     """
     Set the total points of the user
+
+    :param user_id: the user id in the database
+    :param points: the value their points will be set to
     """
     user = db.session.query(LotteryPoints).filter(
         LotteryPoints.id == user_id).first()
@@ -66,20 +72,4 @@ def execute():
     winner = random.choice(users)
     # add the prize to the winner's points
     give_points(winner.id, prize)
-    _send_notification(winner.email)
-
-
-def _send_notification(email):
-    notification = Notification()
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    title = "Lottery win"
-    description = "You have won" + str(prize) + "points"
-    notification.add_notification(
-        email,
-        title,
-        description,
-        timestamp,
-        False
-    )
-    db.session.add(notification)
-    db.session.commit()
+    return winner.email

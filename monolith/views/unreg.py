@@ -2,19 +2,26 @@ from flask import Blueprint, render_template, request, abort
 import flask_login
 from flask_login.utils import login_required
 from werkzeug.utils import redirect
+
 from monolith.database import User, db
 from monolith.forms import UnregisterForm
+from monolith.views.doc import auto
 
 
 unreg = Blueprint('unreg', __name__)
 
 
-# delete user account
 # noinspection PyUnresolvedReferences
 @unreg.route('/unregister', methods=['GET', 'POST'])
+@auto.doc(groups=['routes'])
 @login_required
 def unregister():
+    """
+    Deletes the caller's user account
 
+    :return: a rendered view
+    :raises: :class:`RuntimeError`:impossible conditions
+    """
     form = UnregisterForm()
 
     if request.method == 'GET':
