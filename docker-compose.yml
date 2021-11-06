@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/code
     depends_on:
-      - redis
+      - beat
   redis:
     container_name: redis
     image: "redis:alpine"
