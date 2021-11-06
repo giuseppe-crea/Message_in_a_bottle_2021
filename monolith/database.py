@@ -76,6 +76,7 @@ class Message(db.Model):
     # two columns: visible to sender, visible to receiver, for deletion
     visible_to_sender = db.Column(db.Boolean, nullable=False)
     visible_to_receiver = db.Column(db.Boolean, nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
 
     def __init__(self, *args, **kw):
         super(Message, self).__init__(*args, **kw)
@@ -93,6 +94,7 @@ class Message(db.Model):
         self.status = status
         self.visible_to_sender = True
         self.visible_to_receiver = True
+        self.is_read = False
 
     def get_id(self):
         return self.id
