@@ -1,11 +1,18 @@
 import os
 import shutil
 
+import flask
+
 from monolith.app import create_app
+from monolith.background import deliver_message
 from monolith.database import db, Message
 
 
 def get_testing_app():
+    """
+    Create an app instance for testing.
+    """
+    # cleanup persistent state for a test from scratch
     cleanup()
     _app = create_app()
     return _app.test_client()
@@ -36,7 +43,7 @@ def create_user(client, mail, firstname, lastname, date_of_birth, password):
 
 
 # a counter to create uniques example users
-next_example_user = 1
+_next_example_user = 1
 
 
 def create_ex_usr(client):
@@ -47,9 +54,9 @@ def create_ex_usr(client):
     :param client: the testing app
     :return: (email, password) of the new user
     """
-    global next_example_user
-    name = "user" + str(next_example_user)
-    next_example_user += 1
+    global _next_example_user
+    name = "user" + str(_next_example_user)
+    _next_example_user += 1
     email = name + "@example.com"
     password = "pass" + name
     create_user(client, email, name, name, "02/02/2000", password)
@@ -64,6 +71,24 @@ def create_ex_users(client, number):
     :return: list of (email, password) tuple of the new users
     """
     return [create_ex_usr(client) for _ in range(number)]
+
+
+def int_send_mess(sender, receiver, text, delivery_time):
+    """
+    Internally send a message, for testing.
+    """
+    message = create_message(
+        text,
+        sender,
+        receiver,
+        delivery_time.strftime('%Y-%m-%dT%H:%M'),
+        None,
+        1
+    )
+    deliver_message(
+        flask.current_app,
+        message.get_id()
+    )
 
 
 def create_message(message, sender, receiver, time, image, status):

@@ -6,8 +6,7 @@ from werkzeug.utils import redirect
 from monolith.database import Report, db, User
 from monolith.forms import ReportForm
 from datetime import datetime
-from monolith.views.blacklist import add2blacklist_local
-
+from monolith.blacklist import add2blacklist_local
 
 report = Blueprint('report', __name__)
 
