@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, abort
 import flask_login
 from flask_login.utils import login_required
 from werkzeug.utils import redirect
+
 from monolith.database import User, db
 from monolith.forms import UnregisterForm
 from monolith.views.doc import auto

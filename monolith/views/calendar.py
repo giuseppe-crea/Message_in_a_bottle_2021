@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
+
 from monolith.database import db, Message
 from monolith.views.doc import auto
 

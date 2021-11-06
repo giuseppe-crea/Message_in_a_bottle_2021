@@ -6,8 +6,9 @@ ENV DOCKER=yes
 ENV TZ=Europe/Rome
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apk add build-base
+RUN apk add git
 RUN pip install -r requirements.txt
-#RUN chmod +x ./run_docker.sh
+RUN pip install git+https://github.com/giuseppe-crea/flask-autodoc.git#egg=Flask-Autodoc
 ENV FLASK_RUN_HOST=flask-monolith
 ENV FLASK_APP=monolith
 ENV FLASK_ENV=development

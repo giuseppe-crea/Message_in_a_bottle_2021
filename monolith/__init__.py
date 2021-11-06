@@ -1,4 +1,5 @@
 import re
+
 from jinja2 import evalcontextfilter
 from markupsafe import Markup, escape
 
