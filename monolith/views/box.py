@@ -8,7 +8,8 @@ from monolith import send, lottery
 from monolith.delete import remove_message, delete_for_receiver, \
     delete_for_sender
 
-from monolith.forms import ForwardForm
+from monolith.forms import ForwardForm, ReplayForm
+from monolith.send import send_messages, save_draft
 
 box = Blueprint('box', __name__)
 
@@ -93,20 +94,27 @@ def notify_sender(message):
     return
 
 
-@box.route("/inbox/forward/<_id>", methods=["GET", "POST"])
+@box.route("/inbox/forward/<m_id>", methods=["GET", "POST"])
 @login_required
-def forward(_id):
-    if _id is not None:
+def forward(m_id):
+    """
+    Implements the forward message feature.
+    :param m_id: message id
+    """
+    if m_id is not None:
+        # get the message from the database
         try:
             user_mail = current_user.get_email()
             message = Message().query.filter_by(
-                id=int(_id),
+                id=int(m_id),
                 receiver_email=user_mail
             ).one()
+            # asks the user the email of the new receiver and the delivery time
             form = ForwardForm()
             if form.validate_on_submit():
                 address = form.data["recipient"]
                 time = form.data["time"]
+                # add a forward header to the message
                 frw_message = "Forwarded by: " + message.receiver_email
                 frw_message += "\nFrom: " + message.sender_email
                 frw_message += "\n\n" + message.message
@@ -124,22 +132,81 @@ def forward(_id):
             abort(403)
 
 
-@box.route("/outbox/withdraw/<_id>", methods=["GET"])
+@box.route("/outbox/withdraw/<m_id>", methods=["GET"])
 @login_required
-def withdraw(_id):
-    if _id is not None:
+def withdraw(m_id):
+    """
+    Implements the withdraw message feature.
+    The user can spend lottery points to withdraw a message.
+    :param m_id: message id
+    """
+    if m_id is not None:
+        # get the user's total lottery points
         points = lottery.get_usr_points(current_user)
         if points >= lottery.price:
+            # get the message from the database
             message = None
             try:
                 message = Message().query.filter_by(
-                    id=int(_id)).one()
+                    id=int(m_id)).one()
             except NoResultFound:
                 abort(403)
+            # check that the message has not already been delivered
             if message.status == 1:
                 delete_for_receiver(message)
                 delete_for_sender(message)
+                # decrease the user's points
                 points -= lottery.price
                 lottery.set_points(current_user.get_id(), points)
                 return redirect('/outbox')
     abort(401)
+
+
+@box.route("/inbox/replay/<m_id>", methods=["GET", "POST"])
+@login_required
+def replay(m_id):
+    """
+    Implements the replay message feature.
+    :param m_id: message id
+    """
+    if m_id is None:
+        return redirect('/inbox')
+    message = None
+    # get the massage from the database
+    try:
+        user_mail = current_user.get_email()
+        message = Message().query.filter_by(
+            id=int(m_id),
+            receiver_email=user_mail
+        ).one()
+    except NoResultFound:
+        abort(403)
+
+    # get the receiver mail from the original message
+    receiver = message.sender_email
+    # ask the user to insert the text and the delivery date of the replay
+    form = ReplayForm()
+
+    # send the replay
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            message = form.data['message']
+            time = form.data['time']
+            to_parse = receiver.split(', ')
+            current_user_mail = getattr(current_user, 'email')
+            if request.form.get("save_button"):
+                # the user asked to save this message
+                save_draft(current_user_mail, receiver, message, time, None)
+                return redirect('/')
+            correctly_sent, not_correctly_sent = \
+                send_messages(to_parse, current_user_mail, time, message, None)
+        else:
+            return render_template('error_template.html', form=form)
+        return render_template(
+            'done_sending.html',
+            users1=correctly_sent,
+            users2=not_correctly_sent,
+            text=message
+        )
+    else:
+        return render_template('send.html', form=form)

@@ -26,16 +26,16 @@ def give_points(user_id, points):
     """
     Add new points to the user's account
     """
-    winner = db.session.query(LotteryPoints).filter(
+    user = db.session.query(LotteryPoints).filter(
         LotteryPoints.id == user_id).first()
 
-    if winner is None:
-        winner = LotteryPoints()
-        winner.add_new_user(user_id, points)
-        db.session.add(winner)
+    if user is None:
+        user = LotteryPoints()
+        user.add_new_user(user_id, points)
+        db.session.add(user)
         db.session.commit()
     else:
-        winner.points += points
+        user.points += points
         db.session.commit()
 
 
@@ -43,16 +43,16 @@ def set_points(user_id, points):
     """
     Set the total points of the user
     """
-    winner = db.session.query(LotteryPoints).filter(
+    user = db.session.query(LotteryPoints).filter(
         LotteryPoints.id == user_id).first()
 
-    if winner is None:
-        winner = LotteryPoints()
-        winner.add_new_user(user_id, points)
-        db.session.add(winner)
+    if user is None:
+        user = LotteryPoints()
+        user.add_new_user(user_id, points)
+        db.session.add(user)
         db.session.commit()
     else:
-        winner.points = points
+        user.points = points
         db.session.commit()
 
 
