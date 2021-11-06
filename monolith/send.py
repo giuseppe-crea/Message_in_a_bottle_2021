@@ -96,7 +96,6 @@ def save_draft(current_user_mail, recipients, msg, time):
     :param msg: the actual message, max size of 1024 char
     """
     new_draft = Message()
-    # TODO: Maybe implement defaults for missing fields
     new_draft.add_message(msg, current_user_mail, recipients, time, None, 0)
     db.session.add(new_draft)
     db.session.commit()

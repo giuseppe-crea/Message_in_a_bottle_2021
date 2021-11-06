@@ -84,10 +84,23 @@ class Message(db.Model):
 
     def add_message(self, message, sender_email, receiver_email, time, image,
                     status):
-        self.message = message
+        """
+        adds a message to database
+        """
+        # it's impossible for values to be missing if receiver is none
+        if message is not None:
+            self.message = message
+        else:
+            self.message = ''
         self.sender_email = sender_email
-        self.receiver_email = receiver_email
-        self.time = time
+        if receiver_email is not None:
+            self.receiver_email = receiver_email
+        else:
+            self.receiver_email = ''
+        if time is not None:
+            self.time = time
+        else:
+            self.time = ''
         if image is not None:
             self.image = image
         else:
