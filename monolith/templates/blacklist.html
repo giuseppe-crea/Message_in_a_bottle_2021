@@ -1,19 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
+<style>
+        ul {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 1.2em
+          }
+
+
+    </style>
+
 <head>
     <meta charset="UTF-8">
     <title>Blacklist</title>
 </head>
-<a href="/">Home</a><br>
-<a href="/blacklist/add">add user</a> or <a href="/blacklist/remove">remove user</a><br>
+<div style="margin: 40px;">
+    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a></p>
+    <p style="text-align:left; font-size: 1.5em"><a href="/blacklist/add">add user</a>
+        or
+        <a href="/blacklist/remove">remove user</a></p>
+</div>
+
 {% if result != [] %}
+<div style="margin: 40px;">
 <h1>Your blacklist:</h1>
 <ul>
     {% for value in result %}
         <li> {{ value }} </li>
     {% endfor %}
 </ul>
+</div>
 {% else %}
-<br>Your blacklist is empty!
+<p style="text-align:left; font-size: 1.5em; margin: 40px">Your blacklist is empty!</p>
 {% endif %}
 </html>

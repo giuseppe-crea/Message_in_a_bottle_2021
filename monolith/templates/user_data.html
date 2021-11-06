@@ -2,27 +2,29 @@
 </css>
 <html>
 
-<head>
-    <style>
-        table {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-          }
-          td, th {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-          }
-          tr:nth-child(even) {
-            background-color: #dddddd;
-          }
 
-    </style>
-</head>
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+</style>
+
 
 <body>
-<a href="/">Home</a>
+<div style="margin: 40px;">
+    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a></p>
+</div>
+
 <h1>Your account information:</h1>
 <table>
     {% for key, value in result.items() %}
@@ -33,7 +35,8 @@
     {% endfor %}
 </table>
 <div style="margin: 40px;">
-  <p style="text-align:center; font-size: 1.875em"><a href="/credentials">Edit Credentials</a> </p>
+    <p style="text-align:center; font-size: 1.875em"><a href="/credentials">Edit
+        Credentials</a></p>
 </div>
 </body>
 </html>
