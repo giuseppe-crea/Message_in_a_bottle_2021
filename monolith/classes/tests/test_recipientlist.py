@@ -49,7 +49,7 @@ class TestRecipientList(unittest.TestCase):
             # tester address and admin address
             assert b'Choose Recipients' in rv.data
             assert b'example@example.com' in rv.data
-            assert b'tester@example.com' in rv.data
+            assert b'tester@example.com' not in rv.data
 
             # try to select an existing user
             # create a possible recipient
@@ -74,17 +74,28 @@ class TestRecipientList(unittest.TestCase):
             assert rv.status_code == 200
             assert b'q' not in rv.data
 
-            # keyboard input of 't'
-            # exists an account with a 't'
+            # keyboard input of 'test'
+            # exists an account with a 'test'
             # in his information (tester)
+            # it won't be displayed because it's the searching account itself
             rv = tested_app.post(
                 '/live_search',
-                data={'query': 't'},
+                data={'query': 'test'},
                 follow_redirects=True
             )
             assert rv.status_code == 200
             assert b'Choose Recipients' in rv.data
-            assert b'tester@example.com' in rv.data
+            assert b'tester@example.com' not in rv.data
+            assert b'recipient@example.com' not in rv.data
+            # same test but with 'r'
+            rv = tested_app.post(
+                '/live_search',
+                data={'query': 'r'},
+                follow_redirects=True
+            )
+            assert rv.status_code == 200
+            assert b'Choose Recipients' in rv.data
+            assert b'recipient@example.com' in rv.data
 
             # void POST request (no recipient selection)
             rv = tested_app.post(
