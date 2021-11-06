@@ -16,14 +16,21 @@ send = Blueprint('send', __name__)
 @send.route('/send', methods=['POST', 'GET'], defaults={'_id': None})
 @send.route('/send/<_id>', methods=['POST', 'GET'])
 @login_required
-# data is a default parameter used for recipient setting
 def _send(_id, data=""):
+    """
+    Endpoint for saving drafts and sending messages
+    Takes values from the related form and either saves them as draft
+    or passes the values on to the controller which will then proceed to queue
+    the message with celery
+    :param _id: the draft id
+    :param data: a default parameter used for recipient setting
+    """
     form = SendForm()
     # if we are loading a draft:
     # the method check is required to avoid resetting the data on a POST
     if _id is not None and request.method == 'GET':
-        # load it after checking its existence
-        # drafts don't save images
+        # load it after checking its existence, and its status as a draft
+        # drafts don't save images to save on server data usage
         try:
             draft = Message().query.filter_by(
                 id=int(_id),
@@ -39,7 +46,6 @@ def _send(_id, data=""):
     # instantiate arrays of mail addresses to display for our sender
     correctly_sent = []
     not_correctly_sent = []
-
     if request.method == 'POST':
         if form.validate_on_submit():
             current_user_mail = getattr(current_user, 'email')
@@ -57,15 +63,12 @@ def _send(_id, data=""):
                     current_user_mail,
                     user_input,
                     message,
-                    time,
-                    None,
+                    time
                 )
-                # TODO: change this to a "Draft saved" message
                 return redirect('/')
             # check if the post request has the optional file part
             if 'file' in request.files:
                 file = request.files['file']
-
             # go ahead and deliver the messages
             try:
                 correctly_sent, not_correctly_sent = send_messages(
@@ -97,6 +100,9 @@ def _send(_id, data=""):
 @send.route('/send_draft_list', methods=['GET'])
 @login_required
 def get_message():
+    """
+    View of all drafts for a given user
+    """
     drafts = Message().query.filter_by(sender_email=current_user.email,
                                        status=0).all()
     # noinspection PyUnresolvedReferences

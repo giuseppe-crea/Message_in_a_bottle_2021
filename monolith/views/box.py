@@ -42,13 +42,20 @@ def prep_outbox(_id):
 
 
 def get_box(kwargs, role):
+    """
+    returns either the inbox or the outbox, based on the route that was called
+    then performs a database query with the prepared arguments for that route
+    finally renders everything in a proper page
+    works for both a single message and a list of messages
+    DELETE will only delete the message for the current user, not their partner
+    :param kwargs: query keyword arguments
+    :param role: either /inbox or /outbox depending on the route
+    """
     if 'id' in kwargs:
         try:
             message = Message().query.filter_by(**kwargs).one()
             if request.method == "DELETE":
                 remove_message(message, role)
-                # TODO: redirect to confirmation page
-                #  this is actually overwritten by the JS currently
                 return redirect(role)
             else:
                 notify_sender(message)
@@ -73,8 +80,11 @@ def get_box(kwargs, role):
         )
 
 
-# notifies the sender when the receiver opens for the first time a message
 def notify_sender(message):
+    """
+    notifies the sender when the receiver opens for the first time a message
+    :param message: message object
+    """
     if not message.is_read:
         # send notification
         timestamp = message.time
@@ -196,7 +206,7 @@ def replay(m_id):
             current_user_mail = getattr(current_user, 'email')
             if request.form.get("save_button"):
                 # the user asked to save this message
-                save_draft(current_user_mail, receiver, message, time, None)
+                save_draft(current_user_mail, receiver, message, time)
                 return redirect('/')
             correctly_sent, not_correctly_sent = \
                 send_messages(to_parse, current_user_mail, time, message, None)

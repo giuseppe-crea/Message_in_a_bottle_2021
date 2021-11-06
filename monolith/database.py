@@ -74,6 +74,7 @@ class Message(db.Model):
     # 0 draft, 1 sent, 2 delivered
     status = db.Column(db.Integer, nullable=False)
     # two columns: visible to sender, visible to receiver, for deletion
+    # when both are set to false, the message is deleted
     visible_to_sender = db.Column(db.Boolean, nullable=False)
     visible_to_receiver = db.Column(db.Boolean, nullable=False)
     is_read = db.Column(db.Boolean, default=False)

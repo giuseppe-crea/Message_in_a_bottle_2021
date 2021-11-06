@@ -13,6 +13,11 @@ images = UploadSet('images', IMAGES, default_dest=None)
 
 
 class TimeValidator(object):
+    """
+    Custom validator for our datetime field
+    it takes care to ignore seconds in its comparison
+    and prevents the user from sending messages into the past
+    """
     field_flags = ('required',)
 
     # this validator strips times down to the minute
@@ -32,7 +37,10 @@ class TimeValidator(object):
 
 
 class MailValidator(object):
-
+    """
+    custom validator for mails, more powerful than a normal MailField
+    It can check a whole list of comma-separated mails
+    """
     @staticmethod
     def check(email):
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'

@@ -9,6 +9,9 @@ from sqlalchemy.exc import NoResultFound
 from monolith import lottery
 from monolith.database import db, Message, Notification
 
+# Check a specifically set environment variable for the address of the backend
+# said address could also be obtained from an env variable
+# but this is not currently required
 if os.environ.get('DOCKER') is not None:
     BACKEND = BROKER = 'redis://redis:6379/0'
 else:
@@ -21,6 +24,10 @@ UPLOAD_FOLDER = None
 
 @celery.task
 def do_task(app):
+    """
+    instantiate an app if none is present
+    :param app: the flask.current_app object, can be None
+    """
     global _APP
     global UPLOAD_FOLDER
     # lazy init
@@ -51,7 +58,7 @@ def setup_periodic_tasks(sender, **kwargs):
         cleanup_pictures.s(_APP),
         name='expired images cleanup'
     )
-
+    # Runs the lottery every lottery period
     sender.add_periodic_task(
         float(lottery.period),
         lottery_task.s(_APP),
@@ -59,9 +66,13 @@ def setup_periodic_tasks(sender, **kwargs):
     )
 
 
-# task to periodically send unsent messages past due
 @celery.task
 def send_unsent_past_due(app):
+    """
+    task to periodically send unsent messages past due
+    useful in case of catastrophic failure of celery
+    :param app: the flask.current_app object, can be None
+    """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
@@ -74,10 +85,13 @@ def send_unsent_past_due(app):
             deliver_message(app, row.get_id())
 
 
-# task to delete pictures with no reference in the database
-# to be run periodically
 @celery.task
 def cleanup_pictures(app):
+    """
+    task to delete pictures with no reference in the database
+    this is one possible way to account for forwards and deletions
+    :param app: the flask.current_app object, can be None
+    """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
@@ -100,7 +114,11 @@ def cleanup_pictures(app):
 # noinspection PyUnresolvedReferences
 @celery.task
 def deliver_message(app, message_id):
-    # TODO: RPC that notifies the receiver
+    """
+    Task to deliver a message by editing its status in the database
+    :param app: the flask.current_app object, can be None
+    :param message_id: the id of the message to deliver in the database
+    """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
@@ -129,6 +147,10 @@ def deliver_message(app, message_id):
 
 @celery.task
 def lottery_task(app):
+    """
+    Runs the lottery
+    :param app: the flask.current_app object, can be None
+    """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
@@ -138,6 +160,13 @@ def lottery_task(app):
 
 @celery.task
 def create_notification(title, description, timestamp, target):
+    """
+    Creates a notification element in the database
+    :param title: Notification title
+    :param description: Notification body text
+    :param timestamp: timestamp to display on the Notification
+    :param target: the user mail address to which the notification is addressed
+    """
     notification = Notification()
     notification.add_notification(
         target,
