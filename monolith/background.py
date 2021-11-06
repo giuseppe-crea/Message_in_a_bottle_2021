@@ -136,6 +136,7 @@ def lottery_task(app):
         lottery.execute()
 
 
+@celery.task
 def create_notification(title, description, timestamp, target):
     notification = Notification()
     notification.add_notification(
