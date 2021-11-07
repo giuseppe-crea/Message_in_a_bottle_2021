@@ -82,6 +82,9 @@ def get_box(kwargs, role):
         try:
             message = Message().query.filter_by(**kwargs).one()
             if request.method == "DELETE":
+                if message.status == 0:
+                    remove_message(message, '/inbox')
+                    return redirect("/send_draft_list")
                 remove_message(message, role)
                 return redirect(role)
             else:

@@ -1,27 +1,52 @@
 <!--suppress ALL -->
 
-<html>
- <body>
-  <h1>Unregister</h1>
 
-  <form action="" method="POST">
+<html>
+<head>
+    <h1>Unregister</h1>
+</head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+input[type=password] {
+  padding: 5px;
+  margin:5px 0;
+  border: 2px solid #eee;
+  font-family:inherit;
+  font-size: inherit;
+}
+
+input[type=submit] {
+  padding: 5px;
+  margin:5px 0;
+  border: 2px solid #eee;
+  font-family:inherit;
+  font-size: inherit;
+}
+
+
+</style>
+
+
+<form action="" method="POST">
     {{ form.hidden_tag() }}
     <dl>
-     {% for field in form.display %}
-     <dt>{{ form[field].label }}</dt>
-     <dd>{{ form[field]() }}</dd>
-       {% if form[field].errors %}
-          {% for e in form[field].errors %}
-           <!--suppress HtmlUnknownTag -->
+        {% for field in form.display %}
+        <dd>{{ form[field](class='custom-class', placeholder=field) }}</dd>
+        {% if form[field].errors %}
+        {% for e in form[field].errors %}
+        <!--suppress HtmlUnknownTag -->
         <p class="help-block">{{ e }}</p>
-          {% endfor %}
-       {% endif %}
-     {% endfor %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
     </dl>
     <p>
-    <input type=submit value="Delete Account">
-  </form>
- </body>
+        <input type=submit value="Delete Account">
+</form>
+</body>
 </html>
 
 

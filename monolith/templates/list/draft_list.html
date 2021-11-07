@@ -1,13 +1,74 @@
-{% extends 'body.html' %}
-
-<h1>{% block title %} List of messages {% endblock %}</h1>
-
 {% block content %}
-    <ul style="list-style-type: none;">
-        {% for draft in drafts %}
-            <li><b>to:</b> {{ draft['receiver_email'] }}</li>
-            <a href="send/{{draft['id']}}">More...</a>
-            <br>
-        {% endfor %}
-    </ul>
+<style>
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          max-width: 0;
+        }
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+
+
+
+
+
+</style>
+
+<script>
+    function deleteRecord(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", url);
+        xhr.send();
+        xhr.onload = function() {
+            if (xhr.status != 200) {
+                console.log('ERROR');
+            } else {
+                console.log('DELETED!');
+            }
+            location.reload();
+        };
+        xhr.onerror = function() {
+            console.log('NO CONNECTION');
+        };
+    }
+
+</script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Drafts</title>
+</head>
+<div style="margin: 40px;">
+    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a>
+    <h1>Your drafts:</h1></p>
+</div>
+<table>
+    <th>Reciver</th>
+    <th>Delivery</th>
+    <th>Text</th>
+    <th>Controls</th>
+    {% for draft in drafts %}
+    <tr>
+        <td>{{draft.receiver_email}}</td>
+        <td>{{draft.time}}</td>
+        <td>{{draft.message}}</td>
+        <td><a href="send/{{draft['id']}}">Edit</a> or
+            <a onclick=deleteRecord("outbox/{{draft['id']}}")
+               href="#">Delete</a></td>
+    </tr>
+    {% endfor %}
+
+</table>
 {% endblock %}
+

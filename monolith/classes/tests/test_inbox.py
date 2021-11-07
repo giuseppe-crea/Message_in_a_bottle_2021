@@ -23,7 +23,7 @@ class TestHome(unittest.TestCase):
                 "01/01/1990",
                 "alice")
             assert rv.status_code == 200
-            assert b'Alice Alice' in rv.data
+            assert b"sender@example.com" in rv.data
             # login as Alice
             rv = login(tested_app, 'sender@example.com', 'alice')
             assert rv.status_code == 200
@@ -87,7 +87,7 @@ class TestHome(unittest.TestCase):
                 "01/01/1990",
                 "eve")
             assert rv.status_code == 200
-            assert b'Eve Nosy' in rv.data
+            assert b"intruder@example.com" in rv.data
             rv = login(tested_app, 'intruder@example.com', 'eve')
             assert rv.status_code == 200
             rv = tested_app.get('/outbox', follow_redirects=True)

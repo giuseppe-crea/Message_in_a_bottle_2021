@@ -1,13 +1,41 @@
 <!--suppress ALL -->
 
+<style>
+* {
+box-sizing: border-box;
+}
+
+.form_field {
+"class" : "custom-class"
+height: 15px;
+padding: 10px;
+margin: 2px 0;
+border: 8px solid #eee;
+font-family:inherit;
+font-size: inherit;
+}
+
+input[type=submit] {
+padding: 5px;
+margin:5px 0;
+border: 2px solid #eee;
+font-family:inherit;
+font-size: inherit;
+}
+
+
+</style>
+
 <html>
+<div style="margin: 40px;">
+    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a></p>
+
  <body>
   <form action="" method="POST">
     {{ form.hidden_tag() }}
     <dl>
      {% for field in form.display %}
-     <dt>{{ form[field].label }}</dt>
-     <dd>{{ form[field]() }}</dd>
+        <dd>{{ form[field](class='form_field', placeholder=field) }}</dd>
        {% if form[field].errors %}
           {% for e in form[field].errors %}
            <p class="help-block">{{ e }}</p>
@@ -18,7 +46,7 @@
     <p>
     <input type=submit value="Submit">
   </form>
-  <a href="/">Home</a><br>
+</div>
  </body>
 </html>
 

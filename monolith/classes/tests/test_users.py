@@ -20,8 +20,8 @@ class TestCreate(unittest.TestCase):
             assert rv.status_code == 200
             rv = tested_app.get('/users')
             assert rv.status_code == 200
-            assert b'User List' in rv.data
-            assert b'Admin Amint' in rv.data
+            assert b'Users List' in rv.data
+            assert b"axample@example.com" in rv.data
 
     def test_invalid_form_values(self):
         tested_app = get_testing_app()
