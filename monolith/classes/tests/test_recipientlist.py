@@ -13,7 +13,6 @@ class TestRecipientList(unittest.TestCase):
 
     # # # # # # # # # # test several functionalities # # # # # # # # # # #
     def test_listing(self):
-
         # test page retrieving
         tested_app = get_testing_app()
         with tested_app:
@@ -107,7 +106,6 @@ class TestRecipientList(unittest.TestCase):
             # back to /send
             assert b'Message' in rv.data
 
-
             # submitting one existing user selection
             # no redirection
             rv = tested_app.post(
@@ -150,8 +148,8 @@ class TestRecipientList(unittest.TestCase):
                 '/list_of_recipients',
                 data={
                     'multiple_field_form':
-                    ['first_recipient@example.com',
-                     'second_recipient@example.com']},
+                        ['first_recipient@example.com',
+                         'second_recipient@example.com']},
                 follow_redirects=False
             )
             assert rv.status_code == 302

@@ -27,14 +27,15 @@ font-size: inherit;
 }
 
 
+
 </style>
 
 
-<div style="margin: 40px;">
+<div>
     <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a></p>
 </div>
- <head>
-     <script>
+<head>
+    <script>
          // fill the recipient form input, if necessary
          function set_recipients(){
             // retrieve the URL
@@ -49,29 +50,31 @@ font-size: inherit;
                 document.getElementById('recipient').setAttribute('value', recipients);
             }
          }
-     </script>
-     <title>Send a Message</title>
- </head>
- <body onload="set_recipients()"> <!-- to set through the DOM the selected recipients passed as GET parameters -->
-  <form action="" method="POST" enctype="multipart/form-data">
+
+    </script>
+    <title>Send a Message</title>
+</head>
+<body onload="set_recipients()">
+<!-- to set through the DOM the selected recipients passed as GET parameters -->
+<form action="" method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     <dl>
-     {% for field in form.display %}
+        {% for field in form.display %}
         <dd>{{ form[field](class='form_field', placeholder=field) }}</dd>
-       {% if form[field].errors %}
-          {% for e in form[field].errors %}
-           <p class="help-block">{{ e }}</p>
-          {% endfor %}
-       {% endif %}
-     {% endfor %}
+        {% if form[field].errors %}
+        {% for e in form[field].errors %}
+        <p class="help-block">{{ e }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
     </dl>
-    <p>
-      <div>
-          <p style="text-align:left; font-size: 1.4em">
-              See a <a href="/list_of_recipients">list</a> of possible recipients</p>
-      </div>
+    <div style="padding-left: 40px;">
+    <p style="text-align:left; font-size: 1.4em; margin 80px">
+        See a <a href="/list_of_recipients">list</a> of possible recipients</p>
+
     <input type=submit name="save_button" value="Save"> or
-        <input type=submit name="send_button" value="Send">
-  </form>
- </body>
+    <input type=submit name="send_button" value="Send">
+    </div>
+</form>
+</body>
 </html>
