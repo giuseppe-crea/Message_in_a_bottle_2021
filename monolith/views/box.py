@@ -84,6 +84,7 @@ def get_box(kwargs, role):
             if request.method == "DELETE":
                 if message.status == 0:
                     remove_message(message, '/inbox')
+                    remove_message(message, '/outbox')
                     return redirect("/send_draft_list")
                 remove_message(message, role)
                 return redirect(role)
@@ -98,6 +99,7 @@ def get_box(kwargs, role):
         except NoResultFound:
             abort(403)
     else:
+        kwargs['status'] = 2
         messages = Message().query.filter_by(**kwargs)
         pending_messages = None
         if role == '/outbox':

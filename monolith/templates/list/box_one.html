@@ -28,7 +28,7 @@
     {% if role == '/inbox' %}
     <a href="forward/{{message['id']}}">Forward</a>
     <a href="replay/{{message['id']}}">Replay</a>
-    {% else %}
+    {% elif message['status'] == 1 %}
     <script type = "text/javascript">
         function getConfirmation() {
            var retVal = confirm("Are you sure you want to spend points and withdraw this message?");
