@@ -2,38 +2,74 @@
 <html lang="en">
 
 
-<style>
-        ul {
-            font-family: arial, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 1.2em
-          }
-
-
-</style>
-
 <head>
     <meta charset="UTF-8">
     <title>Blacklist</title>
-</head>
-<div style="margin: 40px;">
-    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a></p>
-    <p style="text-align:left; font-size: 1.5em"><a href="/blacklist/add">add user</a>
-        or
-        <a href="/blacklist/remove">remove user</a></p>
-</div>
+    <link rel="icon" href="../static/images/icon.png">
 
-{% if result != [] %}
-<div style="margin: 40px;">
-<h1>Your blacklist:</h1>
-<ul>
-    {% for value in result %}
-        <li> {{ value }} </li>
-    {% endfor %}
-</ul>
-</div>
-{% else %}
-<p style="text-align:left; font-size: 1.5em; margin: 40px">Your blacklist is empty!</p>
-{% endif %}
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        td, th {
+          border: 1px solid #74BDCB;
+          text-align: left;
+          padding: 8px;
+        }
+        tr:nth-child(even) {
+          background-color: #74BDCB;
+        }
+        .parent {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          grid-template-rows: repeat(5, 1fr);
+          grid-column-gap: 0px;
+          grid-row-gap: 12px;
+        }
+        .div1 { grid-area: 1 / 1 / 5 / 6; }
+        .div2 { 
+            grid-area: 5 / 1 / 6 / 6; 
+        
+        }
+        .div3 { grid-area: 5 / 2 / 6 / 3; background-color: #74BDCB;}
+        .div4 { grid-area: 5 / 4 / 6 / 5; background-color: #74BDCB;} 
+    </style>
+</head>
+
+
+<body style="background-color: #E7F2F8">
+
+    <div class="parent">
+        <div class="div1"> 
+            {% if result != [] %}
+            <h1>Your blacklist:</h1>
+        
+            <table>
+                <th>email</th>
+                {% for value in result %}
+                <tr>
+                    <td>{{ value }} </td>
+                </tr>
+                {% endfor %}
+        
+            </table>
+        
+            {% else %}
+            <br>Your blacklist is empty!
+            {% endif %}
+        </div>
+        <div class="div2"> </div>
+        <div class="div3"> 
+            <p style="text-align:center; font-size: 1.875em; "><a href="/blacklist/add" style="color: #E7F2F8;">Add User</a> </p> 
+        </div>
+        <div class="div4"> 
+            <p style="text-align:center; font-size: 1.875em"><a href="/blacklist/remove" style="color: #E7F2F8;">Remove User</a> </p> 
+        </div>
+    </div> 
+
+</body>
+
+
 </html>

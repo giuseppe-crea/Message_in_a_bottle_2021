@@ -46,7 +46,7 @@ class TestReport(unittest.TestCase):
                 follow_redirects=True
             )
             assert rv.status_code == 200
-            assert b'ERROR: reported user does not exist' in rv.data
+            assert b'Reported user does not exist' in rv.data
 
             # the author tries to report himself
             rv = tested_app.post(
@@ -59,7 +59,7 @@ class TestReport(unittest.TestCase):
                 follow_redirects=True
             )
             assert rv.status_code == 200
-            assert b'ERROR: cannot report yourself' in rv.data
+            assert b'Cannot report yourself' in rv.data
 
             # create the reported account
             rv = create_user(
