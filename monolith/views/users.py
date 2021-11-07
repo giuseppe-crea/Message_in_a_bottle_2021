@@ -4,7 +4,6 @@ from flask_login import login_required
 
 from monolith.database import User, db
 from monolith.forms import UserForm
-from monolith.lottery import get_usr_points
 from monolith.views.doc import auto
 
 users = Blueprint('users', __name__)
@@ -97,7 +96,7 @@ def user_data():
     # get the user's data fom the database
     data = db.session.query(User).filter(User.id == user.get_id()).first()
     # get the user's lottery points
-    points = get_usr_points(user)
+    points = user.get_points()
     # convert user data into a dictionary for easy display.
     result = _user_data2dict(data, points)
     return render_template('user_data.html', result=result)

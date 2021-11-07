@@ -59,7 +59,7 @@ def prep_outbox(_id):
     """
     user_mail = current_user.get_email()
     role = '/outbox'
-    kwargs = {'status': 2, 'sender_email': user_mail,
+    kwargs = {'sender_email': user_mail,
               'visible_to_sender': True}
     if _id is not None:
         kwargs['id'] = int(_id)
@@ -85,7 +85,8 @@ def get_box(kwargs, role):
                 remove_message(message, role)
                 return redirect(role)
             else:
-                notify_sender(message)
+                if role == '/inbox':
+                    notify_sender(message)
                 return render_template(
                     'list/box_one.html',
                     message=message,
@@ -187,12 +188,13 @@ def withdraw(m_id):
     """
     if m_id is not None:
         # get the user's total lottery points
-        points = lottery.get_usr_points(current_user)
+        points = current_user.get_points()
         if points >= lottery.price:
             # get the message from the database
             message = None
             try:
                 message = Message().query.filter_by(
+                    sender_email=current_user.email,
                     id=int(m_id)).one()
             except NoResultFound:
                 abort(403)
@@ -202,7 +204,8 @@ def withdraw(m_id):
                 delete_for_sender(message)
                 # decrease the user's points
                 points -= lottery.price
-                lottery.set_points(current_user.get_id(), points)
+                current_user.set_points(points)
+                db.session.commit()
                 return redirect('/outbox')
     abort(401)
 

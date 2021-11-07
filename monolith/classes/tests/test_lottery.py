@@ -1,10 +1,13 @@
 import unittest
 
+import flask
 import flask_login
+from flask_login import current_user
 
-from monolith import lottery
-from monolith.classes.tests import utils
-from monolith.classes.tests.utils import get_testing_app
+from monolith.database import db
+from monolith.background import lottery_task
+from monolith.lottery import prize, price
+from monolith.classes.tests.utils import get_testing_app, login, create_ex_usr
 
 
 class TestLottery(unittest.TestCase):
@@ -19,12 +22,13 @@ class TestLottery(unittest.TestCase):
         tested_app = get_testing_app()
         with tested_app:
             # create and log a new user
-            user, psw = utils.create_ex_usr(tested_app)
-            utils.login(tested_app, user, psw)
+            user, psw = create_ex_usr(tested_app)
+            rv = login(tested_app, user, psw)
+            assert rv.status_code == 200
             # give some points to the user
-            user = flask_login.current_user
-            lottery.set_points(user.get_id(), lottery.price * 2)
-
+            current_user.add_points(200)
+            current_points = current_user.get_points()
+            db.session.commit()
             # send a message from user to default user
             tested_app.post(
                 '/send',
@@ -40,28 +44,24 @@ class TestLottery(unittest.TestCase):
 
             # withdraw the message
             rv = tested_app.get("/outbox/withdraw/1")
+            print(rv.data)
             self.assertEqual(rv.status_code, 302)
 
             # message removed from outbox
             rv = tested_app.get("/outbox")
             self.assertNotIn(b"example@example.com", rv.data)
 
-    def test_lottery(self):
-        """
-        Test the lottery execution
-        """
-        app = utils.get_testing_app()
+            assert current_user.get_points() == current_points - price
+
+    def test_lottery_task(self):
+        app = get_testing_app()
         with app:
-            # log the default and unique user
             email, psw = "example@example.com", "admin"
-            utils.login(app, email, psw)
+            login(app, email, psw)
             user = flask_login.current_user
-            # set the user's points to 0
-            lottery.set_points(user.get_id(), 0)
-
-            # execute a lottery round
-            lottery.execute()
-
-            # expect non zero lottery points
-            points = lottery.get_usr_points(user)
-            self.assertNotEqual(points, 0)
+            # should be 1000, but it doesn't matter
+            starting_points = user.get_points()
+            lottery_task(flask.current_app)
+            rv = app.get('/user_data')
+            print(rv.data)
+            assert bytes(str(starting_points + prize), 'utf-8') in rv.data

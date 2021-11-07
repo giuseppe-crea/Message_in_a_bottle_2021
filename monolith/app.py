@@ -49,14 +49,9 @@ def create_app():
             example.is_admin = True
             example.content_filter = False
             example.set_password('admin')
+            example.set_points(10 * lottery.price)
             db.session.add(example)
             db.session.commit()
-            q = db.session.query(User).filter(User.email
-                                              == 'example@example.com')
-            user = q.first()
-        # give to the admin some lottery points
-        lottery.set_points(user.id, lottery.price * 10)
-
     return _app
 
 
