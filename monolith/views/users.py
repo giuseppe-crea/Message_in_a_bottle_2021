@@ -4,21 +4,35 @@ from flask_login import login_required
 
 from monolith.database import User, db
 from monolith.forms import UserForm
-from monolith.lottery import get_usr_points
+from monolith.views.doc import auto
 
 users = Blueprint('users', __name__)
 
 
 # noinspection PyUnresolvedReferences
 @users.route('/users')
+@auto.doc(groups=['routes'])
 def _users():
+    """
+    Displays a list of all users by first and last name
+
+    :return: a rendered view
+    """
     users_query = db.session.query(User)
     return render_template("users.html", users=users_query)
 
 
 # noinspection PyUnresolvedReferences
 @users.route('/create_user', methods=['POST', 'GET'])
+@auto.doc(groups=['routes'])
 def create_user():
+    """
+    Registration view from which new users can enroll to the system
+    in doing so it modifies the database
+
+    :return: a rendered view
+    :raises: :class:`RuntimeError`:impossible conditions
+    """
     form = UserForm()
 
     if request.method == 'POST':
@@ -51,6 +65,11 @@ def create_user():
 def _user_data2dict(data: User, points):
     """
     Convert user data into a dictionary for easy display.
+
+    :param data: input User object
+    :param points: lottery points
+    :returns: a dictionary containing user data
+    :rtype: dict
     """
     return {
         "first name": data.firstname,
@@ -62,19 +81,22 @@ def _user_data2dict(data: User, points):
 
 
 @users.route('/user_data', methods=['GET'])
+@auto.doc(groups=['routes'])
 @login_required
 def user_data():
     """
     The user can read his account's data.
     Only logged users are authorized to use this function.
-    :return: display the user's data using the user_data template.
+
+    :returns: display the user's data using the user_data template.
+    :rtype: View
     """
     # get the current user
     user = flask_login.current_user
     # get the user's data fom the database
     data = db.session.query(User).filter(User.id == user.get_id()).first()
     # get the user's lottery points
-    points = get_usr_points(user)
+    points = user.get_points()
     # convert user data into a dictionary for easy display.
     result = _user_data2dict(data, points)
     return render_template('user_data.html', result=result)

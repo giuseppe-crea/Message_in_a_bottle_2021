@@ -3,17 +3,27 @@ from flask_login import login_required, current_user
 
 from monolith.forms import CredentialsForm
 from monolith.database import db
+from monolith.views.doc import auto
 
 credentials = Blueprint('credentials', __name__)
 
 
 # noinspection PyUnresolvedReferences
 @credentials.route('/credentials', methods=['POST', 'GET'])
+@auto.doc(groups=['routes'])
 @login_required
 def _credentials():
+    """
+    Route from which users can modify their account data
+    data which can be modified includes:
+    - First name; Last name; email address; password
+    The user will be prompted for confirmation before the changes are committed
+    The user's old password is required to make edits
+
+    :returns: a rendered view
+    """
     form = CredentialsForm()
     kwargs = {}
-
     if request.method == 'POST':
         if form.validate_on_submit():
             old_password = form.data['old_password']

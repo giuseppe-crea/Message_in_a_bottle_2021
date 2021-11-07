@@ -2,14 +2,15 @@ from flask import Blueprint, abort, redirect, request
 from flask.templating import render_template
 from flask_login import login_required, current_user
 from sqlalchemy.exc import NoResultFound
-from monolith.background import create_notification
+from monolith.background import create_notification, LOTTERY_PRICE
 from monolith.database import Message, db
-from monolith import send, lottery
+from monolith import send
 from monolith.delete import remove_message, delete_for_receiver, \
     delete_for_sender
 
 from monolith.forms import ForwardForm, ReplayForm
 from monolith.send import send_messages, save_draft
+from monolith.views.doc import auto
 
 box = Blueprint('box', __name__)
 
@@ -17,8 +18,20 @@ box = Blueprint('box', __name__)
 # noinspection PyUnresolvedReferences
 @box.route("/inbox", methods=["GET"], defaults={'_id': None})
 @box.route("/inbox/<_id>", methods=["GET", "DELETE"])
+@auto.doc(groups=['routes'])
 @login_required
 def prep_inbox(_id):
+    """
+    Prepares the query arguments to populate the message list as if the user
+    had accessed the inbox functionality
+    If the optional message id is passed, the query will return only the
+    specific message with that id
+    Performs all necessary checks to make sure the user is authorized to view
+    a specific message
+
+    :param _id: optional message id
+    :return: a rendered view
+    """
     user_mail = current_user.get_email()
     role = '/inbox'
     kwargs = {'status': 2, 'receiver_email': user_mail,
@@ -30,11 +43,23 @@ def prep_inbox(_id):
 
 @box.route("/outbox", methods=["GET"], defaults={'_id': None})
 @box.route("/outbox/<_id>", methods=["GET", "DELETE"])
+@auto.doc(groups=['routes'])
 @login_required
 def prep_outbox(_id):
+    """
+    Prepares the query arguments to populate the message list as if the user
+    had accessed the sent messages functionality
+    If the optional message id is passed, the query will return only the
+    specific message with that id
+    Performs all necessary checks to make sure the user is authorized to view
+    a specific message
+
+    :param _id: optional message id
+    :return: a list of sent messages, divided in delivered and pending
+    """
     user_mail = current_user.get_email()
     role = '/outbox'
-    kwargs = {'status': 2, 'sender_email': user_mail,
+    kwargs = {'sender_email': user_mail,
               'visible_to_sender': True}
     if _id is not None:
         kwargs['id'] = int(_id)
@@ -42,16 +67,26 @@ def prep_outbox(_id):
 
 
 def get_box(kwargs, role):
+    """
+    returns either the inbox or the outbox, based on the route that was called
+    then performs a database query with the prepared arguments for that route
+    finally renders everything in a proper page
+    works for both a single message and a list of messages
+    DELETE will only delete the message for the current user, not their partner
+
+    :param kwargs: query keyword arguments
+    :param role: either /inbox or /outbox depending on the route
+    :return: a rendered view
+    """
     if 'id' in kwargs:
         try:
             message = Message().query.filter_by(**kwargs).one()
             if request.method == "DELETE":
                 remove_message(message, role)
-                # TODO: redirect to confirmation page
-                #  this is actually overwritten by the JS currently
                 return redirect(role)
             else:
-                notify_sender(message)
+                if role == '/inbox':
+                    notify_sender(message)
                 return render_template(
                     'list/box_one.html',
                     message=message,
@@ -73,8 +108,13 @@ def get_box(kwargs, role):
         )
 
 
-# notifies the sender when the receiver opens for the first time a message
 def notify_sender(message):
+    """
+    notifies the sender when the receiver opens for the first time a message
+
+    :param message: message object
+    :return: a rendered view
+    """
     if not message.is_read:
         # send notification
         timestamp = message.time
@@ -95,11 +135,14 @@ def notify_sender(message):
 
 
 @box.route("/inbox/forward/<m_id>", methods=["GET", "POST"])
+@auto.doc(groups=['routes'])
 @login_required
 def forward(m_id):
     """
     Implements the forward message feature.
+
     :param m_id: message id
+    :return: a rendered view
     """
     if m_id is not None:
         # get the message from the database
@@ -133,21 +176,25 @@ def forward(m_id):
 
 
 @box.route("/outbox/withdraw/<m_id>", methods=["GET"])
+@auto.doc(groups=['routes'])
 @login_required
 def withdraw(m_id):
     """
     Implements the withdraw message feature.
     The user can spend lottery points to withdraw a message.
+
     :param m_id: message id
+    :return: a rendered view
     """
     if m_id is not None:
         # get the user's total lottery points
-        points = lottery.get_usr_points(current_user)
-        if points >= lottery.price:
+        points = current_user.get_points()
+        if points >= LOTTERY_PRICE:
             # get the message from the database
             message = None
             try:
                 message = Message().query.filter_by(
+                    sender_email=current_user.email,
                     id=int(m_id)).one()
             except NoResultFound:
                 abort(403)
@@ -156,18 +203,22 @@ def withdraw(m_id):
                 delete_for_receiver(message)
                 delete_for_sender(message)
                 # decrease the user's points
-                points -= lottery.price
-                lottery.set_points(current_user.get_id(), points)
+                points -= LOTTERY_PRICE
+                current_user.set_points(points)
+                db.session.commit()
                 return redirect('/outbox')
     abort(401)
 
 
 @box.route("/inbox/replay/<m_id>", methods=["GET", "POST"])
+@auto.doc(groups=['routes'])
 @login_required
 def replay(m_id):
     """
     Implements the replay message feature.
+
     :param m_id: message id
+    :return: a rendered view
     """
     if m_id is None:
         return redirect('/inbox')
@@ -196,7 +247,7 @@ def replay(m_id):
             current_user_mail = getattr(current_user, 'email')
             if request.form.get("save_button"):
                 # the user asked to save this message
-                save_draft(current_user_mail, receiver, message, time, None)
+                save_draft(current_user_mail, receiver, message, time)
                 return redirect('/')
             correctly_sent, not_correctly_sent = \
                 send_messages(to_parse, current_user_mail, time, message, None)

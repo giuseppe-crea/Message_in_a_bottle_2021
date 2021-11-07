@@ -1,14 +1,18 @@
 import os
 import pathlib
+import random
 from datetime import datetime
 
 from celery import Celery
+from celery.schedules import crontab
 from sqlalchemy import and_
 from sqlalchemy.exc import NoResultFound
 
-from monolith import lottery
-from monolith.database import db, Message, Notification
+from monolith.database import db, Message, Notification, User
 
+# Check a specifically set environment variable for the address of the backend
+# said address could also be obtained from an env variable
+# but this is not currently required
 if os.environ.get('DOCKER') is not None:
     BACKEND = BROKER = 'redis://redis:6379/0'
 else:
@@ -17,10 +21,17 @@ celery = Celery(__name__, backend=BACKEND, broker=BROKER)
 
 _APP = None
 UPLOAD_FOLDER = None
+LOTTERY_PRIZE = 100
+LOTTERY_PRICE = 100
 
 
 @celery.task
 def do_task(app):
+    """
+    instantiate an app if none is present
+
+    :param app: the flask.current_app object, can be None
+    """
     global _APP
     global UPLOAD_FOLDER
     # lazy init
@@ -39,6 +50,9 @@ def do_task(app):
 
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
+    """
+    celery beat support function
+    """
     # Checks for unsent and overdue messages every 5 minutes
     sender.add_periodic_task(
         300.0,
@@ -51,17 +65,22 @@ def setup_periodic_tasks(sender, **kwargs):
         cleanup_pictures.s(_APP),
         name='expired images cleanup'
     )
-
+    # Runs the lottery every lottery period
     sender.add_periodic_task(
-        float(lottery.period),
+        crontab(hour=7, minute=30, day_of_month=1),
         lottery_task.s(_APP),
         name='lottery task'
     )
 
 
-# task to periodically send unsent messages past due
 @celery.task
 def send_unsent_past_due(app):
+    """
+    task to periodically send unsent messages past due
+    useful in case of catastrophic failure of celery
+
+    :param app: the flask.current_app object, can be None
+    """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
@@ -74,10 +93,14 @@ def send_unsent_past_due(app):
             deliver_message(app, row.get_id())
 
 
-# task to delete pictures with no reference in the database
-# to be run periodically
 @celery.task
 def cleanup_pictures(app):
+    """
+    task to delete pictures with no reference in the database
+    this is one possible way to account for forwards and deletions
+
+    :param app: the flask.current_app object, can be None
+    """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
@@ -100,7 +123,12 @@ def cleanup_pictures(app):
 # noinspection PyUnresolvedReferences
 @celery.task
 def deliver_message(app, message_id):
-    # TODO: RPC that notifies the receiver
+    """
+    Task to deliver a message by editing its status in the database
+
+    :param app: the flask.current_app object, can be None
+    :param message_id: the id of the message to deliver in the database
+    """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
@@ -129,14 +157,38 @@ def deliver_message(app, message_id):
 
 @celery.task
 def lottery_task(app):
+    """
+    Runs the lottery
+
+    :param app: the flask.current_app object, can be None
+    """
     global _APP
     do_task(app)
     # noinspection PyUnresolvedReferences
     with _APP.app_context():
-        lottery.execute()
+        users = User.query.all()
+        winner = random.choice(users)
+        if winner is not None:
+            winner.add_points(LOTTERY_PRIZE)
+            db.session.commit()
+            create_notification(
+                "Lottery win",
+                "You have won" + str(LOTTERY_PRIZE) + "points",
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                winner.email
+            )
 
 
+@celery.task
 def create_notification(title, description, timestamp, target):
+    """
+    Creates a notification element in the database
+
+    :param title: Notification title
+    :param description: Notification body text
+    :param timestamp: timestamp to display on the Notification
+    :param target: the user mail address to which the notification is addressed
+    """
     notification = Notification()
     notification.add_notification(
         target,

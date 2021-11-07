@@ -13,12 +13,23 @@ images = UploadSet('images', IMAGES, default_dest=None)
 
 
 class TimeValidator(object):
+    """
+    Custom validator for our datetime field
+    it takes care to ignore seconds in its comparison
+    and prevents the user from sending messages into the past
+    """
     field_flags = ('required',)
 
     # this validator strips times down to the minute
     # our delivery method will instantly deliver anything with a negative
     # timestamp, making this reliable
     def __init__(self, startdate=datetime.now(), message=None):
+        """
+        Initializer for the TimeValidator class
+
+        :param startdate: the earliest valid date
+        :param message: optional custom error message
+        """
         self.startdate = startdate.replace(second=0, microsecond=0)
         if not message:
             message = "You can't set a delivery date earlier than " + \
@@ -32,7 +43,10 @@ class TimeValidator(object):
 
 
 class MailValidator(object):
-
+    """
+    custom validator for mails, more powerful than a normal MailField
+    It can check a whole list of comma-separated mails
+    """
     @staticmethod
     def check(email):
         regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -44,6 +58,13 @@ class MailValidator(object):
             return False
 
     def __init__(self, mails=None, message=None, single=False):
+        """
+        Initializer for the MailValidator class
+
+        :param mails: string to validate
+        :param message: optional custom error message
+        :param single: set to true if the mails param must validate to len 1
+        """
         if mails is None:
             mails = []
         self.mails = mails

@@ -2,17 +2,22 @@ from flask import Blueprint, render_template
 from monolith.database import Notification, db
 import flask_login
 from flask_login.utils import login_required
+from monolith.views.doc import auto
 
 
 alerts = Blueprint('alerts', __name__)
 
 
-# get user notifications
 # noinspection PyUnresolvedReferences
 @alerts.route('/notifications', methods=['GET'])
+@auto.doc(groups=['routes'])
 @login_required
 def notifications():
+    """
+    Displays the currently pending user notifications
 
+    :return: a rendered view
+    """
     current_user = flask_login.current_user
     current_user_email = current_user.email
 
@@ -31,9 +36,15 @@ def notifications():
                            notifications=query_notifications)
 
 
-# return the number of unread notifications for user_email
-def get_notifincations_count(user_email):
-    query = db.session.query(Notification).\
-                filter_by(user_email=user_email, is_read=False)
+# return
+def get_notifications_count(user_email):
+    """
+    :param user_email: the mail we want notification count for
+    :return: the number of unread notifications for user_email
+    """
+    query = db.session.query(Notification).filter_by(
+        user_email=user_email,
+        is_read=False
+    )
     notifications_count = query.count()
     return notifications_count

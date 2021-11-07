@@ -17,6 +17,13 @@ def delete_for_sender(message_query: Message):
 
 
 def remove_message(message_query, role):
+    """
+    Sets a message as invisible to user in role
+    deletes the message if it is also invisible to the opposite role
+
+    :param message_query: the Message object to edit
+    :param role: the role, '/inbox' or '/outbox', of the user calling this fun
+    """
     if role == '/inbox':
         delete_for_receiver(message_query)
     else:

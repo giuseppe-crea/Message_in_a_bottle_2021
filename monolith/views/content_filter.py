@@ -5,14 +5,21 @@ from monolith.database import User, db
 from monolith.forms import ContentFilterForm
 from better_profanity import profanity
 from werkzeug.exceptions import BadRequestKeyError
+from monolith.views.doc import auto
 
 
 content_filter = Blueprint('content_filter', __name__)
 
 
 @content_filter.route('/content_filter', methods=['GET', 'POST'])
+@auto.doc(groups=['routes'])
 @login_required
 def _content_filter():
+    """
+    A view from which a user can activate or deactivate the content filter
+
+    :return: a rendered view
+    """
     form = ContentFilterForm()
     if request.method == 'POST':  # POST request
         user = db.session.query(User).filter(User.id ==
@@ -35,8 +42,14 @@ def _content_filter():
 
 
 @content_filter.route('/content_filter/list', methods=['GET'])
+@auto.doc(groups=['routes'])
 @login_required
 def _content_filter_list():
+    """
+    Shows a list of all words that make up the filter
+
+    :return: a rendered view
+    """
     file = open(r"./monolith/static/default_badwords.txt", "r")
     wordlist = []
     for line in file:
@@ -45,6 +58,15 @@ def _content_filter_list():
 
 
 def check_content_filter(receiver_address, message_to_send):
+    """
+    Checks if a given message triggers a possible active filter
+    for a given receiver
+
+    :param receiver_address: the user in question
+    :param message_to_send: the message
+    :return: whether or not the message upholds the filter policy
+    :rtype: bool
+    """
     # check recipient content filter
     content_filter_status = db.session.query(User).filter(
         User.email == receiver_address

@@ -13,6 +13,7 @@ class User(db.Model):
     lastname = db.Column(db.Unicode(128))
     password = db.Column(db.Unicode(128))
     date_of_birth = db.Column(db.DateTime)
+    points = db.Column(db.Integer, default=0)
     content_filter = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
@@ -21,15 +22,6 @@ class User(db.Model):
     def __init__(self, *args, **kw):
         super(User, self).__init__(*args, **kw)
         self._authenticated = False
-
-    # this method is never used
-    def register_new_user(self, email, first_name, last_name, password,
-                          date_of_birth):
-        self.firstname = first_name
-        self.lastname = last_name
-        self.email = email
-        self.set_password(password)
-        self.date_of_birth = date_of_birth
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -49,12 +41,21 @@ class User(db.Model):
     def get_email(self):
         return self.email
 
+    def add_points(self, points):
+        self.points = self.points + points
+
+    def set_points(self, points):
+        self.points = points
+
+    def get_points(self):
+        return self.points
+
     def update(self, **kwargs):
         for key, value in kwargs.items():
             if key == 'password':
                 self.set_password(value)
             # prevent privilege de/escalation
-            elif key != 'is_admin' or key != 'is_anonymous':
+            elif key != 'is_admin' or key != 'is_anonymous' or key != 'points':
                 setattr(self, key, value)
 
     def get_content_filter_status(self):
@@ -74,6 +75,7 @@ class Message(db.Model):
     # 0 draft, 1 sent, 2 delivered
     status = db.Column(db.Integer, nullable=False)
     # two columns: visible to sender, visible to receiver, for deletion
+    # when both are set to false, the message is deleted
     visible_to_sender = db.Column(db.Boolean, nullable=False)
     visible_to_receiver = db.Column(db.Boolean, nullable=False)
     is_read = db.Column(db.Boolean, default=False)
@@ -83,10 +85,22 @@ class Message(db.Model):
 
     def add_message(self, message, sender_email, receiver_email, time, image,
                     status):
-        self.message = message
+        """
+        adds a message to database, initializing to empty all missing fields
+        """
+        if message is not None:
+            self.message = message
+        else:
+            self.message = ''
         self.sender_email = sender_email
-        self.receiver_email = receiver_email
-        self.time = time
+        if receiver_email is not None:
+            self.receiver_email = receiver_email
+        else:
+            self.receiver_email = ''
+        if time is not None:
+            self.time = time
+        else:
+            self.time = ''
         if image is not None:
             self.image = image
         else:
@@ -97,9 +111,15 @@ class Message(db.Model):
         self.is_read = False
 
     def get_id(self):
+        """
+        :return: message id for this object
+        """
         return self.id
 
     def get_status(self):
+        """
+        :return: message status for this object
+        """
         return self.status
 
 
@@ -119,20 +139,6 @@ class Blacklist(db.Model):
 
     def get_id(self):
         return self.owner
-
-
-class LotteryPoints(db.Model):
-    __tablename__ = 'lottery'
-
-    id = db.Column(db.Integer, primary_key=True)
-    points = db.Column(db.Integer)
-
-    def __init__(self, *args, **kw):
-        super(LotteryPoints, self).__init__(*args, **kw)
-
-    def add_new_user(self, id, points=0):
-        self.id = id
-        self.points = points
 
 
 class Report(db.Model):
