@@ -53,12 +53,12 @@ def report_user():
             # check if the reported email exists
             q = db.session.query(User).filter(User.email == reported_user)
             if q.first() is None:
-                form.user.errors.append("ERROR: reported user does not exist")
+                form.user.errors.append("Reported user does not exist")
                 return render_template('error_template.html', form=form)
 
             # a user cannot report himself
             if reported_user == current_user_email:
-                form.user.errors.append("ERROR: cannot report yourself")
+                form.user.errors.append("Cannot report yourself")
                 return render_template('error_template.html', form=form)
 
             # create the report
