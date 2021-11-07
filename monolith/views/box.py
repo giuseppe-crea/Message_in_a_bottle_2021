@@ -166,9 +166,13 @@ def forward(m_id):
                 frw_message = "Forwarded by: " + message.receiver_email
                 frw_message += "\nFrom: " + message.sender_email
                 frw_message += "\n\n" + message.message
+                if message.image != "":
+                    image = message.image
+                else:
+                    image = None
                 correctly_sent, not_correctly_sent = \
                     send.send_messages(address.split(', '), user_mail, time,
-                                       frw_message, None)
+                                       frw_message, None, image)
                 return render_template(
                     'done_sending.html',
                     users1=correctly_sent,
@@ -255,7 +259,8 @@ def replay(m_id):
                 save_draft(current_user_mail, receiver, message, time)
                 return redirect('/')
             correctly_sent, not_correctly_sent = \
-                send_messages(to_parse, current_user_mail, time, message, None)
+                send_messages(to_parse, current_user_mail, time, message, None,
+                              None)
         else:
             return render_template('error_template.html', form=form)
         return render_template(

@@ -30,11 +30,12 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def send_messages(to_parse, current_user_mail, time, message, file):
+def send_messages(to_parse, current_user_mail, time, message, file, image):
     """
     Enqueues a message with celery performing checks on the sender/receiver
     Saves any file it gets to a folder specific to that sender
 
+    :param image: image path, used for forwards, None in all other cases
     :param to_parse: list of mail recipient addresses, comma separated
     :param current_user_mail: mail of sender
     :param time: time of delivery, cannot be in the past
@@ -47,7 +48,6 @@ def send_messages(to_parse, current_user_mail, time, message, file):
     """
     correctly_sent = []
     not_correctly_sent = []
-    image = None
     # find users in database
     # if user found, enqueue, otherwise print error
     time_aware = pytz.timezone('Europe/Rome').localize(time)

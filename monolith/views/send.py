@@ -80,7 +80,8 @@ def _send(_id, data=""):
                     current_user_mail,
                     time,
                     message,
-                    file
+                    file,
+                    None
                 )
             except (FileExistsError, NameError) as e:
                 form.file.errors.append(str(e))
