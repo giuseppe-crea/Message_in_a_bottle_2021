@@ -75,7 +75,7 @@
                         {
                             name: "Message Received", 
                             date: "{{ message.time }}", 
-                            description: "<b>From: {{ message.sender_email }}</b> <br><br> {{ message.message }}",
+                            description: "<b>From: {{ message.sender_email }}</b> <br><br> <a href=\"/inbox/{{message.id}}\" style=\"color: white;\">read this message</a>",
                             type: "holiday",
                         },
                      {% endfor %}
@@ -84,7 +84,7 @@
                         {
                             name: "Message Sent", 
                             date: "{{ message.time }}", 
-                            description: "<b>To: {{ message.receiver_email }}</b> <br><br> {{ message.message }}",
+                            description: "<b>To: {{ message.receiver_email }}</b> <br><br> <a href=\"/outbox/{{message.id}}\" style=\"color: white;\">read this message</a>",
                             type: "event",
                         },
                      {% endfor %}
