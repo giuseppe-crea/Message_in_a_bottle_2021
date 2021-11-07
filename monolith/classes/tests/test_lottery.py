@@ -5,8 +5,7 @@ import flask_login
 from flask_login import current_user
 
 from monolith.database import db
-from monolith.background import lottery_task
-from monolith.lottery import prize, price
+from monolith.background import lottery_task, LOTTERY_PRIZE, LOTTERY_PRICE
 from monolith.classes.tests.utils import get_testing_app, login, create_ex_usr
 
 
@@ -51,7 +50,7 @@ class TestLottery(unittest.TestCase):
             rv = tested_app.get("/outbox")
             self.assertNotIn(b"example@example.com", rv.data)
 
-            assert current_user.get_points() == current_points - price
+            assert current_user.get_points() == current_points - LOTTERY_PRICE
 
     def test_lottery_task(self):
         app = get_testing_app()
@@ -59,9 +58,15 @@ class TestLottery(unittest.TestCase):
             email, psw = "example@example.com", "admin"
             login(app, email, psw)
             user = flask_login.current_user
+            db.session.add(user)
             # should be 1000, but it doesn't matter
             starting_points = user.get_points()
             lottery_task(flask.current_app)
+            # reactivate the user that was closed by the lottery task
+            db.session.add(user)
+            points = user.get_points()
+            expected_points = starting_points + LOTTERY_PRIZE
+            assert points == expected_points
+            # check that the proper balance is displayed in the user page
             rv = app.get('/user_data')
-            print(rv.data)
-            assert bytes(str(starting_points + prize), 'utf-8') in rv.data
+            assert bytes(str(expected_points), 'utf-8') in rv.data

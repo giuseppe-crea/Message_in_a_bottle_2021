@@ -4,7 +4,7 @@ import sys
 from flask import Flask
 from flask_uploads import configure_uploads
 
-from monolith import lottery
+from monolith.background import LOTTERY_PRICE
 from monolith.auth import login_manager
 from monolith.database import User, db
 from monolith.views import blueprints
@@ -49,7 +49,7 @@ def create_app():
             example.is_admin = True
             example.content_filter = False
             example.set_password('admin')
-            example.set_points(10 * lottery.price)
+            example.set_points(10 * LOTTERY_PRICE)
             db.session.add(example)
             db.session.commit()
     return _app

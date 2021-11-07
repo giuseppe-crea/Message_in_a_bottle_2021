@@ -2,9 +2,9 @@ from flask import Blueprint, abort, redirect, request
 from flask.templating import render_template
 from flask_login import login_required, current_user
 from sqlalchemy.exc import NoResultFound
-from monolith.background import create_notification
+from monolith.background import create_notification, LOTTERY_PRICE
 from monolith.database import Message, db
-from monolith import send, lottery
+from monolith import send
 from monolith.delete import remove_message, delete_for_receiver, \
     delete_for_sender
 
@@ -189,7 +189,7 @@ def withdraw(m_id):
     if m_id is not None:
         # get the user's total lottery points
         points = current_user.get_points()
-        if points >= lottery.price:
+        if points >= LOTTERY_PRICE:
             # get the message from the database
             message = None
             try:
@@ -203,7 +203,7 @@ def withdraw(m_id):
                 delete_for_receiver(message)
                 delete_for_sender(message)
                 # decrease the user's points
-                points -= lottery.price
+                points -= LOTTERY_PRICE
                 current_user.set_points(points)
                 db.session.commit()
                 return redirect('/outbox')
