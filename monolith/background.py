@@ -1,13 +1,14 @@
 import os
 import pathlib
+import random
 from datetime import datetime
 
 from celery import Celery
+from celery.schedules import crontab
 from sqlalchemy import and_
 from sqlalchemy.exc import NoResultFound
 
-from monolith import lottery
-from monolith.database import db, Message, Notification
+from monolith.database import db, Message, Notification, User
 
 # Check a specifically set environment variable for the address of the backend
 # said address could also be obtained from an env variable
@@ -20,6 +21,8 @@ celery = Celery(__name__, backend=BACKEND, broker=BROKER)
 
 _APP = None
 UPLOAD_FOLDER = None
+LOTTERY_PRIZE = 100
+LOTTERY_PRICE = 100
 
 
 @celery.task
@@ -64,7 +67,7 @@ def setup_periodic_tasks(sender, **kwargs):
     )
     # Runs the lottery every lottery period
     sender.add_periodic_task(
-        float(lottery.period),
+        crontab(hour=7, minute=30, day_of_month=1),
         lottery_task.s(_APP),
         name='lottery task'
     )
@@ -163,13 +166,16 @@ def lottery_task(app):
     do_task(app)
     # noinspection PyUnresolvedReferences
     with _APP.app_context():
-        winner = lottery.execute()
+        users = User.query.all()
+        winner = random.choice(users)
         if winner is not None:
+            winner.add_points(LOTTERY_PRIZE)
+            db.session.commit()
             create_notification(
                 "Lottery win",
-                "You have won" + str(lottery.prize) + "points",
+                "You have won" + str(LOTTERY_PRIZE) + "points",
                 datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                winner
+                winner.email
             )
 
 

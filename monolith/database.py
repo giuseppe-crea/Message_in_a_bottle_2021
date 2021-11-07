@@ -13,6 +13,7 @@ class User(db.Model):
     lastname = db.Column(db.Unicode(128))
     password = db.Column(db.Unicode(128))
     date_of_birth = db.Column(db.DateTime)
+    points = db.Column(db.Integer, default=0)
     content_filter = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     is_admin = db.Column(db.Boolean, default=False)
@@ -40,12 +41,21 @@ class User(db.Model):
     def get_email(self):
         return self.email
 
+    def add_points(self, points):
+        self.points = self.points + points
+
+    def set_points(self, points):
+        self.points = points
+
+    def get_points(self):
+        return self.points
+
     def update(self, **kwargs):
         for key, value in kwargs.items():
             if key == 'password':
                 self.set_password(value)
             # prevent privilege de/escalation
-            elif key != 'is_admin' or key != 'is_anonymous':
+            elif key != 'is_admin' or key != 'is_anonymous' or key != 'points':
                 setattr(self, key, value)
 
     def get_content_filter_status(self):
@@ -129,20 +139,6 @@ class Blacklist(db.Model):
 
     def get_id(self):
         return self.owner
-
-
-class LotteryPoints(db.Model):
-    __tablename__ = 'lottery'
-
-    id = db.Column(db.Integer, primary_key=True)
-    points = db.Column(db.Integer)
-
-    def __init__(self, *args, **kw):
-        super(LotteryPoints, self).__init__(*args, **kw)
-
-    def add_new_user(self, id, points=0):
-        self.id = id
-        self.points = points
 
 
 class Report(db.Model):
