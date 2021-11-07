@@ -45,6 +45,10 @@ class TestHome(unittest.TestCase):
             # get a message which doesn't exist
             rv = tested_app.get('/send/2', follow_redirects=True)
             assert rv.status_code == 404
+            # test draft removal
+            rv = tested_app.delete('/outbox/1', follow_redirects=True)
+            assert rv.status_code == 200
+            assert b'example@example.com' not in rv.data
 
     def test_anonymous_access(self):
         tested_app = get_testing_app()
