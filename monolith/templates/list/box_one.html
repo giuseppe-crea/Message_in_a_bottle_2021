@@ -1,8 +1,12 @@
-{% extends 'body.html' %}
-<meta http-equiv="Content-Security-Policy" media-src='/';>
-<h1>{% block title %} List of messages {% endblock %}</h1>
 
+<meta http-equiv="Content-Security-Policy" media-src='/';>
 {% block content %}
+
+<div>
+    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a>
+
+</div>
+<p style="text-align:left; font-size: 1.2em">
     <b>from:</b> {{ message['sender_email'] }}
     <br>
     <b>to:</b> {{ message['receiver_email'] }}
@@ -24,7 +28,7 @@
     {% if role == '/inbox' %}
     <a href="forward/{{message['id']}}">Forward</a>
     <a href="replay/{{message['id']}}">Replay</a>
-    {% else %}
+    {% elif message['status'] == 1 %}
     <script type = "text/javascript">
         function getConfirmation() {
            var retVal = confirm("Are you sure you want to spend points and withdraw this message?");
@@ -37,4 +41,5 @@
       </script>
         <button id="post-btn" onclick="getConfirmation()">Withdraw</button>
     {% endif %}
+</p>
 {% endblock %}
