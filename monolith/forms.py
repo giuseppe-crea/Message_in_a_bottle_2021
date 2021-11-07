@@ -141,7 +141,7 @@ class SendForm(FlaskForm):
     display = ['message', 'time', 'recipient', 'file']
 
 
-class ReplayForm(FlaskForm):
+class ReplyForm(FlaskForm):
     message = f.StringField(
         'Message',
         validators=[InputRequired(), Length(max=1024)]

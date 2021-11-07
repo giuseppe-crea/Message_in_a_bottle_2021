@@ -69,10 +69,12 @@ font-size: inherit;
         {% endfor %}
     </dl>
     <div style="padding-left: 40px;">
-    <p style="text-align:left; font-size: 1.4em; margin 80px">
+    <p style="text-align:left; font-size: 1.4em; margin: 80px">
+        {% if use == 'send' %}
         See a <a href="/list_of_recipients">list</a> of possible recipients</p>
 
     <input type=submit name="save_button" value="Save"> or
+        {% endif %}
     <input type=submit name="send_button" value="Send">
     </div>
 </form>

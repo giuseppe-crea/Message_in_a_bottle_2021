@@ -114,4 +114,4 @@ def get_message():
     drafts = Message().query.filter_by(sender_email=current_user.email,
                                        status=0).all()
     # noinspection PyUnresolvedReferences
-    return render_template('list/draft_list.html', drafts=drafts)
+    return render_template('list/draft_list.html', drafts=drafts, use='send')

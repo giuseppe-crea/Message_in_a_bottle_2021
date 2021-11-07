@@ -132,9 +132,9 @@ class TestHome(unittest.TestCase):
             # the message is correctly sent
             self.assertIn(b'Successfully Sent to:', rv.data)
 
-    def test_replay(self):
+    def test_reply(self):
         """
-        Test the message replay functionality.
+        Test the message reply functionality.
         """
         tested_app = get_testing_app()
         with tested_app:
@@ -152,10 +152,10 @@ class TestHome(unittest.TestCase):
             rv = tested_app.get('/inbox/1')
             self.assertEqual(rv.status_code, 200)
 
-            # replay to the message
+            # reply to the message
             time = "2199-01-01T01:01"
             rv = tested_app.post(
-                '/inbox/replay/1',
+                '/inbox/reply/1',
                 data={
                     'message': "Success!",
                     'time': time},

@@ -27,7 +27,7 @@
     <br>
     {% if role == '/inbox' %}
     <a href="forward/{{message['id']}}">Forward</a>
-    <a href="replay/{{message['id']}}">Replay</a>
+    <a href="reply/{{message['id']}}">Reply</a>
     {% elif message['status'] == 1 %}
     <script type = "text/javascript">
         function getConfirmation() {

@@ -8,7 +8,7 @@ from monolith import send
 from monolith.delete import remove_message, delete_for_receiver, \
     delete_for_sender
 
-from monolith.forms import ForwardForm, ReplayForm
+from monolith.forms import ForwardForm, ReplyForm
 from monolith.send import send_messages, save_draft
 from monolith.views.doc import auto
 
@@ -219,12 +219,12 @@ def withdraw(m_id):
     abort(401)
 
 
-@box.route("/inbox/replay/<m_id>", methods=["GET", "POST"])
+@box.route("/inbox/reply/<m_id>", methods=["GET", "POST"])
 @auto.doc(groups=['routes'])
 @login_required
-def replay(m_id):
+def reply(m_id):
     """
-    Implements the replay message feature.
+    Implements the reply message feature.
 
     :param m_id: message id
     :return: a rendered view
@@ -244,10 +244,10 @@ def replay(m_id):
 
     # get the receiver mail from the original message
     receiver = message.sender_email
-    # ask the user to insert the text and the delivery date of the replay
-    form = ReplayForm()
+    # ask the user to insert the text and the delivery date of the reply
+    form = ReplyForm()
 
-    # send the replay
+    # send the reply
     if request.method == 'POST':
         if form.validate_on_submit():
             message = form.data['message']
@@ -270,4 +270,4 @@ def replay(m_id):
             text=message
         )
     else:
-        return render_template('send.html', form=form)
+        return render_template('send.html', form=form, use='reply')
