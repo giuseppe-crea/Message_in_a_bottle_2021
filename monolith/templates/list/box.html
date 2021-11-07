@@ -64,27 +64,33 @@
     <th>Text</th>
     <th>Controls</th>
 
-    <tr>
+
+
+    {% if role == "/outbox" %}
         {% for message in messages %}
-        {% if role == "/outbox" %}
-        <td>{{message.receiver_email}}</td>
-        <td>{{message.time}}</td>
-        <td>{{message.message}}</td>
-        <td><a href="outbox/{{message['id']}}">Open</a>
-            or <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">Delete</a>
-        </td></tr>
-        {% else %}
-
-        <td>{{message.sender_email}}</td>
-        <td>{{message.time}}</td>
-        <td>{{message.message}}</td>
-        <td><a href="inbox/{{message['id']}}">Open</a>
-            or <a onclick=deleteRecord("inbox/{{message['id']}}") href="#">Delete</a>
-        </td></tr>
-        {% endif %}
-        <br>
+        <tr>
+            <td>{{message.receiver_email}}</td>
+            <td>{{message.time}}</td>
+            <td>{{message.message}}</td>
+            <td><a href="outbox/{{message['id']}}">Open</a>
+                or <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">Delete</a>
+            </td>
+        </tr>
         {% endfor %}
+    {% else %}
+        {% for message in messages %}
+        <tr>
+            <td>{{message.sender_email}}</td>
+            <td>{{message.time}}</td>
+            <td>{{message.message}}</td>
+            <td><a href="inbox/{{message['id']}}">Open</a>
+                or <a onclick=deleteRecord("inbox/{{message['id']}}") href="#">Delete</a>
+            </td>
 
+        </tr>
+        {% endfor %}
+    {% endif %}
+    <br>
 </table>
 
 {% if role == "/outbox" %}
@@ -99,7 +105,7 @@
     <th>Text</th>
     <th>Controls</th>
 
-    <tr></tr>
+    <tr>
     {% for message in pending %}
     <td>{{message.receiver_email}}</td>
     <td>{{message.time}}</td>
@@ -108,7 +114,6 @@
         or <a onclick=deleteRecord("outbox/{{message['id']}}")
               href="#">Delete</a>
     </td></tr>
-    <br>
     {% endfor %}
 </table>
 {% endif %}

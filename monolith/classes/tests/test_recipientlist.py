@@ -106,7 +106,7 @@ class TestRecipientList(unittest.TestCase):
             assert rv.status_code == 200
             # back to /send
             assert b'Message' in rv.data
-            assert b'Send on' in rv.data
+
 
             # submitting one existing user selection
             # no redirection
