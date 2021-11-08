@@ -44,7 +44,7 @@ class TestSend(unittest.TestCase):
             )
             assert rv.status_code == 200
             self.assertIn(b'Message "Short test message" was:', rv.data)
-            self.assertIn(b'Successfully Sent to:', rv.data)
+            self.assertIn(b'Successfully sent to:', rv.data)
             self.assertIn(b'receiver@example.com', rv.data)
             # adding a user,
             # trying to send the same message again to multiple users
@@ -68,7 +68,7 @@ class TestSend(unittest.TestCase):
             )
             assert rv.status_code == 200
             self.assertIn(b'Message "Short test message" was:', rv.data)
-            self.assertIn(b'Successfully Sent to:', rv.data)
+            self.assertIn(b'Successfully sent to:', rv.data)
             self.assertIn(b'receiver@example.com', rv.data)
             self.assertIn(b'otherguy@example.com', rv.data)
             self.assertIn(b'Failed to send to:', rv.data)
