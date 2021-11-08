@@ -68,23 +68,33 @@
         </div>
       </div>
     </nav>
-    <form id="filter_form" action="" method="POST"
+    <div class="jumbotron">
+        <form id="filter_form" action="" method="POST"
           enctype="multipart/form-data">
-       {% if status %}
-        <label> Your current content filter status is: <b style="color: green">
-            enabled</b>
-            <input type="checkbox" name="content_filter" checked="true"
-                   onchange="document.getElementById('filter_form').submit()">
-        </label>
-        <br>
-        <a href="/content_filter/list"> See words </a>
-        {% else %}
-        <label> Your current content_filter status is: <b style="color:red">
-            disabled</b>
+            {% if status %}
+            <label style="font-size: 26px; padding-right: 10px;">
+                Your current content filter status is:
+                <b style="color: green"> enabled   </b>
+            </label>
+            <input type="checkbox" name="content_filter" checked
+                   onchange="document.getElementById('filter_form').submit()"
+                   style="transform: scale(1.5);">
+            <br>
+            <a href="/content_filter/list"> See words </a>
+            {% else %}
+            <label style="font-size: 26px; padding-right: 10px;">
+                Your current content_filter status is:
+                <b style="color:red"> disabled </b>
+            </label>
+
             <input type="checkbox" name="content_filter"
-                   onchange="document.getElementById('filter_form').submit()">
-        </label>
-        {% endif %}
+                   onchange="document.getElementById('filter_form').submit()"
+                   style=" transform: scale(1.5);">
+            {% endif %}
+
     </form>
+
+    </div>
+
 </body>
 </html>
