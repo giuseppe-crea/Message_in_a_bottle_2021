@@ -1,32 +1,118 @@
 <!--suppress ALL -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Done Sending</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+      </script>
 
-<html>
-  <body>
-  <h1>Message "{{ text }}" was:</h1>
-  {% if users1|length > 0 %}
-    <h2>Successfully Sent to:</h2>
-    <ul>
-      {% for user in users1 %}
-      <li>
-      {{user}}
-      </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  {% if users2|length > 0 %}
-  <h2>Failed to send to:</h2>
-    <ul>
-      {% for user in users2 %}
-      <li>
-      {{user}}
-      </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  {% if users2|length == 0 and users1|length ==0 %}
-      Something's wrong!
-  {% endif %}
-  <a href="/send">Send another message</a> or <a href="/logout">logout</a>.
-  <a href="/">Home</a>
+      <script
+      src=
+  "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+      </script>
+
+      <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+      </script>
+  </head>
+
+  <body style="background-color: #e7f2f8b2">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-md navbar-light navbar-laravel"
+       style="margin-bottom: 20px;background-color: #e3f2fd;">
+    <div class="container">
+
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">
+          <img src="../static/images/icon.png" alt="logo" width="50"
+              height="50">
+        </a>
+      </div>
+
+      <a class="navbar-brand" href="/">My Message in a Bottle</a>
+      <button class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Right Side Of Navbar -->
+          <ul class="navbar-nav ml-auto">
+            <li>
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle"
+                        type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                      Hi, {{ current_user.firstname }}!
+                </button>
+                <div class="dropdown-menu"
+                     aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item"
+                     href="/user_data">Account Data
+                  </a>
+                  <a class="dropdown-item"
+                     href="/unregister">Delete Account
+                  </a>
+                  <a class="dropdown-item"
+                     href="/logout">Logout
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Message "<b>{{ text }}</b>" was:</h2>
+    {% if users1|length > 0 %}
+      <h3 style="color: green">Successfully sent to:</h3>
+      <ul class="list-group list-group-flush">
+        {% for user in users1 %}
+        <li class="list-group-item">
+          {{user}}
+        </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if users2|length > 0 %}
+    <h3 style="color:red">Failed to send to:</h3>
+      <ul>
+        {% for user in users2 %}
+        <li>
+        {{user}}
+        </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if users2|length == 0 and users1|length ==0 %}
+        <h1> <b> Something's wrong! </b></h1>
+    {% endif %}
+
+  </div>
+  <br>
+  <br>
+  <br>
+  <div>
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block"
+                onclick="location.href='/send'">Send another Message</button>
+  </div>
+
+
+
   </body>
 </html>
