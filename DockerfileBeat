@@ -7,5 +7,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apk add build-base
 RUN apk add git
 RUN pip install -r requirements.txt
-RUN pip install git+https://github.com/giuseppe-crea/flask-autodoc.git#egg=Flask-Autodoc
 CMD ["celery", "-A", "monolith.background.celery", "beat", "-l", "INFO"]
