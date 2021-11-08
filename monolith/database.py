@@ -84,7 +84,7 @@ class Message(db.Model):
         super(Message, self).__init__(*args, **kw)
 
     def add_message(self, message, sender_email, receiver_email, time, image,
-                    status):
+                    status, visible_to_receiver=True):
         """
         adds a message to database, initializing to empty all missing fields
         """
@@ -107,7 +107,10 @@ class Message(db.Model):
             self.image = ''
         self.status = status
         self.visible_to_sender = True
-        self.visible_to_receiver = True
+        if not visible_to_receiver:
+            self.visible_to_receiver = False
+        else:
+            self.visible_to_receiver = True
         self.is_read = False
 
     def get_id(self):
