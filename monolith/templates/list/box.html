@@ -43,9 +43,7 @@
 </style>
 
 <div>
-    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a>
-
-        {% if role == "/inbox" %}
+    {% if role == "/inbox" %}
     <h1>Welcome to your Inbox folder!</h1>
     {% else %}
     <h1>Welcome to your Sent Messages folder!</h1>
