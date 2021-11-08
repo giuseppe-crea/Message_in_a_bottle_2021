@@ -1,45 +1,115 @@
-
-<meta http-equiv="Content-Security-Policy" media-src='/';>
 {% block content %}
+<head>
+    <meta http-equiv="Content-Security-Policy" media-src='/';>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
 
-<div>
-    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a>
+    <script
+    src=
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    </script>
 
-</div>
-<p style="text-align:left; font-size: 1.2em">
-    <b>from:</b> {{ message['sender_email'] }}
-    <br>
-    <b>to:</b> {{ message['receiver_email'] }}
-    <br>
-    <b>Delivery date:</b> {{ message['time'] }}
-    <br>
-    <b>Message:</b>
-    <br>
-    {{ message['message'] }}
-    <br>
-    {% if message['image'] != "" %}
-        <b>Attached Picture:</b>
+    <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+    </script>
+</head>
+
+<body style="background-color: #e7f2f8b2;">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light navbar-laravel"
+         style="margin-bottom: 20px;background-color: #e3f2fd;">
+      <div class="container">
+
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">
+            <img src="../static/images/icon.png" alt="logo" width="50"
+                height="50">
+          </a>
+        </div>
+
+        <a class="navbar-brand" href="/">My Message in a Bottle</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ml-auto">
+              <li>
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle"
+                          type="button" id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                        Hi, {{ current_user.firstname }}!
+                  </button>
+                  <div class="dropdown-menu"
+                       aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item"
+                       href="/user_data">Account Data
+                    </a>
+                    <a class="dropdown-item"
+                       href="/unregister">Delete Account
+                    </a>
+                    <a class="dropdown-item"
+                       href="/logout">Logout
+                    </a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </nav>
+
+    <p style="text-align:left; font-size: 1.2em">
+        <b>from:</b> {{ message['sender_email'] }}
         <br>
-            <div style="width: 1000px; height: 1000px">
-                <img src="{{ url_for('static', filename=message['image']|safe) }}" width="100%" height="auto"/>
-            </div>
+        <b>to:</b> {{ message['receiver_email'] }}
+        <br>
+        <b>Delivery date:</b> {{ message['time'] }}
+        <br>
+        <b>Message:</b>
+        <br>
+        {{ message['message'] }}
+        <br>
+        {% if message['image'] != "" %}
+            <b>Attached Picture:</b>
+            <br>
+                <div style="width: 1000px; height: 1000px">
+                    <img src="{{ url_for('static', filename=message['image']|safe) }}" width="100%" height="auto"/>
+                </div>
+            {% endif %}
+        <br>
+        {% if role == '/inbox' %}
+        <a href="forward/{{message['id']}}">Forward</a>
+        <a href="reply/{{message['id']}}">Reply</a>
+        {% elif message['status'] == 1 %}
+        <script type = "text/javascript">
+            function getConfirmation() {
+               var retVal = confirm("Are you sure you want to spend points and withdraw this message?");
+               if( retVal == true ) {
+                  window.location="/outbox/withdraw/{{message['id']}}";
+               } else {
+                  return false;
+               }
+            }
+          </script>
+            <button id="post-btn" onclick="getConfirmation()">Withdraw</button>
         {% endif %}
-    <br>
-    {% if role == '/inbox' %}
-    <a href="forward/{{message['id']}}">Forward</a>
-    <a href="reply/{{message['id']}}">Reply</a>
-    {% elif message['status'] == 1 %}
-    <script type = "text/javascript">
-        function getConfirmation() {
-           var retVal = confirm("Are you sure you want to spend points and withdraw this message?");
-           if( retVal == true ) {
-              window.location="/outbox/withdraw/{{message['id']}}";
-           } else {
-              return false;
-           }
-        }
-      </script>
-        <button id="post-btn" onclick="getConfirmation()">Withdraw</button>
-    {% endif %}
-</p>
+    </p>
+</body>
+
 {% endblock %}

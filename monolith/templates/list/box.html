@@ -1,5 +1,22 @@
 {% block content %}
-<script>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+
+    <script
+    src=
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    </script>
+
+    <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+    </script>
+    <script>
     function deleteRecord(url) {
         var xhr = new XMLHttpRequest();
         xhr.open("DELETE", url);
@@ -16,58 +33,162 @@
             console.log('NO CONNECTION');
         };
     }
-</script>
-<style>
-    table {
-      font-family: arial, sans-serif;
-      border-collapse: collapse;
-      width: 100%;
-    }
+    </script>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
 
-    td, th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding-top: 8px;
-      padding-bottom: 8px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      max-width: 0;
-    }
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding-top: 8px;
+          padding-bottom: 8px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          max-width: 0;
+        }
 
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-</style>
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+    </style>
+</head>
 
-<div>
-    {% if role == "/inbox" %}
-        <h1>Welcome to your Inbox folder!</h1>
-    {% else %}
-        <h1>Welcome to your Sent Messages folder!</h1>
-    {% endif %}
-</div>
+<body style="background-color: #e7f2f8b2;">
 
-{% if role == "/outbox" %}
-    <h2>Messages Already Delivered:</h2>
-{% else %}
-    <h2>Your messages:</h2>
-{% endif %}
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light navbar-laravel"
+         style="margin-bottom: 20px;background-color: #e3f2fd;">
+      <div class="container">
 
-<table>
-    <th>email</th>
-    <th>Delivery</th>
-    <th>Text</th>
-    <th>Controls</th>
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">
+            <img src="../static/images/icon.png" alt="logo" width="50"
+                height="50">
+          </a>
+        </div>
+
+        <a class="navbar-brand" href="/">My Message in a Bottle</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ml-auto">
+              <li>
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle"
+                          type="button" id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                        Hi, {{ current_user.firstname }}!
+                  </button>
+                  <div class="dropdown-menu"
+                       aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item"
+                       href="/user_data">Account Data
+                    </a>
+                    <a class="dropdown-item"
+                       href="/unregister">Delete Account
+                    </a>
+                    <a class="dropdown-item"
+                       href="/logout">Logout
+                    </a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div>
+        {% if role == "/inbox" %}
+            <h2>Welcome to your Inbox folder!</h2>
+        {% else %}
+            <h2>Welcome to your Sent Messages folder!</h2>
+        {% endif %}
+    </div>
+
+    <br>
 
     {% if role == "/outbox" %}
-        {% for message in messages %}
+        <h3>Messages Already Delivered:</h3>
+    {% else %}
+        <h3>Your messages:</h3>
+    {% endif %}
+
+    <table>
+        <th>email</th>
+        <th>Delivery</th>
+        <th>Text</th>
+        <th>Controls</th>
+
+        {% if role == "/outbox" %}
+            {% for message in messages %}
+            <tr>
+                <td>{{message.receiver_email}}</td>
+                <td>{{message.time}}</td>
+                <td>{{message.message}}</td>
+                <td>
+                    <a href="outbox/{{message['id']}}">Open</a>
+                    or
+                    <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            {% for message in messages %}
+            <tr>
+                <td>{{message.sender_email}}</td>
+                <td>{{message.time}}</td>
+                <td>{{message.message}}</td>
+                <td>
+                    <a href="inbox/{{message['id']}}">Open</a>
+                    or
+                    <a onclick=deleteRecord("inbox/{{message['id']}}") href="#">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        <br>
+    </table>
+
+    {% if role == "/outbox" %}
+    <div>
+        <h2>Messages Pending Delivery:</h2>
+    </div>
+    <table>
+        <th>email</th>
+        <th>Delivery</th>
+        <th>Text</th>
+        <th>Controls</th>
+
         <tr>
+            {% for message in pending %}
             <td>{{message.receiver_email}}</td>
             <td>{{message.time}}</td>
             <td>{{message.message}}</td>
             <td>
-                <a href="outbox/{{message['id']}}">Open</a>
+                <a href="outbox/{{message['id']}}">
+                    Open
+                </a>
                 or
                 <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">
                     Delete
@@ -75,53 +196,10 @@
             </td>
         </tr>
         {% endfor %}
-    {% else %}
-        {% for message in messages %}
-        <tr>
-            <td>{{message.sender_email}}</td>
-            <td>{{message.time}}</td>
-            <td>{{message.message}}</td>
-            <td>
-                <a href="inbox/{{message['id']}}">Open</a>
-                or
-                <a onclick=deleteRecord("inbox/{{message['id']}}") href="#">
-                    Delete
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
+    </table>
     {% endif %}
-    <br>
-</table>
 
-{% if role == "/outbox" %}
-<div>
-    <h2>Messages Pending Delivery:</h2>
-</div>
-<table>
-    <th>email</th>
-    <th>Delivery</th>
-    <th>Text</th>
-    <th>Controls</th>
-
-    <tr>
-        {% for message in pending %}
-        <td>{{message.receiver_email}}</td>
-        <td>{{message.time}}</td>
-        <td>{{message.message}}</td>
-        <td>
-            <a href="outbox/{{message['id']}}">
-                Open
-            </a>
-            or
-            <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">
-                Delete
-            </a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
+</body>
 {% endblock %}
 
 
