@@ -100,7 +100,7 @@ class TestContentFilter(unittest.TestCase):
             assert rv.status_code == 200
             self.assertIn(b'disabled', rv.data)
 
-            # checkbox click
+            # checkbox click, enabling content filter
             rv = self.app.post(
                 '/content_filter',
                 data={'content_filter': 'on'},
@@ -135,9 +135,10 @@ class TestContentFilter(unittest.TestCase):
             self.assertIn(b'Message "fuck you" was:', rv.data)
             self.assertIn(b'Successfully sent to:', rv.data)
 
-            # the message actually is not sent
+            # the message is not displayed to the receiver
             self.assertEqual(db.session.query(Message).
-                             filter(Message.sender_email == email,
-                                    Message.receiver_email == email2,
-                                    Message.message == "fuck you").first(),
-                             None)
+                             filter(Message.sender_email == email2,
+                                    Message.receiver_email == email,
+                                    Message.message == "fuck you").first().
+                             visible_to_receiver,
+                             0)
