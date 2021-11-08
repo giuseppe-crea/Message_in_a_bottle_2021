@@ -99,7 +99,7 @@ def _send(_id, data=""):
         )
     else:
         # noinspection PyUnresolvedReferences
-        return render_template('send.html', form=form)
+        return render_template('send.html', form=form, use='send')
 
 
 @send.route('/send_draft_list', methods=['GET'])
