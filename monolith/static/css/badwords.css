@@ -1,0 +1,20 @@
+body {
+    background-color: #e7f2f8b2;
+}
+li {
+    text-align: center;
+}
+
+.list-group-item {
+    background-color: #e7f2f8b2;
+    font-weight: bold;
+}
+
+ul {
+    background-color: #e7f2f8b2;
+}
+
+h2 {
+    color: #007bff;
+    font-weight: bold;
+}
