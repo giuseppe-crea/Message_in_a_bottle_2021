@@ -133,7 +133,7 @@ class TestContentFilter(unittest.TestCase):
 
             # the returned page
             self.assertIn(b'Message "fuck you" was:', rv.data)
-            self.assertIn(b'Successfully Sent to:', rv.data)
+            self.assertIn(b'Successfully sent to:', rv.data)
 
             # the message actually is not sent
             self.assertEqual(db.session.query(Message).

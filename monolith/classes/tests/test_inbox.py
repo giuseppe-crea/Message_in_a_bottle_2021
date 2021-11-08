@@ -130,7 +130,7 @@ class TestHome(unittest.TestCase):
                 follow_redirects=True
             )
             # the message is correctly sent
-            self.assertIn(b'Successfully Sent to:', rv.data)
+            self.assertIn(b'Successfully sent to:', rv.data)
 
     def test_reply(self):
         """
@@ -162,4 +162,4 @@ class TestHome(unittest.TestCase):
                 follow_redirects=True
             )
             # the message is correctly sent
-            self.assertIn(b'Successfully Sent to:', rv.data)
+            self.assertIn(b'Successfully sent to:', rv.data)
