@@ -126,9 +126,9 @@
     <br>
 
     {% if role == "/outbox" %}
-        <h3>Messages Already Delivered:</h3>
+        <h2>Messages Already Delivered:</h2>
     {% else %}
-        <h3>Your messages:</h3>
+        <h2>Your messages:</h2>
     {% endif %}
 
     <table>
@@ -138,6 +138,7 @@
         <th>Controls</th>
 
         {% if role == "/outbox" %}
+            <!-- the newest first -->
             {% for message in messages|reverse %}
             <tr>
                 <td>{{message.receiver_email}}</td>
@@ -153,7 +154,7 @@
             </tr>
             {% endfor %}
         {% else %}
-            <!-- newest first -->
+            <!-- the newest first -->
             {% for message in messages|reverse %}
             <tr>
                 <td>{{message.sender_email}}</td>
@@ -173,32 +174,32 @@
     </table>
 
     {% if role == "/outbox" %}
-    <div>
+        <br>
         <h2>Messages Pending Delivery:</h2>
-    </div>
-    <table>
-        <th>email</th>
-        <th>Delivery</th>
-        <th>Text</th>
-        <th>Controls</th>
+        <br>
+        <table>
+            <th>email</th>
+            <th>Delivery</th>
+            <th>Text</th>
+            <th>Controls</th>
 
-        <tr>
-            {% for message in pending|reverse %}
-            <td>{{message.receiver_email}}</td>
-            <td>{{message.time}}</td>
-            <td>{{message.message}}</td>
-            <td>
-                <a href="outbox/{{message['id']}}">
-                    Open
-                </a>
-                or
-                <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">
-                    Delete
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+            <tr>
+                {% for message in pending|reverse %}
+                <td>{{message.receiver_email}}</td>
+                <td>{{message.time}}</td>
+                <td>{{message.message}}</td>
+                <td>
+                    <a href="outbox/{{message['id']}}">
+                        Open
+                    </a>
+                    or
+                    <a onclick=deleteRecord("outbox/{{message['id']}}") href="#">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     {% endif %}
 
 </body>
