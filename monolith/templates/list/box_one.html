@@ -2,6 +2,7 @@
 <head>
     <meta http-equiv="Content-Security-Policy" media-src='/';>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="../../static/images/favicon.ico"/>
     <link rel="stylesheet"
   href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script
@@ -74,42 +75,54 @@
       </div>
     </nav>
 
-    <p style="text-align:left; font-size: 1.2em">
-        <b>from:</b> {{ message['sender_email'] }}
-        <br>
-        <b>to:</b> {{ message['receiver_email'] }}
-        <br>
-        <b>Delivery date:</b> {{ message['time'] }}
-        <br>
-        <b>Message:</b>
-        <br>
-        {{ message['message'] }}
-        <br>
-        {% if message['image'] != "" %}
-            <b>Attached Picture:</b>
+        <div class="container jumbotron">
+            <b>From:</b> {{ message['sender_email'] }}
             <br>
-                <div style="width: 1000px; height: 1000px">
-                    <img src="{{ url_for('static', filename=message['image']|safe) }}" width="100%" height="auto"/>
+            <b>To:</b> {{ message['receiver_email'] }}
+            <br>
+            <b>Delivery Date:</b> {{ message['time'] }}
+            <br><br>
+            <b>Message:</b>
+            <br>
+            {{ message['message'] }}
+            <br><br>
+            {% if message['image'] != "" %}
+                <b>Attached Picture:</b>
+                <br>
+                <div style="width: 500px; height: 500px">
+                    <img src="{{ url_for('static', filename=message['image']|safe) }}"/>
                 </div>
             {% endif %}
-        <br>
-        {% if role == '/inbox' %}
-        <a href="forward/{{message['id']}}">Forward</a>
-        <a href="reply/{{message['id']}}">Reply</a>
-        {% elif message['status'] == 1 %}
-        <script type = "text/javascript">
-            function getConfirmation() {
-               var retVal = confirm("Are you sure you want to spend points and withdraw this message?");
-               if( retVal == true ) {
-                  window.location="/outbox/withdraw/{{message['id']}}";
-               } else {
-                  return false;
-               }
-            }
-          </script>
+            <br>
+            {% if role == '/inbox' %}
+            <a href="forward/{{message['id']}}"
+               class="btn btn-info"
+               role="button">
+                Forward
+            </a>
+            <a href="reply/{{message['id']}}"
+               class="btn btn-info"
+               role="button">
+                Reply
+            </a>
+
+            {% elif message['status'] == 1 %}
+
+            <script type = "text/javascript">
+                function getConfirmation() {
+                   var retVal = confirm("Are you sure you want to spend points and withdraw this message?");
+                   if( retVal == true ) {
+                      window.location="/outbox/withdraw/{{message['id']}}";
+                   } else {
+                      return false;
+                   }
+                }
+            </script>
             <button id="post-btn" onclick="getConfirmation()">Withdraw</button>
-        {% endif %}
-    </p>
+
+            {% endif %}
+        </div>
+
 </body>
 
 {% endblock %}
