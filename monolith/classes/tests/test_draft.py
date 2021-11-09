@@ -12,7 +12,7 @@ class TestHome(unittest.TestCase):
             login(tested_app, 'example@example.com', 'admin')
             rv = tested_app.get('/send_draft_list')
             assert rv.status_code == 200
-            assert b'Home' in rv.data
+            assert b'Your drafts:' in rv.data
 
     def test_saving_loading(self):
         tested_app = get_testing_app()
