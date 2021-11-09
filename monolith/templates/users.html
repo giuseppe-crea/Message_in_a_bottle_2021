@@ -1,6 +1,8 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <link rel="icon" href="../../static/images/icon.png">
+    <title>Users List</title>
     <style>
       table {
           font-family: arial, sans-serif;
@@ -15,29 +17,23 @@
         tr:nth-child(even) {
           background-color: #dddddd;
         }
-
-
     </style>
 </head>
-
-
 <body>
-<p style="text-align:left; font-size: 1.875em"><a href="/">Home</a></p>
-<h1>Users List</h1>
-<table>
-    <th>Email</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    {% for user in users %}
-    <tr>
-        <td>{{user.email}}</td>
-        <td>{{user.firstname}}</td>
-        <td>{{user.lastname}}</td>
-    </tr>
-    {% endfor %}
-
-</table>
-
+    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a></p>
+    <h1>Users List</h1>
+    <table>
+        <th>Email</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        {% for user in users %}
+        <tr>
+            <td>{{user.email}}</td>
+            <td>{{user.firstname}}</td>
+            <td>{{user.lastname}}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
 

@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
   <link rel="stylesheet" href="../static/css/index.css">
-  <link rel="icon" href="../static/images/icon.png">
+  <link rel="icon" href="../../static/images/icon.png">
   <title>My Message in a Bottle</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -12,8 +10,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 </head>
-
-
 
 {% if current_user.is_authenticated %}
 <body style="background-color: #e7f2f8b2">
@@ -85,86 +81,78 @@
 
 
 
-<!-- User Functionalities -->
-{% if current_user.is_authenticated %}
+  <!-- User Functionalities -->
+  {% if current_user.is_authenticated %}
 
-<section class="tiles">
-<div class="container ">
+  <section class="tiles">
+  <div class="container ">
 
-  <div class="row justify-content-center">
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/inbox">Inbox</a>
+    <div class="row justify-content-center">
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/inbox">Inbox</a>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/outbox">Sent Messages</a>
+        </div>
       </div>
     </div>
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/outbox">Sent Messages</a>
+
+    <div class="row justify-content-center">
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/send">Send a Message</a>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/send_draft_list">Drafts</a>
+        </div>
       </div>
     </div>
+
+    <div class="row justify-content-center">
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/blacklist">Blacklist</a>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/report_user">Report a User</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/content_filter">Content filter</a>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/calendar">Calendar</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Functionalities -->
+    {% if current_user.is_admin %}
+    <div class="row justify-content-center">
+      <div class="col-sm-6">
+        <div class="link-tiles"><a href="/reports">Reports</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+  </section>
+
+
+  <!-- Anonymous Welcome Page -->
+  {% else %}
+
+  <div>
+    <img src="../static/images/welcome.png" class="img-fluid rounded mx-auto d-block" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 300px; max-width:800px" alt="Welcome">
   </div>
 
-  <div class="row justify-content-center">
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/send">Send a Message</a>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/send_draft_list">Drafts</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/blacklist">Blacklist</a>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/report_user">Report a User</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/content_filter">Content filter</a>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/calendar">Calendar</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Admin Functionalities -->
-  {% if current_user.is_admin %}
-  <div class="row justify-content-center">
-    <div class="col-sm-6">
-      <div class="link-tiles"><a href="/reports">Reports</a>
-      </div>
-    </div>
-  </div>
   {% endif %}
-
-</div>
-</section>
-
-
-<!-- Anonymous Welcome Page -->
-{% else %}
-
-<div>
-  <img src="../static/images/welcome.png" class="img-fluid rounded mx-auto d-block" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 300px; max-width:800px" alt="Welcome">
-</div>
- 
-
-
-
-
-{% endif %}
-
-
-
-
 
 </body>
 </html>
