@@ -1,6 +1,7 @@
 <!--suppress ALL -->
 <html>
 <head>
+  <title>Request Page</title>
   <link rel="icon" href="../../static/images/icon.png">
   <link rel="stylesheet"
   href=
@@ -68,7 +69,7 @@
   </nav>
 
   <div class="container jumbotron">
-      <h2> Forward message </h2>
+      <h2> Select a User </h2>
       <form action="" method="POST">
           {{ form.hidden_tag() }}
           {% for field in form.display %}
@@ -83,7 +84,7 @@
               {% endfor %}
             {% endif %}
           {% endfor %}
-          <button type="submit" class="btn btn-primary">Forward</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
       </form>
   </div>
 

@@ -4,84 +4,107 @@
     <meta charset="UTF-8">
     <title>Blacklist</title>
     <link rel="icon" href="../../static/images/icon.png">
-    <style>
-
-        table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-        }
-
-        td, th {
-          border: 1px solid #74BDCB;
-          text-align: left;
-          padding: 8px;
-        }
-
-        tr:nth-child(even) {
-          background-color: #74BDCB;
-        }
-
-        .parent {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          grid-template-rows: repeat(5, 1fr);
-          grid-column-gap: 0px;
-          grid-row-gap: 12px;
-        }
-
-        .div1 {
-            grid-area: 1 / 1 / 5 / 6;
-        }
-
-        .div2 { 
-            grid-area: 5 / 1 / 6 / 6;
-        }
-
-        .div3 {
-            grid-area: 5 / 2 / 6 / 3;
-            background-color: #74BDCB;
-        }
-
-        .div4 {
-            grid-area: 5 / 4 / 6 / 5;
-            background-color: #74BDCB;
-        }
-
-        a {
-        text-decoration: none !important;
-        }
-
-    </style>
+    <link rel="stylesheet"
+    href=
+    "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <script
+    src=
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    </script>
+    <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+    </script>
 </head>
 
 <body style="background-color: #e7f2f8b2">
 
-    <div class="parent">
-        <div class="div1"> 
-            {% if result != [] %}
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light navbar-laravel"
+         style="margin-bottom: 20px;background-color: #e3f2fd;">
+      <div class="container">
+
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">
+            <img src="../static/images/icon.png" alt="logo" width="50"
+                height="50">
+          </a>
+        </div>
+
+        <a class="navbar-brand" href="/">My Message in a Bottle</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ml-auto">
+              <li>
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle "
+                          type="button" id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                    Hi, {{ current_user.firstname }}!
+                  </button>
+                  <div class="dropdown-menu"
+                       aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item"
+                       href="/user_data">Account Data</a>
+                    <a class="dropdown-item"
+                       href="/unregister">Delete Account</a>
+                    <a class="dropdown-item"
+                       href="/logout">Logout</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container jumbotron">
+        {% if result != [] %}
             <h1>Your blacklist:</h1>
-            <table>
-                <th>email</th>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            email
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for value in result %}
                 <tr>
-                    <td>{{ value }} </td>
+                    <td> {{ value }} </td>
                 </tr>
                 {% endfor %}
+                </tbody>
             </table>
-            {% else %}
+        {% else %}
             <br>
             <h1>Your blacklist is empty!</h1>
-            {% endif %}
-        </div>
+        {% endif %}
+
         <div class="div2">
         </div>
-        <div class="div3"> 
-            <p style="text-align:center; font-size: 1.875em; "><a href="/blacklist/add" style="color: #E7F2F8;">Add User</a> </p> 
-        </div>
-        <div class="div4"> 
-            <p style="text-align:center; font-size: 1.875em"><a href="/blacklist/remove" style="color: #E7F2F8;">Remove User</a> </p> 
-        </div>
+
+        <a class="btn btn-primary" href="/blacklist/add" role="button">
+            Add User
+        </a>
+        <a class="btn btn-primary" href="/blacklist/remove" role="button">
+            Remove User
+        </a>
+
+
     </div>
 </body>
 </html>
