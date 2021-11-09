@@ -58,13 +58,17 @@ def ajax_livesearch():
         recipients_found = db.session.query(User).filter(
             User.id != current_user.get_id()).all()
     else:
-        search = "%{}%".format(search_word)
-        recipients_found = db.session.query(User). \
-            filter(User.email.like(search)
-                   | User.firstname.like(search)
-                   | User.lastname.like(search),
-                   User.id != current_user.get_id()). \
-            limit(100).all()  # avoiding a huge result
+        if request.form['query'] == 'void_request':
+            recipients_found = db.session.query(User).filter(
+                User.id != current_user.get_id()).all()
+        else:
+            search = "%{}%".format(search_word)
+            recipients_found = db.session.query(User). \
+                filter(User.email.like(search)
+                       | User.firstname.like(search)
+                       | User.lastname.like(search),
+                       User.id != current_user.get_id()). \
+                limit(100).all()  # avoiding a huge result
 
     # instantiate the form
     form = RecipientsListForm()
