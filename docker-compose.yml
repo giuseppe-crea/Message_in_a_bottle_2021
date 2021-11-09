@@ -38,3 +38,16 @@ services:
       - celery
     links:
       - celery
+  flower:
+    container_name: flower
+    build:
+      context: .
+      dockerfile: DockerfileFlower
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+    links:
+      - redis
+    ports:
+      - "5555:5555"
