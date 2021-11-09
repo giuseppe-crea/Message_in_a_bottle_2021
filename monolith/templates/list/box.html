@@ -153,7 +153,8 @@
             </tr>
             {% endfor %}
         {% else %}
-            {% for message in messages %}
+            <!-- newest first -->
+            {% for message in messages|reverse %}
             <tr>
                 <td>{{message.sender_email}}</td>
                 <td>{{message.time}}</td>
