@@ -85,10 +85,7 @@ def int_send_mess(sender, receiver, text, delivery_time):
         None,
         1
     )
-    deliver_message(
-        flask.current_app,
-        message.get_id()
-    )
+    deliver_message(flask.current_app, message.get_id())
 
 
 def create_message(message, sender, receiver, time, image, status):

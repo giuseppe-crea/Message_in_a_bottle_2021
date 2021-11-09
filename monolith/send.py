@@ -73,7 +73,6 @@ def send_messages(to_parse, current_user_mail, time, message, file, image):
                     image,
                     1
                 )
-
             else:
                 # create a message entry in the database with status = pending
                 # and visible_to_receiver = False

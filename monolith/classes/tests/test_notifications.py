@@ -67,10 +67,7 @@ class TestNotifications(unittest.TestCase):
                 None,
                 1
             )
-            deliver_message(
-                flask.current_app,
-                message.get_id()
-            )
+            deliver_message(flask.current_app, message.get_id())
             # sender logs out
             tested_app.get('/logout')
 
@@ -131,10 +128,7 @@ class TestNotifications(unittest.TestCase):
                 None,
                 1
             )
-            deliver_message(
-                flask.current_app,
-                message.get_id()
-            )
+            deliver_message(flask.current_app, message.get_id())
             # sender logs out
             tested_app.get('/logout')
             # receiver logs in

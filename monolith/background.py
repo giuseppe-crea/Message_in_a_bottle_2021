@@ -137,18 +137,19 @@ def deliver_message(app, message_id):
         try:
             message = Message().query.filter_by(id=int(message_id)).one()
             message.status = 2
-            # notify recipient
-            timestamp = message.time
-            title = message.sender_email + " Sent You a Message"
-            description = \
-                "Check Your <a href=\"/inbox\">Inbox</a> to <a href=\"/inbox/"\
-                + str(message.get_id()) + "\">Open It</a>"
-            create_notification(
-                title,
-                description,
-                timestamp,
-                message.receiver_email
-            )
+            if message.visible_to_receiver:
+                # notify recipient if this is not a blacklisted sender
+                timestamp = message.time
+                title = message.sender_email + " Sent You a Message"
+                description = "Check Your <a href=\"/inbox\">Inbox</a> to " \
+                              "<a href=\"/inbox/" + str(message.get_id()) + \
+                              "\">Open It</a>"
+                create_notification(
+                    title,
+                    description,
+                    timestamp,
+                    message.receiver_email
+                )
             db.session.commit()
         except NoResultFound:
             pass  # this means the message was retracted

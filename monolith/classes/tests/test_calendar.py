@@ -70,10 +70,7 @@ class TestCalendar(unittest.TestCase):
                 None,
                 1
             )
-            deliver_message(
-                flask.current_app,
-                message.get_id()
-            )
+            deliver_message(flask.current_app, message.get_id())
             # the message is present in sender's calendar/sent
             rv = tested_app.get('/calendar/sent')
             assert rv.status_code == 200

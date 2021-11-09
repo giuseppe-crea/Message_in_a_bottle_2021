@@ -38,10 +38,7 @@ class TestHome(unittest.TestCase):
                 None,
                 1
             )
-            deliver_message(
-                flask.current_app,
-                message.get_id()
-            )
+            deliver_message(flask.current_app, message.get_id())
             # check the outbox
             rv = tested_app.get('/outbox', follow_redirects=True)
             assert rv.status_code == 200
