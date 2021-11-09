@@ -53,13 +53,13 @@
             <ul class="navbar-nav ml-auto">
               {% if current_user.is_authenticated %}
               <li>
-
                 <a class="nav-link" href="/notifications">
                   <i class="fa fa-lg fa-bell"></i>
                   {% if notifications > 0 %}
-                  <span class="notification-badge badge badge-danger"> {{ notifications }} </span>
+                  <span class="notification-badge badge badge-danger"> {{
+                    notifications }} </span>&nbsp;&nbsp;
                   {% endif %}
-              </a>
+                </a>
               </li>
 
               <li>
