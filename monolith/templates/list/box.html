@@ -138,7 +138,7 @@
         <th>Controls</th>
 
         {% if role == "/outbox" %}
-            {% for message in messages %}
+            {% for message in messages|reverse %}
             <tr>
                 <td>{{message.receiver_email}}</td>
                 <td>{{message.time}}</td>
@@ -183,7 +183,7 @@
         <th>Controls</th>
 
         <tr>
-            {% for message in pending %}
+            {% for message in pending|reverse %}
             <td>{{message.receiver_email}}</td>
             <td>{{message.time}}</td>
             <td>{{message.message}}</td>
