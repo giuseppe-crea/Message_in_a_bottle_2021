@@ -105,13 +105,19 @@
 
             {% if use == 'send' %}
             See a <a href="/list_of_recipients">list</a> of possible recipients</p>
-            <button type=submit class="btn btn-primary" name="save_button">
+            <button type=submit
+                    class="btn btn-primary"
+                    name="save_button"
+                    value="Save">
                 Save
             </button>
             or
             {% endif %}
 
-            <button type=submit class="btn btn-primary" name="send_button">
+            <button type=submit
+                    class="btn btn-primary"
+                    name="send_button"
+                    value="Send">
                 Send
             </button>
         </form>
