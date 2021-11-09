@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, render_template, request
 from flask_login import login_required, current_user
 
 from monolith.forms import CredentialsForm
-from monolith.database import db
+from monolith.database import db, User
 from monolith.views.doc import auto
 
 credentials = Blueprint('credentials', __name__)
@@ -32,6 +32,18 @@ def _credentials():
                     # create a dictionary of only meaningful new values
                     if key != 'old_password' and value != '':
                         kwargs[key] = value
+                    # also make sure the user doesn't try to change its
+                    # mail to an existing one
+                    if key == 'email':
+                        q = db.session.query(User).filter(
+                            User.email == value)
+                        user = q.first()
+                        if user is not None:
+                            form.email.errors.append("Email already in use")
+                            return render_template(
+                                'error_template.html',
+                                form=form
+                            )
                 if kwargs != {}:
                     current_user.update(**kwargs)
                     db.session.commit()
