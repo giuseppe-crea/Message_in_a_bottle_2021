@@ -90,7 +90,7 @@
                 <b>Attached Picture:</b>
                 <br>
                 <div>
-                    <img style="width: 500px; height: 500px; object-fit: cover;"
+                    <img style="max-width: 500px; max-height: 500px;"
                          src="{{ url_for('static', filename=message['image']|safe) }}"
                     />
                 </div>
