@@ -4,6 +4,21 @@
 <head>
     <link rel="icon" href="../../static/images/icon.png">
     <title>Account Data</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="../../static/images/icon.png">
+    <link rel="stylesheet"
+    href=
+    "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <script
+    src=
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    </script>
+    <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+    </script>
     <style>
         table {
           font-family: arial, sans-serif;
@@ -23,20 +38,75 @@
     </style>
 </head>
 <body>
-    <p style="text-align:left; font-size: 1.875em"><a href="/">Home</a></p>
-    <h1>Your account information:</h1>
-    <table>
-        {% for key, value in result.items() %}
-        <tr>
-            <th> {{ key }}</th>
-            <td> {{ value }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <div style="margin: 40px;">
-        <p style="text-align:center; font-size: 1.875em"><a href="/credentials">Edit
-            Credentials</a></p>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-md navbar-light navbar-laravel"
+         style="margin-bottom: 20px;background-color: #e3f2fd;">
+      <div class="container">
+
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">
+            <img src="../static/images/icon.png" alt="logo" width="50"
+                height="50">
+          </a>
+        </div>
+
+        <a class="navbar-brand" href="/">My Message in a Bottle</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ml-auto">
+              <li>
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle "
+                          type="button" id="dropdownMenuButton"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false">
+                    Hi, {{ current_user.firstname }}!
+                  </button>
+                  <div class="dropdown-menu"
+                       aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item"
+                       href="/user_data">Account Data</a>
+                    <a class="dropdown-item"
+                       href="/unregister">Delete Account</a>
+                    <a class="dropdown-item"
+                       href="/logout">Logout</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+        <br>
+        <h2>Your account information:</h2>
+        <table class="table table-hover">
+            {% for key, value in result.items() %}
+            <tr>
+                <th> {{ key }}</th>
+                <td> {{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <a href="/credentials" class="btn btn-info" role="button"
+           style="float:right">
+            Edit Credentials
+        </a>
+
     </div>
+
 </body>
 </html>
 

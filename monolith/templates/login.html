@@ -1,75 +1,57 @@
 <html>
   <head>
-    <title>Login</title>
+    <title>Sign In</title>
     <link rel="icon" href="../../static/images/icon.png">
+    <link rel="stylesheet"
+    href=
+    "https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <script
+    src=
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    </script>
+    <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+    </script>
     <style>
-      * {
-        box-sizing: border-box;
-      }
-      .form_field {
-        height: 20px;
-        padding: 20px;
-        margin: 15px 0;
-        border: 4px solid #E7F2F8;
-        font-family:inherit;
-        font-size: inherit;
-      }
-      input[type=submit] {
-        margin-top: 20px;
-        float: right;
-        border: 2px solid #E7F2F8;
-        height: 28px;
-        width: 90px;
-      }
-      .form-center {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            -webkit-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            grid-column-gap: 0px;
-            grid-row-gap: 0px; 
-      }
-      .div1{grid-area: 1 / 1 / 2 / 3;}
-      .div2{grid-area: 2 / 2 / 3 / 3;}
-
-
+        .jumbotron {
+            margin-top: 60px !important;
+            text-align: center;
+        }
+        input {
+            text-align: center !important;
+        }
     </style>
   </head>
 
+  <body style="background-color: #e7f2f8b2;">
+       <div class="container jumbotron" >
+          <h2>Please, Sign in</h2>
+          <form action="" method="POST" >
+              {{ form.hidden_tag() }}
 
-
-
-  <body style="background-color: #74BDCB;">
-
-
-    <div class="form-center" >
-      <div class="div1"> 
-        <form action="" method="POST">
-          {{ form.hidden_tag() }}
-          <dl>
               {% for field in form.display %}
-              <dd>{{ form[field](class='form_field', placeholder=field) }}</dd>
-              {% if form[field].errors %}
-              {% for e in form[field].errors %}
-              <p class="help-block">{{ e }}</p>
+                <div class="form-group row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                    {{ form[field](class='form-control form-control-lg',
+                        placeholder=field)}}
+                    </div>
+                </div>
+                {% if form[field].errors %}
+                  {% for e in form[field].errors %}
+                  <p class="help-block">{{ e }}</p>
+                  {% endfor %}
+                {% endif %}
               {% endfor %}
-              {% endif %}
-              {% endfor %}
-          </dl>
-      </div>
-      
-      <div class="div2"> 
-        <input type=submit value="Submit">
-        </div>
-            
-      </form>
+
+
+             <button type=submit class="btn btn-primary" value="Submit">
+                 Submit
+             </button>
+          </form>
     </div>
-
-
-
   </body>
 </html>
