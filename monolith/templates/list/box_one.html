@@ -89,8 +89,10 @@
             {% if message['image'] != "" %}
                 <b>Attached Picture:</b>
                 <br>
-                <div style="width: 500px; height: 500px">
-                    <img src="{{ url_for('static', filename=message['image']|safe) }}"/>
+                <div>
+                    <img style="width: 500px; height: 500px; object-fit: cover;"
+                         src="{{ url_for('static', filename=message['image']|safe) }}"
+                    />
                 </div>
             {% endif %}
             <br>
